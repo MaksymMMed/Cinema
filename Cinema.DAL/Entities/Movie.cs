@@ -20,8 +20,8 @@ namespace Cinema.DAL.Entities
         public Director Director { get; set; }
         public Images Images { get; set; }
         public virtual ICollection<Session> Sessions { get; set; }
-        public virtual ICollection<MoviesGenre> MovieGenres { get; set; }
-        public virtual ICollection<ActorsMovies> MovieActors { get; set; }
+        public virtual ICollection<MovieGenre> MovieGenres { get; set; }
+        public virtual ICollection<ActorMovie> MovieActors { get; set; }
         public virtual ICollection<Review> MovieReviews { get; set; }
     }
 }

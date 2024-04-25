@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace Cinema.DAL.Entities
 {
-    public class ActorsMovies
+    public class MovieGenre
     {
         public Guid Id { get; set; }
-        public Guid ActorId { get; set; }
         public Guid MovieId { get; set; }
-        public Actor Actor { get; set; }
+        public Guid GenreId { get; set; }
+        public Genre Genre { get; set; }
         public Movie Movie { get; set; }
     }
 }
