@@ -11,8 +11,8 @@ public class MoviesImageSetsConfiguration : IEntityTypeConfiguration<MovieImageS
         builder.HasKey(e => e.MovieId);
 
         // Relations
-        
+
         //Seeding
-        
+        builder.HasData(Seeding.DataSeed.MovieImageSets);
     }
 }

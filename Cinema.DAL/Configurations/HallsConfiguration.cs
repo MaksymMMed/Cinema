@@ -11,8 +11,9 @@ public class HallsConfiguration : IEntityTypeConfiguration<Hall>
         builder.HasKey(e => e.Id);
 
         // Relations
-        
+
         //Seeding
-        
+        builder.HasData(Seeding.DataSeed.Halls);
+
     }
 }

@@ -20,6 +20,7 @@ public class SessionsConfiguration : IEntityTypeConfiguration<Session>
             .HasForeignKey(e => e.MovieId);
 
         //Seeding
+        builder.HasData(Seeding.DataSeed.Sessions);
 
     }
 }
