@@ -25,8 +25,8 @@ namespace Cinema.DAL.Seeding
             SeedActors();
             SeedDirectors();
             SeedGenres();
-            SeedMovieImageSets();
             SeedMovies();
+            SeedMovieImageSets();
             SeedActorsMovies();
             SeedMoviesGenres();
             SeedReviews();
@@ -100,17 +100,17 @@ namespace Cinema.DAL.Seeding
             [
                 new Director
                 {
-                    Id = new Guid("282AD0ED-0BFC-40A5-B2F2-519EE9A572DA"),
+                    Id = new Guid("ED9A79D9-FE9D-456E-A0A7-2A028CBE1001"),
                     Name = "Christopher Nolan"
                 },
                 new Director
                 {
-                    Id = new Guid("282AD0ED-0BFC-40A5-B2F2-519EE9A572DB"),
+                    Id = new Guid("ED9A79D9-FE9D-456E-A0A7-2A028CBE1002"),
                     Name = "Quentin Tarantino"
                 },
                 new Director
                 {
-                    Id = new Guid("282AD0ED-0BFC-40A5-B2F2-519EE9A572DD"),
+                    Id = new Guid("ED9A79D9-FE9D-456E-A0A7-2A028CBE1003"),
                     Name = "Steven Spielberg"
                 }
             ];
@@ -141,22 +141,6 @@ namespace Cinema.DAL.Seeding
                 }
             ];
         }
-        private static void SeedMovieImageSets()
-        {
-            MovieImageSets =
-            [
-                new MovieImageSet
-                {
-                    MovieId = new Guid("9344F562-FFDC-41C5-BB24-C41C969534C1"),
-                    ImagesUrl = "['https://64.media.tumblr.com/03f0f59694430f001d08e9309dc52f2e/f5e1e516dcb80f72-07/s1280x1920/9263ba9178755f24391d9ef5fd6d23c8ba9ab35d.jpg','https://64.media.tumblr.com/5bb66a7e359f0a5fec8a238d73798291/f5e1e516dcb80f72-9b/s1280x1920/5ec8af306838ed682350b62189e31627e578b701.jpg']"
-                },
-                new MovieImageSet
-                {
-                    MovieId = new Guid("9344F562-FFDC-41C5-BB24-C41C969534C2"),
-                    ImagesUrl = "['https://64.media.tumblr.com/03f0f59694430f001d08e9309dc52f2e/f5e1e516dcb80f72-07/s1280x1920/9263ba9178755f24391d9ef5fd6d23c8ba9ab35d.jpg','https://64.media.tumblr.com/5bb66a7e359f0a5fec8a238d73798291/f5e1e516dcb80f72-9b/s1280x1920/5ec8af306838ed682350b62189e31627e578b701.jpg']"
-                }
-            ];
-        }
         private static void SeedMovies()
         {
             Movies =
@@ -184,6 +168,22 @@ namespace Cinema.DAL.Seeding
                     AgeRestriction = "PG-13",
                     Duration = 169,
                     ReleaseDate = new DateTime(2014, 10, 26)
+                }
+            ];
+        }
+        private static void SeedMovieImageSets()
+        {
+            MovieImageSets =
+            [
+                new MovieImageSet
+                {
+                    MovieId = Movies[0].Id,
+                    ImagesUrl = "['https://64.media.tumblr.com/03f0f59694430f001d08e9309dc52f2e/f5e1e516dcb80f72-07/s1280x1920/9263ba9178755f24391d9ef5fd6d23c8ba9ab35d.jpg','https://64.media.tumblr.com/5bb66a7e359f0a5fec8a238d73798291/f5e1e516dcb80f72-9b/s1280x1920/5ec8af306838ed682350b62189e31627e578b701.jpg']"
+                },
+                new MovieImageSet
+                {
+                    MovieId = Movies[1].Id,
+                    ImagesUrl = "['https://64.media.tumblr.com/03f0f59694430f001d08e9309dc52f2e/f5e1e516dcb80f72-07/s1280x1920/9263ba9178755f24391d9ef5fd6d23c8ba9ab35d.jpg','https://64.media.tumblr.com/5bb66a7e359f0a5fec8a238d73798291/f5e1e516dcb80f72-9b/s1280x1920/5ec8af306838ed682350b62189e31627e578b701.jpg']"
                 }
             ];
         }

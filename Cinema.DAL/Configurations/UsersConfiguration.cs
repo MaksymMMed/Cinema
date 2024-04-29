@@ -11,9 +11,6 @@ public class UsersConfiguration : IEntityTypeConfiguration<User>
         builder.HasKey(e => e.Id);
 
         // Relations
-        builder.HasMany(e => e.Tickets)
-            .WithOne()
-            .HasForeignKey(g => g.UserId);
 
         //Seeding
         builder.HasData(Seeding.DataSeed.Users);

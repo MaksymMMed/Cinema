@@ -22,6 +22,10 @@ public class MoviesConfiguration : IEntityTypeConfiguration<Movie>
             .HasMaxLength(10);
 
         // Relations
+        builder.HasOne(e => e.Director)
+          .WithMany()
+          .HasForeignKey(e => e.DirectorId);
+
         builder.HasOne(e => e.ImageSet)
             .WithOne(e => e.Movie)
             .HasForeignKey<MovieImageSet>(e => e.MovieId);
