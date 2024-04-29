@@ -12,12 +12,19 @@ public class SessionsConfiguration : IEntityTypeConfiguration<Session>
 
         // Relations
         builder.HasOne(e => e.Hall)
-            .WithMany()
-            .HasForeignKey(e => e.HallId);
-        
+            .WithMany(e => e.Sessions)
+            .HasForeignKey(e => e.HallId)
+            .HasConstraintName("SessionHallFK");
+
         builder.HasOne(e => e.Movie)
-            .WithMany()
-            .HasForeignKey(e => e.MovieId);
+            .WithMany(e => e.Sessions)
+            .HasForeignKey(e => e.MovieId)
+            .HasConstraintName("MovieSessionFK");
+
+        builder.HasMany(e => e.Tickets)
+            .WithOne(e => e.Session)
+            .HasForeignKey(e => e.SessionId)
+            .HasConstraintName("TicketSessionFK");
 
         //Seeding
         builder.HasData(Seeding.DataSeed.Sessions);

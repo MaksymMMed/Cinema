@@ -15,6 +15,10 @@ public class GenresConfiguration : IEntityTypeConfiguration<Genre>
             .HasMaxLength(20);
 
         // Relations
+        builder.HasMany(e => e.MoviesGenre)
+            .WithOne(e => e.Genre)
+            .HasForeignKey(e => e.GenreId)
+            .HasConstraintName("GenreMovieFK");
 
         //Seeding
         builder.HasData(Seeding.DataSeed.Genres);

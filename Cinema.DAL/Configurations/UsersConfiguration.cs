@@ -11,6 +11,22 @@ public class UsersConfiguration : IEntityTypeConfiguration<User>
         builder.HasKey(e => e.Id);
 
         // Relations
+        builder.HasMany(x => x.Invoices)
+            .WithOne(x => x.User)
+            .OnDelete(DeleteBehavior.Restrict)
+            .HasForeignKey(x => x.UserId)
+            .HasConstraintName("UserInvoiceFK");
+
+        builder.HasMany(x => x.Tickets)
+            .WithOne(x => x.User)
+            .HasForeignKey(x => x.UserId)
+            .HasConstraintName("TicketUserFK");
+
+        builder.HasMany(x => x.Reviews)
+            .WithOne(x => x.CreatedBy)
+            .HasForeignKey(x=> x.CreatedById)
+            .HasConstraintName("UserReviewFK");
+
 
         //Seeding
         builder.HasData(Seeding.DataSeed.Users);

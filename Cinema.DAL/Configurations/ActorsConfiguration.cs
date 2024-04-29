@@ -15,6 +15,10 @@ public class ActorsConfiguration : IEntityTypeConfiguration<Actor>
             .HasMaxLength(35);
 
         // Relations
+        builder.HasMany(e => e.ActorMovies)
+            .WithOne(e => e.Actor)
+            .HasForeignKey(g => g.ActorId)
+            .HasConstraintName("ActorMovieFK");
 
         //Seeding
         builder.HasData(Seeding.DataSeed.Actors);

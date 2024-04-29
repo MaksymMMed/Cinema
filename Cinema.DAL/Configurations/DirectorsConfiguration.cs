@@ -15,6 +15,10 @@ public class DirectorsConfiguration : IEntityTypeConfiguration<Director>
             .HasMaxLength(35);
 
         // Relations
+        builder.HasMany(e => e.Movies)
+            .WithOne(e => e.Director)
+            .HasForeignKey(g => g.DirectorId)
+            .HasConstraintName("MovieDirectorFK");
 
         //Seeding
         builder.HasData(Seeding.DataSeed.Directors);
