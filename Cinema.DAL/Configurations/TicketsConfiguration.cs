@@ -12,16 +12,24 @@ public class TicketsConfiguration : IEntityTypeConfiguration<Ticket>
 
         // Relations
         builder.HasOne(e => e.Session)
-            .WithMany()
-            .HasForeignKey(e => e.SessionId);
+            .WithMany(e => e.Tickets)
+            .OnDelete(DeleteBehavior.Restrict)
+            .HasForeignKey(e => e.SessionId)
+            .HasConstraintName("TicketSessionFK");
         
         builder.HasOne(e => e.Hall)
-            .WithMany()
-            .HasForeignKey(e => e.HallId);
+            .WithMany(e => e.Tickets)
+            .HasForeignKey(e => e.HallId)
+            .HasConstraintName("TicketHallFK");
         
         builder.HasOne(e => e.User)
-            .WithMany()
-            .HasForeignKey(g => g.UserId);
+            .WithMany(e => e.Tickets)
+            .HasForeignKey(g => g.UserId)
+            .HasConstraintName("TicketUserFK");
+
+        builder.HasOne(e => e.Invoice)
+            .WithOne(e => e.Ticket)
+            .HasConstraintName("TicketInvoiceFK");
 
         //Seeding
         builder.HasData(Seeding.DataSeed.Tickets);

@@ -15,12 +15,15 @@ public class ReviewsConfiguration : IEntityTypeConfiguration<Review>
 
         // Relations
         builder.HasOne(e => e.CreatedBy)
-            .WithMany()
-            .HasForeignKey(e => e.CreatedById);
+            .WithMany(e => e.Reviews)
+            .HasForeignKey(e => e.CreatedById)
+            .HasConstraintName("UserReviewFK");
+
         
         builder.HasOne(e => e.Movie)
-            .WithMany()
-            .HasForeignKey(e => e.MovieId);
+            .WithMany(e => e.MovieReviews)
+            .HasForeignKey(e => e.MovieId)
+            .HasConstraintName("MovieReviewFK");
 
         //Seeding
         builder.HasData(Seeding.DataSeed.Reviews);

@@ -13,11 +13,13 @@ public class MoviesGenresConfiguration : IEntityTypeConfiguration<MovieGenre>
         // Relations
         builder.HasOne(e => e.Movie)
             .WithMany(e => e.MovieGenres)
-            .HasForeignKey(g => g.MovieId);
+            .HasForeignKey(g => g.MovieId)
+            .HasConstraintName("MovieGenreFK");
         
         builder.HasOne(e => e.Genre)
             .WithMany(e => e.MoviesGenre)
-            .HasForeignKey(g => g.GenreId);
+            .HasForeignKey(g => g.GenreId)
+            .HasConstraintName("GenreMovieFK");
 
         //Seeding
         builder.HasData(Seeding.DataSeed.MoviesGenres);

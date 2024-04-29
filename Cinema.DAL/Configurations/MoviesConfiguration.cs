@@ -23,12 +23,34 @@ public class MoviesConfiguration : IEntityTypeConfiguration<Movie>
 
         // Relations
         builder.HasOne(e => e.Director)
-          .WithMany()
-          .HasForeignKey(e => e.DirectorId);
+          .WithMany(e=>e.Movies)
+          .HasForeignKey(e => e.DirectorId)
+          .HasConstraintName("MovieDirectorFK");
 
         builder.HasOne(e => e.ImageSet)
             .WithOne(e => e.Movie)
-            .HasForeignKey<MovieImageSet>(e => e.MovieId);
+            .HasForeignKey<MovieImageSet>(e => e.MovieId)
+            .HasConstraintName("MovieImageSetFK");
+
+        builder.HasMany(e => e.MovieGenres)
+            .WithOne(e => e.Movie)
+            .HasForeignKey(e => e.MovieId)
+            .HasConstraintName("MovieGenreFK"); 
+
+        builder.HasMany(e => e.MovieActors)
+            .WithOne(e => e.Movie)
+            .HasForeignKey(e => e.MovieId)
+            .HasConstraintName("MovieActorFK");
+
+        builder.HasMany(e => e.MovieReviews)
+            .WithOne(e => e.Movie)
+            .HasForeignKey(e => e.MovieId)
+            .HasConstraintName("MovieReviewFK");
+
+        builder.HasMany(e => e.Sessions)
+            .WithOne(e => e.Movie)
+            .HasForeignKey(e => e.MovieId)
+            .HasConstraintName("MovieSessionFK");
 
         //Seeding
         builder.HasData(Seeding.DataSeed.Movies);

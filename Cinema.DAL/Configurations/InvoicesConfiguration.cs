@@ -13,11 +13,13 @@ public class InvoicesConfiguration : IEntityTypeConfiguration<Invoice>
         // Relations
         builder.HasOne(e => e.User)
             .WithMany()
-            .HasForeignKey(g => g.UserId);
+            .HasForeignKey(g => g.UserId)
+            .HasConstraintName("UserInvoiceFK");
         
         builder.HasOne(e => e.Ticket)
             .WithMany()
-            .HasForeignKey(g => g.TicketId);
+            .HasForeignKey(g => g.TicketId)
+            .HasConstraintName("TicketInvoiceFK");
 
         //Seeding
         builder.HasData(Seeding.DataSeed.Invoices);
