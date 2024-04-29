@@ -27,6 +27,6 @@ public class MoviesConfiguration : IEntityTypeConfiguration<Movie>
             .HasForeignKey<MovieImageSet>(e => e.MovieId);
 
         //Seeding
-
+        builder.HasData(Seeding.DataSeed.Movies);
     }
 }

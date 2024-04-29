@@ -23,6 +23,6 @@ public class ReviewsConfiguration : IEntityTypeConfiguration<Review>
             .HasForeignKey(e => e.MovieId);
 
         //Seeding
-
+        builder.HasData(Seeding.DataSeed.Reviews);
     }
 }

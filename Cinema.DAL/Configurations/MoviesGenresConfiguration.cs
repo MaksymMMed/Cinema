@@ -18,8 +18,8 @@ public class MoviesGenresConfiguration : IEntityTypeConfiguration<MovieGenre>
         builder.HasOne(e => e.Genre)
             .WithMany(e => e.MoviesGenre)
             .HasForeignKey(g => g.GenreId);
-        
+
         //Seeding
-        
+        builder.HasData(Seeding.DataSeed.MoviesGenres);
     }
 }

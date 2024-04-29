@@ -24,6 +24,7 @@ public class TicketsConfiguration : IEntityTypeConfiguration<Ticket>
             .HasForeignKey(g => g.UserId);
 
         //Seeding
+        builder.HasData(Seeding.DataSeed.Tickets);
 
     }
 }

@@ -18,8 +18,8 @@ public class InvoicesConfiguration : IEntityTypeConfiguration<Invoice>
         builder.HasOne(e => e.Ticket)
             .WithMany()
             .HasForeignKey(g => g.TicketId);
-        
+
         //Seeding
-        
+        builder.HasData(Seeding.DataSeed.Invoices);
     }
 }

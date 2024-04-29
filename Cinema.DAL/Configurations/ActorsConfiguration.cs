@@ -15,8 +15,9 @@ public class ActorsConfiguration : IEntityTypeConfiguration<Actor>
             .HasMaxLength(35);
 
         // Relations
-        
+
         //Seeding
+        builder.HasData(Seeding.DataSeed.Actors);
         
     }
 }

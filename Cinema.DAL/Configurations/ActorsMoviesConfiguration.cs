@@ -18,8 +18,9 @@ public class ActorsMoviesConfiguration : IEntityTypeConfiguration<ActorMovie>
         builder.HasOne(e => e.Movie)
             .WithMany(e => e.MovieActors)
             .HasForeignKey(g => g.MovieId);
-        
+
         //Seeding
-        
+        builder.HasData(Seeding.DataSeed.ActorsMovies);
+
     }
 }

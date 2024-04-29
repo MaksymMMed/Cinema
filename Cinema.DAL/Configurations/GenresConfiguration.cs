@@ -15,8 +15,8 @@ public class GenresConfiguration : IEntityTypeConfiguration<Genre>
             .HasMaxLength(20);
 
         // Relations
-        
+
         //Seeding
-        
+        builder.HasData(Seeding.DataSeed.Genres);
     }
 }
