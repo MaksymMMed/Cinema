@@ -8,7 +8,11 @@ namespace Cinema.BLL.MapperProfiles.Halls;
 
 public class HallsProfile : Profile
 {
-    private static IEnumerable<int> ConvertRowsCapacity(string rowsCapacity)
+    private static string SerializeRowsCapacity(IEnumerable<int> rowsCapacity)
+    {
+        return JsonSerializer.Serialize(rowsCapacity);
+    }
+    private static IEnumerable<int> DeserializeRowsCapacity(string rowsCapacity)
     {
         return JsonSerializer.Deserialize<IEnumerable<int>>(rowsCapacity) ?? [];
     }
@@ -25,7 +29,7 @@ public class HallsProfile : Profile
     {
         CreateMap<Hall, HallReadDto>()
             .ForMember(dst => dst.RowsCapacity, opt =>
-                opt.MapFrom(src => ConvertRowsCapacity(src.RowsCapacity)))
+                opt.MapFrom(src => DeserializeRowsCapacity(src.RowsCapacity)))
             .ForMember(dst => dst.SessionsCount, opt =>
                 opt.MapFrom(src => src.Sessions.Count()))
             .ForMember(dst => dst.TicketsCount, opt =>
@@ -33,8 +37,15 @@ public class HallsProfile : Profile
 
         CreateMap<Hall, HallDetailReadDto>()
             .ForMember(dst => dst.RowsCapacity, opt =>
-                           opt.MapFrom(src => ConvertRowsCapacity(src.RowsCapacity)))
+                           opt.MapFrom(src => DeserializeRowsCapacity(src.RowsCapacity)))
             .ForMember(dst => dst.Sessions, opt =>
                            opt.MapFrom(src => GetSessions(src.Sessions)));
+
+        CreateMap<HallCreateDto, Hall>()
+            .ForMember(dst => dst.Capacity, opt =>
+                           opt.MapFrom(src => src.RowsCapacity.Sum()))
+            .ForMember(dst => dst.RowsCapacity, opt =>
+                           opt.MapFrom(src => SerializeRowsCapacity(src.RowsCapacity)));
+
     }
 }

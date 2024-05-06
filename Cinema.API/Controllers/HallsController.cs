@@ -1,4 +1,5 @@
-﻿using Cinema.BLL.Filtering.Halls;
+﻿using Cinema.BLL.DTOs.Halls;
+using Cinema.BLL.Filtering.Halls;
 using Cinema.BLL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -35,6 +36,16 @@ public class HallsController : ControllerBase
 
         if (!result.IsSuccess)
             return NotFound(result.Error);
+
+        return Ok(result.Value);
+    }
+    [HttpPost]
+    public async Task<IActionResult> Create([FromBody] HallCreateDto dto)
+    {
+        var result = await _hallsService.Create(dto);
+
+        if (!result.IsSuccess)
+            return BadRequest(result.Error);
 
         return Ok(result.Value);
     }

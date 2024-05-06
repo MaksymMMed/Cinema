@@ -17,6 +17,17 @@ public class HallsService : BusinessService<Hall, Guid>, IHallsService
         ) : base(httpContextAccessor, repository, mapper)
     {
     }
+
+    public async Task<Result<HallReadDto>> Create(HallCreateDto dto)
+    {
+        var hall = _mapper.Map<Hall>(dto);
+
+        await _repository.Add(hall);
+        
+        var mappedHall = _mapper.Map<HallReadDto>(hall);
+        return await Task.FromResult(Result<HallReadDto>.Success(mappedHall));
+    }
+
     public Task<Result<EntitiesWithTotalCount<HallReadDto>>> Get(HallsFilteringModel model)
     {
         var query = _repository.GetQuery(include: q => q
@@ -34,7 +45,7 @@ public class HallsService : BusinessService<Hall, Guid>, IHallsService
 
     public Task<Result<HallDetailReadDto>> GetById(Guid id)
     {
-        // is getByIdWithInclude might be used here? but it's throws an error
+        // should getByIdWithInclude be used here? but it's throws an error
         var hall = _repository.GetQuery(include: q => q
                    .Include(s => s.Sessions)
                    .Include(t => t.Tickets))
