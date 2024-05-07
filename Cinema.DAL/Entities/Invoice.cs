@@ -9,6 +9,6 @@
         public bool Status { get; set; }
         public DateTime CreateDateUtc { get; set; }
         public Ticket Ticket { get; set; }
-        public User User { get; set; }
+        public AspNetUser User { get; set; }
     }
 }

@@ -29,7 +29,7 @@ namespace Cinema.DAL.Migrations
                 name: "AspNetRoles",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true)
@@ -43,7 +43,7 @@ namespace Cinema.DAL.Migrations
                 name: "AspNetUsers",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -102,37 +102,12 @@ namespace Cinema.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "User",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    NormalizedUserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    NormalizedEmail = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
-                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    SecurityStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PhoneNumberConfirmed = table.Column<bool>(type: "bit", nullable: false),
-                    TwoFactorEnabled = table.Column<bool>(type: "bit", nullable: false),
-                    LockoutEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
-                    LockoutEnabled = table.Column<bool>(type: "bit", nullable: false),
-                    AccessFailedCount = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_User", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    RoleId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    RoleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
@@ -153,7 +128,7 @@ namespace Cinema.DAL.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
@@ -175,7 +150,7 @@ namespace Cinema.DAL.Migrations
                     LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ProviderKey = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ProviderDisplayName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -192,8 +167,8 @@ namespace Cinema.DAL.Migrations
                 name: "AspNetUserRoles",
                 columns: table => new
                 {
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    RoleId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RoleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -216,7 +191,7 @@ namespace Cinema.DAL.Migrations
                 name: "AspNetUserTokens",
                 columns: table => new
                 {
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Value = table.Column<string>(type: "nvarchar(max)", nullable: true)
@@ -347,7 +322,7 @@ namespace Cinema.DAL.Migrations
                     table.ForeignKey(
                         name: "UserReviewFK",
                         column: x => x.CreatedById,
-                        principalTable: "User",
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -407,7 +382,7 @@ namespace Cinema.DAL.Migrations
                     table.ForeignKey(
                         name: "TicketUserFK",
                         column: x => x.UserId,
-                        principalTable: "User",
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -435,7 +410,7 @@ namespace Cinema.DAL.Migrations
                     table.ForeignKey(
                         name: "UserInvoiceFK",
                         column: x => x.UserId,
-                        principalTable: "User",
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -449,6 +424,15 @@ namespace Cinema.DAL.Migrations
                     { new Guid("bbd5c0d3-a45d-490a-b26d-d503b6a82262"), "Emily Blunt" },
                     { new Guid("bbd5c0d3-a45d-490a-b26d-d503b6a82263"), "Matthew McConaughhey" },
                     { new Guid("bbd5c0d3-a45d-490a-b26d-d503b6a82264"), "Anne Hathaway" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "AspNetUsers",
+                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
+                values: new object[,]
+                {
+                    { new Guid("88d6040a-130f-43d4-8bee-1f0074962181"), 0, "04c99617-c427-4f99-bd40-5dbc52108f6e", "admin@example.com", true, false, null, "ADMIN@EXAMPLE.COM", "ADMIN", "AQAAAAIAAYagAAAAEBL+uOlsNZGbN9ibvJstGX+uW/zoklJwRNalt2c0EdcN1qIHjjSsQd99veyyYun6dQ==", null, false, null, false, "admin" },
+                    { new Guid("88d6040a-130f-43d4-8bee-1f0074962182"), 0, "fdcc761f-8c63-4e40-ab00-b66bb54717e2", "user@example.com", true, false, null, "USER@EXAMPLE.COM", "USER", "AQAAAAIAAYagAAAAEB2Bp2Il1Yv0TnM+/O7cn2ALL2YXLbeghYDSejApp36HDT+MwprD3GR49o0gtE1/2Q==", null, false, null, false, "user" }
                 });
 
             migrationBuilder.InsertData(
@@ -479,15 +463,6 @@ namespace Cinema.DAL.Migrations
                 {
                     { new Guid("d67b95a0-b12e-4574-b9ec-634b11f8df41"), 100, "[10,10,10,10,10,10,10,10,10,10]" },
                     { new Guid("d67b95a0-b12e-4574-b9ec-634b11f8df42"), 50, "[5,5,5,5,5,5,5,5,5,5]" }
-                });
-
-            migrationBuilder.InsertData(
-                table: "User",
-                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[,]
-                {
-                    { new Guid("88d6040a-130f-43d4-8bee-1f0074962181"), 0, "36d2628d-9cad-4f4e-8043-41bb0b5721c2", "admin@example.com", true, false, null, "ADMIN@EXAMPLE.COM", "ADMIN", "AQAAAAIAAYagAAAAEK1OCMiynCD4+4t6y03oL7GuteseyeYSSwEz/shwNCZl5Q2CZSS4AFg8kZ2XH1plwA==", null, false, null, false, "admin" },
-                    { new Guid("88d6040a-130f-43d4-8bee-1f0074962182"), 0, "5c50475c-6718-4f96-831b-3d991f207b1f", "user@example.com", true, false, null, "USER@EXAMPLE.COM", "USER", "AQAAAAIAAYagAAAAENtWu6FZluXtkwByjnSKpB8eiXDoSt6volgxIxCWO2sNXuGiJ6JIqh0VDF8ArVGE3g==", null, false, null, false, "user" }
                 });
 
             migrationBuilder.InsertData(
@@ -535,8 +510,8 @@ namespace Cinema.DAL.Migrations
                 columns: new[] { "Id", "Comment", "CreatedById", "CreatedByName", "CreatedOnUtc", "MovieId", "Rank" },
                 values: new object[,]
                 {
-                    { new Guid("bbd5c0d3-a45d-490a-b26d-d503b6a82261"), "Great movie!", new Guid("88d6040a-130f-43d4-8bee-1f0074962182"), "user", new DateTime(2024, 4, 29, 10, 3, 18, 229, DateTimeKind.Utc).AddTicks(5577), new Guid("9344f562-ffdc-41c5-bb24-c41c969534c1"), 5 },
-                    { new Guid("bbd5c0d3-a45d-490a-b26d-d503b6a82262"), "Good movie!", new Guid("88d6040a-130f-43d4-8bee-1f0074962182"), "user", new DateTime(2024, 4, 29, 10, 3, 18, 229, DateTimeKind.Utc).AddTicks(5858), new Guid("9344f562-ffdc-41c5-bb24-c41c969534c2"), 4 }
+                    { new Guid("bbd5c0d3-a45d-490a-b26d-d503b6a82261"), "Great movie!", new Guid("88d6040a-130f-43d4-8bee-1f0074962182"), "user", new DateTime(2024, 5, 7, 11, 42, 38, 687, DateTimeKind.Utc).AddTicks(8940), new Guid("9344f562-ffdc-41c5-bb24-c41c969534c1"), 5 },
+                    { new Guid("bbd5c0d3-a45d-490a-b26d-d503b6a82262"), "Good movie!", new Guid("88d6040a-130f-43d4-8bee-1f0074962182"), "user", new DateTime(2024, 5, 7, 11, 42, 38, 687, DateTimeKind.Utc).AddTicks(9330), new Guid("9344f562-ffdc-41c5-bb24-c41c969534c2"), 4 }
                 });
 
             migrationBuilder.InsertData(
@@ -709,9 +684,6 @@ namespace Cinema.DAL.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
                 name: "Ticket");
 
             migrationBuilder.DropTable(
@@ -721,7 +693,7 @@ namespace Cinema.DAL.Migrations
                 name: "Session");
 
             migrationBuilder.DropTable(
-                name: "User");
+                name: "AspNetUsers");
 
             migrationBuilder.DropTable(
                 name: "Movie");

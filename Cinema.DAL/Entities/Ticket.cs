@@ -10,7 +10,7 @@
         public int PlaceIndex { get; set; }
         public Session Session { get; set; }
         public Hall Hall { get; set; }
-        public User User { get; set; }
+        public AspNetUser User { get; set; }
         public Invoice Invoice { get; set; }
     }
 }

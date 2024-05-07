@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Cinema.DAL
 {
-    public class AppDbContext : IdentityDbContext<IdentityUser>
+    public class AppDbContext : IdentityDbContext<AspNetUser, IdentityRole<Guid>, Guid>
     {
         public AppDbContext(DbContextOptions options) : base(options)
         {
@@ -24,7 +24,7 @@ namespace Cinema.DAL
         public DbSet<Review> Review { get; set; }
         public DbSet<Session> Session { get; set; }
         public DbSet<Ticket> Ticket { get; set; }
-        public DbSet<User> User { get; set; }
+        public DbSet<AspNetUser> AspNetUsers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
