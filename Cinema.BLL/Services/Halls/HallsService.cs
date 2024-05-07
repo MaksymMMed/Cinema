@@ -58,11 +58,9 @@ public class HallsService : BusinessService<Hall, Guid>, IHallsService
 
     public async Task<Result<HallDetailReadDto>> GetById(Guid id)
     {
-        // should getByIdWithInclude be used here? but it's throws an error
-        var hall = await _repository.GetQuery(include: q => q
+        var hall = await _repository.GetByIdWithInclude(id, include: q => q
                    .Include(s => s.Sessions)
-                   .Include(t => t.Tickets))
-            .FirstOrDefaultAsync(h => h.Id == id);
+                   .Include(t => t.Tickets));
 
         if (hall == null)
             return Result<HallDetailReadDto>.Fail($"Hall with id {id} not found");
@@ -73,7 +71,7 @@ public class HallsService : BusinessService<Hall, Guid>, IHallsService
 
     public async Task<Result<HallReadDto>> Update(Guid id, HallUpdateDto dto)
     {
-        var hall = await _repository.GetQuery().FirstOrDefaultAsync(h => h.Id == id);
+        var hall = await _repository.GetById(id);
 
         if (hall == null)
             return Result<HallReadDto>.Fail($"Hall with id {id} not found");
