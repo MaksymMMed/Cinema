@@ -167,13 +167,13 @@ namespace Cinema.DAL.Migrations
                         {
                             Id = new Guid("88d6040a-130f-43d4-8bee-1f0074962181"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "fc4a8923-1bdf-46b5-9954-dab6be43eb47",
+                            ConcurrencyStamp = "04c99617-c427-4f99-bd40-5dbc52108f6e",
                             Email = "admin@example.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@EXAMPLE.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJCKW5HwE5D738dBodqoYNM4Vtgz8nrKg+sBdIU+Kgsq6D33ROYidM4lqCO8URk8pA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEBL+uOlsNZGbN9ibvJstGX+uW/zoklJwRNalt2c0EdcN1qIHjjSsQd99veyyYun6dQ==",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false,
                             UserName = "admin"
@@ -182,13 +182,13 @@ namespace Cinema.DAL.Migrations
                         {
                             Id = new Guid("88d6040a-130f-43d4-8bee-1f0074962182"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "e79352fb-928f-4002-8cbe-3f2fb8758650",
+                            ConcurrencyStamp = "fdcc761f-8c63-4e40-ab00-b66bb54717e2",
                             Email = "user@example.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "USER@EXAMPLE.COM",
                             NormalizedUserName = "USER",
-                            PasswordHash = "AQAAAAIAAYagAAAAEMtQgBVaOjNh+LI9LfdBIvDsd109lKP8oftJFNUXHNJfBNF1tK6PxPCSy3obKdC8Gg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEB2Bp2Il1Yv0TnM+/O7cn2ALL2YXLbeghYDSejApp36HDT+MwprD3GR49o0gtE1/2Q==",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false,
                             UserName = "user"
@@ -525,7 +525,7 @@ namespace Cinema.DAL.Migrations
                             Comment = "Great movie!",
                             CreatedById = new Guid("88d6040a-130f-43d4-8bee-1f0074962182"),
                             CreatedByName = "user",
-                            CreatedOnUtc = new DateTime(2024, 5, 7, 9, 7, 17, 783, DateTimeKind.Utc).AddTicks(9750),
+                            CreatedOnUtc = new DateTime(2024, 5, 7, 11, 42, 38, 687, DateTimeKind.Utc).AddTicks(8940),
                             MovieId = new Guid("9344f562-ffdc-41c5-bb24-c41c969534c1"),
                             Rank = 5
                         },
@@ -535,7 +535,7 @@ namespace Cinema.DAL.Migrations
                             Comment = "Good movie!",
                             CreatedById = new Guid("88d6040a-130f-43d4-8bee-1f0074962182"),
                             CreatedByName = "user",
-                            CreatedOnUtc = new DateTime(2024, 5, 7, 9, 7, 17, 784, DateTimeKind.Utc).AddTicks(130),
+                            CreatedOnUtc = new DateTime(2024, 5, 7, 11, 42, 38, 687, DateTimeKind.Utc).AddTicks(9330),
                             MovieId = new Guid("9344f562-ffdc-41c5-bb24-c41c969534c2"),
                             Rank = 4
                         });
