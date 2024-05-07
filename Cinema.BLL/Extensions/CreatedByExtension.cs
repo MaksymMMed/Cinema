@@ -5,7 +5,7 @@ namespace Cinema.BLL.Extensions;
 
 public static class CreatedByExtension
 {
-    public static void RegisterCreation(this ICreatedBy createdBy, User user)
+    public static void RegisterCreation(this ICreatedBy createdBy, AspNetUser user)
     {
         createdBy.CreatedById = user.Id;
         createdBy.CreatedByName = user.UserName ?? "";
