@@ -18,27 +18,27 @@ public class HallsService : BusinessService<Hall, Guid>, IHallsService
     {
     }
 
-    public async Task<Result<HallReadDto>> Create(HallCreateDto dto)
+    public async Task<Result<HallDetailReadDto>> Create(HallCreateDto dto)
     {
         var hall = _mapper.Map<Hall>(dto);
 
         await _repository.Add(hall);
 
-        var mappedHall = _mapper.Map<HallReadDto>(hall);
-        return Result<HallReadDto>.Success(mappedHall);
+        var mappedHall = _mapper.Map<HallDetailReadDto>(hall);
+        return Result<HallDetailReadDto>.Success(mappedHall);
     }
 
-    public async Task<Result<HallReadDto>> Delete(Guid id)
+    public async Task<Result<HallDetailReadDto>> Delete(Guid id)
     {
         var hall = await _repository.GetById(id);
 
         if (hall == null)
-            return Result<HallReadDto>.Fail($"Hall with id {id} not found");
+            return Result<HallDetailReadDto>.Fail($"Hall with id {id} not found");
 
         await _repository.Delete(hall);
 
-        var mappedHall = _mapper.Map<HallReadDto>(hall);
-        return Result<HallReadDto>.Success(mappedHall);
+        var mappedHall = _mapper.Map<HallDetailReadDto>(hall);
+        return Result<HallDetailReadDto>.Success(mappedHall);
     }
 
     public async Task<Result<EntitiesWithTotalCount<HallReadDto>>> Get(HallsFilteringModel model)
@@ -69,18 +69,18 @@ public class HallsService : BusinessService<Hall, Guid>, IHallsService
         return Result<HallDetailReadDto>.Success(mappedHall);
     }
 
-    public async Task<Result<HallReadDto>> Update(Guid id, HallUpdateDto dto)
+    public async Task<Result<HallDetailReadDto>> Update(HallUpdateDto dto)
     {
-        var hall = await _repository.GetById(id);
+        var hall = await _repository.GetById(dto.Id);
 
         if (hall == null)
-            return Result<HallReadDto>.Fail($"Hall with id {id} not found");
+            return Result<HallDetailReadDto>.Fail($"Hall with id {dto.Id} not found");
 
         _mapper.Map(dto, hall);
 
         var newHall = _repository.Update(hall).Result;
 
-        var mappedHall = _mapper.Map<HallReadDto>(newHall);
-        return Result<HallReadDto>.Success(mappedHall);
+        var mappedHall = _mapper.Map<HallDetailReadDto>(newHall);
+        return Result<HallDetailReadDto>.Success(mappedHall);
     }
 }

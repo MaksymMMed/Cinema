@@ -16,20 +16,10 @@ public class HallsProfile : Profile
     {
         return JsonSerializer.Deserialize<IEnumerable<int>>(rowsCapacity) ?? [];
     }
-    private static IEnumerable<SessionDateTimeReadDto> GetSessions(IEnumerable<Session> sessions)
-    {
-        return sessions.OrderByDescending(s => s.DateUtc).Select(s => new SessionDateTimeReadDto
-        {
-            SessionId = s.Id,
-            DateUtc = s.DateUtc
-        });
-    }
 
     public HallsProfile()
     {
         CreateMap<Hall, HallReadDto>()
-            .ForMember(dst => dst.RowsCapacity, opt =>
-                opt.MapFrom(src => DeserializeRowsCapacity(src.RowsCapacity)))
             .ForMember(dst => dst.SessionsCount, opt =>
                 opt.MapFrom(src => src.Sessions.Count()))
             .ForMember(dst => dst.TicketsCount, opt =>
@@ -37,9 +27,7 @@ public class HallsProfile : Profile
 
         CreateMap<Hall, HallDetailReadDto>()
             .ForMember(dst => dst.RowsCapacity, opt =>
-                           opt.MapFrom(src => DeserializeRowsCapacity(src.RowsCapacity)))
-            .ForMember(dst => dst.Sessions, opt =>
-                           opt.MapFrom(src => GetSessions(src.Sessions)));
+                           opt.MapFrom(src => DeserializeRowsCapacity(src.RowsCapacity)));
 
         CreateMap<HallCreateDto, Hall>()
             .ForMember(dst => dst.Capacity, opt =>
