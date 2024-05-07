@@ -12,7 +12,7 @@ namespace Cinema.DAL.Entities
         public DateTime CreatedOnUtc { get; set; }
         public string CreatedByName { get; set; }
         public Movie Movie { get; set; }
-        public User CreatedBy { get; set; }
+        public AspNetUser CreatedBy { get; set; }
 
     }
 }

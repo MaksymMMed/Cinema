@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Cinema.DAL.Configurations;
 
-public class UsersConfiguration : IEntityTypeConfiguration<User>
+public class UsersConfiguration : IEntityTypeConfiguration<AspNetUser>
 {
-    public void Configure(EntityTypeBuilder<User> builder)
+    public void Configure(EntityTypeBuilder<AspNetUser> builder)
     {
         builder.HasKey(e => e.Id);
 
