@@ -28,6 +28,19 @@ public class HallsService : BusinessService<Hall, Guid>, IHallsService
         return Result<HallReadDto>.Success(mappedHall);
     }
 
+    public async Task<Result<HallReadDto>> Delete(Guid id)
+    {
+        var hall = await _repository.GetById(id);
+
+        if (hall == null)
+            return Result<HallReadDto>.Fail($"Hall with id {id} not found");
+
+        await _repository.Delete(hall);
+
+        var mappedHall = _mapper.Map<HallReadDto>(hall);
+        return Result<HallReadDto>.Success(mappedHall);
+    }
+
     public async Task<Result<EntitiesWithTotalCount<HallReadDto>>> Get(HallsFilteringModel model)
     {
         var query = _repository.GetQuery(include: q => q

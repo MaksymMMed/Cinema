@@ -60,4 +60,16 @@ public class HallsController : ControllerBase
 
         return Ok(result.Value);
     }
+    [HttpDelete]
+    [Route("{id}")]
+    public async Task<IActionResult> Delete(Guid id)
+    {
+        var result = await _hallsService.Delete(id);
+
+        if (!result.IsSuccess)
+            return BadRequest(result.Error);
+
+        return Ok(result.Value);
+        return Ok();
+    }
 }
