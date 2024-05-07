@@ -5,7 +5,7 @@ namespace Cinema.DAL.Seeding
 {
     public static class DataSeed
     {
-        public static User[] Users { get; set; } = [];
+        public static AspNetUser[] Users { get; set; } = [];
         public static Actor[] Actors { get; set; } = [];
         public static Director[] Directors { get; set; } = [];
         public static Genre[] Genres { get; set; } = [];
@@ -38,8 +38,8 @@ namespace Cinema.DAL.Seeding
 
         private static void SeedUsers()
         {
-            var hasherUser = new PasswordHasher<User>();
-            var user1 = new User
+            var hasherUser = new PasswordHasher<AspNetUser>();
+            var user1 = new AspNetUser
             {
                 Id = new Guid("88D6040A-130F-43D4-8BEE-1F0074962181"),
                 UserName = "admin",
@@ -50,7 +50,7 @@ namespace Cinema.DAL.Seeding
             };
             user1.PasswordHash = hasherUser.HashPassword(user1, "admin");
 
-            var user2 = new User
+            var user2 = new AspNetUser
             {
                 Id = new Guid("88D6040A-130F-43D4-8BEE-1F0074962182"),
                 UserName = "user",
