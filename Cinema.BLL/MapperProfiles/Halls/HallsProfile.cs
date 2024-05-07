@@ -47,5 +47,10 @@ public class HallsProfile : Profile
             .ForMember(dst => dst.RowsCapacity, opt =>
                            opt.MapFrom(src => SerializeRowsCapacity(src.RowsCapacity)));
 
+        CreateMap<HallUpdateDto, Hall>()
+            .ForMember(dst => dst.Capacity, opt =>
+                           opt.MapFrom(src => src.RowsCapacity.Sum()))
+            .ForMember(dst => dst.RowsCapacity, opt =>
+                           opt.MapFrom(src => SerializeRowsCapacity(src.RowsCapacity)));
     }
 }

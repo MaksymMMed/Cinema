@@ -1,7 +1,10 @@
-﻿namespace Cinema.DAL.Entities
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Cinema.DAL.Entities
 {
     public class Hall
     {
+        [Key]
         public Guid Id { get; set; }
         public int Capacity{ get; set; }
         public string RowsCapacity { get; set; }

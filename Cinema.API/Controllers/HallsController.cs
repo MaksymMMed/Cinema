@@ -49,4 +49,15 @@ public class HallsController : ControllerBase
 
         return Ok(result.Value);
     }
+    [HttpPatch]
+    [Route("{id}")]
+    public async Task<IActionResult> Update(Guid id, [FromBody] HallUpdateDto dto)
+    {
+        var result = await _hallsService.Update(id, dto);
+
+        if (!result.IsSuccess)
+            return BadRequest(result.Error);
+
+        return Ok(result.Value);
+    }
 }

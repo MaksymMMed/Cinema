@@ -23,12 +23,12 @@ public class HallsService : BusinessService<Hall, Guid>, IHallsService
         var hall = _mapper.Map<Hall>(dto);
 
         await _repository.Add(hall);
-        
+
         var mappedHall = _mapper.Map<HallReadDto>(hall);
-        return await Task.FromResult(Result<HallReadDto>.Success(mappedHall));
+        return Result<HallReadDto>.Success(mappedHall);
     }
 
-    public Task<Result<EntitiesWithTotalCount<HallReadDto>>> Get(HallsFilteringModel model)
+    public async Task<Result<EntitiesWithTotalCount<HallReadDto>>> Get(HallsFilteringModel model)
     {
         var query = _repository.GetQuery(include: q => q
             .Include(s => s.Sessions)
@@ -37,24 +37,39 @@ public class HallsService : BusinessService<Hall, Guid>, IHallsService
         var totalCount = query.Count();
         query = query.SortByField(model).Paginate(model);
 
-        var mappedHalls = query.ProjectTo<HallReadDto>(_mapper.ConfigurationProvider).ToList();
+        var mappedHalls = await query.ProjectTo<HallReadDto>(_mapper.ConfigurationProvider).ToListAsync();
 
         var result = new EntitiesWithTotalCount<HallReadDto> { Items = mappedHalls, TotalCount = totalCount };
-        return Task.FromResult(Result<EntitiesWithTotalCount<HallReadDto>>.Success(result));
+        return Result<EntitiesWithTotalCount<HallReadDto>>.Success(result);
     }
 
-    public Task<Result<HallDetailReadDto>> GetById(Guid id)
+    public async Task<Result<HallDetailReadDto>> GetById(Guid id)
     {
         // should getByIdWithInclude be used here? but it's throws an error
-        var hall = _repository.GetQuery(include: q => q
+        var hall = await _repository.GetQuery(include: q => q
                    .Include(s => s.Sessions)
                    .Include(t => t.Tickets))
-            .FirstOrDefaultAsync(h => h.Id == id).Result;
+            .FirstOrDefaultAsync(h => h.Id == id);
 
         if (hall == null)
-            return Task.FromResult(Result<HallDetailReadDto>.Fail($"Hall with id {id} not found"));
+            return Result<HallDetailReadDto>.Fail($"Hall with id {id} not found");
 
         var mappedHall = _mapper.Map<HallDetailReadDto>(hall);
-        return Task.FromResult(Result<HallDetailReadDto>.Success(mappedHall));
+        return Result<HallDetailReadDto>.Success(mappedHall);
+    }
+
+    public async Task<Result<HallReadDto>> Update(Guid id, HallUpdateDto dto)
+    {
+        var hall = await _repository.GetQuery().FirstOrDefaultAsync(h => h.Id == id);
+
+        if (hall == null)
+            return Result<HallReadDto>.Fail($"Hall with id {id} not found");
+
+        _mapper.Map(dto, hall);
+
+        var newHall = _repository.Update(hall).Result;
+
+        var mappedHall = _mapper.Map<HallReadDto>(newHall);
+        return Result<HallReadDto>.Success(mappedHall);
     }
 }
