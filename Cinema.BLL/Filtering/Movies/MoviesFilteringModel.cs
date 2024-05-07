@@ -10,7 +10,7 @@ public class MoviesFilteringModel : FilteringModel<Movie>, IFilter<Movie>
     public IQueryable<Movie> Filter(IQueryable<Movie> source)
     {
         if (!string.IsNullOrEmpty(Name))
-            source = source.Where(v => EF.Functions.Like(v.Name, "%a%"));
+            source = source.Where(v => EF.Functions.Like(v.Name, $"%{Name}%"));
             
         return source;
     }
