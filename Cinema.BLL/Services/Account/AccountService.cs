@@ -50,8 +50,8 @@ namespace Cinema.BLL.Services.Account
                 var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]!));
 
                 var token = new JwtSecurityToken(
-                    issuer: "JWT:ValidIssuer",
-                    audience: "JWT:ValidAudience",
+                    issuer: configuration["Jwt:Issuer"],
+                    audience: configuration["Jwt:Audience"],
                     expires: DateTime.Now.AddHours(3),
                     claims: authClaims,
                     signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
