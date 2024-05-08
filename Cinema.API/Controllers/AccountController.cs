@@ -70,7 +70,7 @@ namespace Cinema.API.Controllers
             var userExists = await userManager.FindByEmailAsync(model.Email);
             if (userExists != null)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new ResponseDto { Status = "Error", Message = "User already exists!" });
+                return StatusCode(StatusCodes.Status409Conflict, new ResponseDto { Status = "Error", Message = "User already exists!" });
             }
 
             AspNetUser user = new AspNetUser()
