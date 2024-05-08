@@ -47,6 +47,10 @@ namespace Cinema.API.Controllers
             }
             else
             {
+                if (result.Error == "UserAlreadyExists")
+                {
+                    return Conflict("User already exists.");
+                }
                 return StatusCode(StatusCodes.Status500InternalServerError, result.Error);
             }
         }
