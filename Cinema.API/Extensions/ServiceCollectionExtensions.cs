@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Identity;
 using Cinema.DAL.Entities;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Cinema.BLL.Services.Account;
 
 namespace Cinema.API.Extensions;
 
@@ -45,6 +46,7 @@ public static class ServiceCollectionExtensions
     public static void AddServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddTransient<IMoviesService, MoviesService>();
+        services.AddTransient<IAccountService, AccountService>();
     } 
 
     public static void AddIdentity(this IServiceCollection services)

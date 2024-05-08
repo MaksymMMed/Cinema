@@ -1,4 +1,5 @@
 ﻿using Cinema.BLL.DTOs.Account;
+using Cinema.BLL.Interfaces;
 using Cinema.DAL.Entities;
 using Cinema.DAL.Enums;
 using Microsoft.AspNetCore.Identity;
@@ -15,87 +16,39 @@ namespace Cinema.API.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
-        private readonly UserManager<AspNetUser> userManager;
-        private readonly RoleManager<IdentityRole<Guid>> roleManager;
-        private readonly IConfiguration configuration;
+        private readonly IAccountService _accountService;
 
-        public AccountController(UserManager<AspNetUser> userManager, RoleManager<IdentityRole<Guid>> roleManager, IConfiguration configuration)
+        public AccountController(IAccountService accountService)
         {
-            this.userManager = userManager;
-            this.roleManager = roleManager;
-            this.configuration = configuration;
+            _accountService = accountService;
         }
 
-        [HttpPost("SignIn")]
+        [HttpPost("sign-in")]
         public async Task<IActionResult> SignIn([FromBody] SignInDto model)
         {
-            var user = await userManager.FindByEmailAsync(model.Email);
-            if (user != null && await userManager.CheckPasswordAsync(user, model.Password))
+            var result = await _accountService.SignIn(model);
+            if (result.IsSuccess) 
             {
-                var userRoles = await userManager.GetRolesAsync(user);
-
-                var authClaims = new List<Claim>
-                {
-                    new Claim(ClaimTypes.Email, user.Email),
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                };
-
-                foreach (var userRole in userRoles)
-                {
-                    authClaims.Add(new Claim(ClaimTypes.Role, userRole));
-                }
-
-                var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]!));
-
-                var token = new JwtSecurityToken(
-                    issuer: "JWT:ValidIssuer",
-                    audience: "JWT:ValidAudience",
-                    expires: DateTime.Now.AddHours(3),
-                    claims: authClaims,
-                    signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
-                    );
-
-                return Ok(new
-                {
-                    token = new JwtSecurityTokenHandler().WriteToken(token),
-                    expiration = token.ValidTo
-                });
+                return Ok(result.Value);
             }
-            return Unauthorized();
+            else 
+            {
+                return Unauthorized(result.Error);
+            }
         }
 
-        [HttpPost("SignUpUser")]
+        [HttpPost("sign-up-user")]
         public async Task<IActionResult> SignUpUser([FromBody] SignUpDto model)
         {
-            var userExists = await userManager.FindByEmailAsync(model.Email);
-            if (userExists != null)
+            var result = await _accountService.SignUpUser(model);
+            if (result.IsSuccess) 
             {
-                return StatusCode(StatusCodes.Status409Conflict, new ResponseDto { Status = "Error", Message = "User already exists!" });
+                return Ok(result.Value);
             }
-
-            AspNetUser user = new AspNetUser()
+            else
             {
-                Email = model.Email,
-                SecurityStamp = Guid.NewGuid().ToString(),
-                UserName = model.Username
-            };
-            var result = await userManager.CreateAsync(user, model.Password);
-
-            if (!result.Succeeded)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, new ResponseDto { Status = "Error", Message = string.Join(" ", result.Errors.Select(x=> x.Description))});
+                return StatusCode(StatusCodes.Status500InternalServerError, result.Error);
             }
-
-            if (!await roleManager.RoleExistsAsync(UserRolesEnum.User.GetDisplayName()))
-            {
-                await roleManager.CreateAsync(new IdentityRole<Guid>(UserRolesEnum.User.GetDisplayName()));
-            }
-
-            if (await roleManager.RoleExistsAsync(UserRolesEnum.User.GetDisplayName()))
-            {
-                await userManager.AddToRoleAsync(user, UserRolesEnum.User.GetDisplayName());
-            }
-            return Ok(new ResponseDto { Status = "Success", Message = "User created successfully!" });
         }
     }
 }
