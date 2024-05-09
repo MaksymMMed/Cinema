@@ -26,15 +26,12 @@ namespace Cinema.API.Controllers
         [HttpPost("sign-in")]
         public async Task<IActionResult> SignIn([FromBody] SignInDto model)
         {
-            var result = await _accountService.SignIn(model);
-            if (result.IsSuccess) 
-            {
-                return Ok(result.Value);
-            }
-            else 
-            {
+            var result = await _accountService.SignIn(model); 
+
+            if (!result.IsSuccess)
                 return Unauthorized(result.Error);
-            }
+
+            return Ok(result.Value);
         }
 
         [HttpPost("sign-up-user")]
@@ -42,17 +39,12 @@ namespace Cinema.API.Controllers
         {
             var result = await _accountService.SignUpUser(model);
             if (result.IsSuccess) 
-            {
                 return Ok(result.Value);
-            }
-            else
-            {
-                if (result.Error == "UserAlreadyExists")
-                {
-                    return Conflict("User already exists.");
-                }
-                return StatusCode(StatusCodes.Status500InternalServerError, result.Error);
-            }
+
+            if (result.Error == "UserAlreadyExists")
+                return Conflict("User already exists.");
+            
+            return BadRequest(result.Error);
         }
     }
 }
