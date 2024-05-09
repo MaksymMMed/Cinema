@@ -13,6 +13,9 @@ builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddAutoMapper();
 
+builder.Services.AddIdentity();
+builder.Services.AddJwtAuthentication(builder.Configuration);
+
 builder.Services.AddRepositories();
 builder.Services.AddServices(builder.Configuration);
 
