@@ -1,14 +1,6 @@
 ﻿using Cinema.BLL.DTOs.Account;
 using Cinema.BLL.Interfaces;
-using Cinema.DAL.Entities;
-using Cinema.DAL.Enums;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Extensions;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 
 namespace Cinema.API.Controllers
 {
