@@ -19,6 +19,8 @@ builder.Services.AddJwtAuthentication(builder.Configuration);
 builder.Services.AddRepositories();
 builder.Services.AddServices(builder.Configuration);
 
+builder.Services.AddTokenInSwagger();
+
 var app = builder.Build();
 
 app.CreateRoles();

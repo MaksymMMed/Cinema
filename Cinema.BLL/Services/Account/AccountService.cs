@@ -93,11 +93,6 @@ namespace Cinema.BLL.Services.Account
                 return Result<TokenDto>.Fail(errors);
             }
 
-            if (!await roleManager.RoleExistsAsync(UserRolesEnum.User.ToString()))
-            {
-                await roleManager.CreateAsync(new IdentityRole<Guid>(UserRolesEnum.User.ToString()));
-            }
-
             if (await roleManager.RoleExistsAsync(UserRolesEnum.User.ToString()))
             {
                 await userManager.AddToRoleAsync(user, UserRolesEnum.User.ToString());
@@ -111,5 +106,42 @@ namespace Cinema.BLL.Services.Account
 
             return await SignIn(signInDto);
         }
+
+        public async Task<Result<TokenDto>> SignUpAdmin(SignUpDto model)
+        {
+            var userExists = await userManager.FindByEmailAsync(model.Email);
+            if (userExists != null)
+            {
+                return Result<TokenDto>.Fail("UserAlreadyExists");
+            }
+
+            AspNetUser user = new AspNetUser()
+            {
+                Email = model.Email,
+                SecurityStamp = Guid.NewGuid().ToString(),
+                UserName = model.Username
+            };
+            var result = await userManager.CreateAsync(user, model.Password);
+
+            if (!result.Succeeded)
+            {
+                string errors = string.Join(" ", result.Errors.Select(x => x.Description));
+                return Result<TokenDto>.Fail(errors);
+            }
+
+            if (await roleManager.RoleExistsAsync(UserRolesEnum.Admin.ToString()))
+            {
+                await userManager.AddToRoleAsync(user, UserRolesEnum.Admin.ToString());
+            }
+
+            SignInDto signInDto = new SignInDto()
+            {
+                Email = model.Email,
+                Password = model.Password
+            };
+
+            return await SignIn(signInDto);
+        }
+
     }
 }

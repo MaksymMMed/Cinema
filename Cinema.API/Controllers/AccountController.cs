@@ -1,5 +1,6 @@
 ﻿using Cinema.BLL.DTOs.Account;
 using Cinema.BLL.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Cinema.API.Controllers
@@ -36,6 +37,20 @@ namespace Cinema.API.Controllers
             if (result.Error == "UserAlreadyExists")
                 return Conflict("User already exists.");
             
+            return BadRequest(result.Error);
+        }
+
+        [Authorize(Roles ="SuperAdmin")]
+        [HttpPost("sign-up-admin")]
+        public async Task<IActionResult> SignUpAdmin([FromBody] SignUpDto model)
+        {
+            var result = await _accountService.SignUpAdmin(model);
+            if (result.IsSuccess)
+                return Ok(result.Value);
+
+            if (result.Error == "UserAlreadyExists")
+                return Conflict("User already exists.");
+
             return BadRequest(result.Error);
         }
     }
