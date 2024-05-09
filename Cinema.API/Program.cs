@@ -21,7 +21,8 @@ builder.Services.AddServices(builder.Configuration);
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+app.CreateRoles();
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

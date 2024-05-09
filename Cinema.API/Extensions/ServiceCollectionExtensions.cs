@@ -24,15 +24,49 @@ public static class ServiceCollectionExtensions
     public static void AddDbContext(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddDbContext<AppDbContext>(
-            optionsAction: (serviceProvider, options) => 
+            optionsAction: (serviceProvider, options) =>
                 options.UseSqlServer(configuration.GetConnectionString("MainBase")),
             contextLifetime: ServiceLifetime.Transient,
             optionsLifetime: ServiceLifetime.Scoped);
     }
 
+    public static async void CreateRoles(this WebApplication application)
+    {
+        var serviceProvider = application.Services.CreateScope().ServiceProvider;
+        var RoleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
+        var UserManager = serviceProvider.GetRequiredService<UserManager<AspNetUser>>();
+        string[] roleNames = { "Admin", "SuperAdmin", "User" };
+        IdentityResult roleResult;
+
+        foreach (var roleName in roleNames)
+        {
+            var roleExist = await RoleManager.RoleExistsAsync(roleName);
+            if (!roleExist)
+            {
+                roleResult = await RoleManager.CreateAsync(new IdentityRole<Guid>(roleName));
+            }
+        }
+        
+        var powerUser = new AspNetUser
+        {
+            UserName = application.Configuration["AppSuperAdmin:Name"],
+            Email = application.Configuration["AppSuperAdmin:Email"],
+        };
+        string userPWD = application.Configuration["AppSuperAdmin:Password"]!;
+        var _user = await UserManager.FindByEmailAsync(application.Configuration["AppSuperAdmin:Email"]!);
+
+        if (_user == null)
+        {
+            var createPowerUser = await UserManager.CreateAsync(powerUser, userPWD);
+            if (createPowerUser.Succeeded)
+            {
+                await UserManager.AddToRoleAsync(powerUser, "SuperAdmin");
+            }
+        }
+    }
+
     public static void AddAutoMapper(this IServiceCollection services)
     {
-        // services.AddAutoMapper(typeof(MoviesProfile));
         var mapperConfig = new MapperConfiguration(mc =>
         {
             mc.AddProfile(new MoviesProfile());
@@ -54,7 +88,7 @@ public static class ServiceCollectionExtensions
         services.AddTransient<IMoviesService, MoviesService>();
         services.AddTransient<IAccountService, AccountService>();
         services.AddTransient<IHallsService, HallsService>();
-    } 
+    }
 
     public static void AddIdentity(this IServiceCollection services)
     {
