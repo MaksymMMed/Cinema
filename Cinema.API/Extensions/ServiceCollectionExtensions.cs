@@ -48,20 +48,20 @@ public static class ServiceCollectionExtensions
             }
         }
         
-        var powerUser = new AspNetUser
+        var superAdmin = new AspNetUser
         {
             UserName = application.Configuration["AppSuperAdmin:Name"],
             Email = application.Configuration["AppSuperAdmin:Email"],
         };
-        string userPWD = application.Configuration["AppSuperAdmin:Password"]!;
+        string superAdminPassword = application.Configuration["AppSuperAdmin:Password"]!;
         var _user = await UserManager.FindByEmailAsync(application.Configuration["AppSuperAdmin:Email"]!);
 
         if (_user == null)
         {
-            var createPowerUser = await UserManager.CreateAsync(powerUser, userPWD);
-            if (createPowerUser.Succeeded)
+            var createSuperAdmin = await UserManager.CreateAsync(superAdmin, superAdminPassword);
+            if (createSuperAdmin.Succeeded)
             {
-                await UserManager.AddToRoleAsync(powerUser, "SuperAdmin");
+                await UserManager.AddToRoleAsync(superAdmin, "SuperAdmin");
             }
         }
     }
