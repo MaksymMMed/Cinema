@@ -16,6 +16,7 @@ using Cinema.DAL.Entities;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Cinema.BLL.Services.Account;
+using Microsoft.OpenApi.Models;
 
 namespace Cinema.API.Extensions;
 
@@ -24,15 +25,82 @@ public static class ServiceCollectionExtensions
     public static void AddDbContext(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddDbContext<AppDbContext>(
-            optionsAction: (serviceProvider, options) => 
+            optionsAction: (serviceProvider, options) =>
                 options.UseSqlServer(configuration.GetConnectionString("MainBase")),
             contextLifetime: ServiceLifetime.Transient,
             optionsLifetime: ServiceLifetime.Scoped);
     }
 
+    public static async void CreateRoles(this WebApplication application)
+    {
+        var serviceProvider = application.Services.CreateScope().ServiceProvider;
+        var RoleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
+        var UserManager = serviceProvider.GetRequiredService<UserManager<AspNetUser>>();
+        string[] roleNames = { "Admin", "SuperAdmin", "User" };
+        IdentityResult roleResult;
+
+        foreach (var roleName in roleNames)
+        {
+            var roleExist = await RoleManager.RoleExistsAsync(roleName);
+            if (!roleExist)
+            {
+                roleResult = await RoleManager.CreateAsync(new IdentityRole<Guid>(roleName));
+            }
+        }
+        
+        var superAdmin = new AspNetUser
+        {
+            UserName = application.Configuration["AppSuperAdmin:Name"],
+            Email = application.Configuration["AppSuperAdmin:Email"],
+        };
+        string superAdminPassword = application.Configuration["AppSuperAdmin:Password"]!;
+        var _user = await UserManager.FindByEmailAsync(application.Configuration["AppSuperAdmin:Email"]!);
+
+        if (_user == null)
+        {
+            var createSuperAdmin = await UserManager.CreateAsync(superAdmin, superAdminPassword);
+            if (createSuperAdmin.Succeeded)
+            {
+                await UserManager.AddToRoleAsync(superAdmin, "SuperAdmin");
+            }
+        }
+    }
+
+    public static void AddTokenInSwagger(this IServiceCollection services)
+    {
+
+        services.AddSwaggerGen(setup =>
+        {
+            var jwtSecurityScheme = new OpenApiSecurityScheme
+            {
+                BearerFormat = "JWT",
+                Name = "JWT Authentication",
+                In = ParameterLocation.Header,
+                Type = SecuritySchemeType.Http,
+                Scheme = JwtBearerDefaults.AuthenticationScheme,
+                Description = "Put **_ONLY_** your JWT Bearer token on textbox below!",
+
+                Reference = new OpenApiReference
+                {
+                    Id = JwtBearerDefaults.AuthenticationScheme,
+                    Type = ReferenceType.SecurityScheme
+                }
+            };
+
+            setup.AddSecurityDefinition(jwtSecurityScheme.Reference.Id, jwtSecurityScheme);
+
+            setup.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    jwtSecurityScheme, Array.Empty<string>() 
+                }
+            });
+
+        });
+    }
+
     public static void AddAutoMapper(this IServiceCollection services)
     {
-        // services.AddAutoMapper(typeof(MoviesProfile));
         var mapperConfig = new MapperConfiguration(mc =>
         {
             mc.AddProfile(new MoviesProfile());
@@ -54,7 +122,7 @@ public static class ServiceCollectionExtensions
         services.AddTransient<IMoviesService, MoviesService>();
         services.AddTransient<IAccountService, AccountService>();
         services.AddTransient<IHallsService, HallsService>();
-    } 
+    }
 
     public static void AddIdentity(this IServiceCollection services)
     {

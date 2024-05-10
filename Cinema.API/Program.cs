@@ -19,9 +19,12 @@ builder.Services.AddJwtAuthentication(builder.Configuration);
 builder.Services.AddRepositories();
 builder.Services.AddServices(builder.Configuration);
 
+builder.Services.AddTokenInSwagger();
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+app.CreateRoles();
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
