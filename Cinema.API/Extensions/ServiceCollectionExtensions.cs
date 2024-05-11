@@ -17,6 +17,10 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Cinema.BLL.Services.Account;
 using Microsoft.OpenApi.Models;
+using Cinema.BLL.MapperProfiles.Directors;
+using Cinema.DAL.Interfaces.Directors;
+using Cinema.DAL.Repositories.Directors;
+using Cinema.BLL.Services.Directors;
 
 namespace Cinema.API.Extensions;
 
@@ -105,6 +109,7 @@ public static class ServiceCollectionExtensions
         {
             mc.AddProfile(new MoviesProfile());
             mc.AddProfile(new HallsProfile());
+            mc.AddProfile(new DirectorsProfile());
         });
 
         var mapper = mapperConfig.CreateMapper();
@@ -115,6 +120,7 @@ public static class ServiceCollectionExtensions
     {
         services.AddScoped<IMoviesRepository, MoviesRepository>();
         services.AddScoped<IHallsRepository, HallsRepository>();
+        services.AddScoped<IDirectorsRepository, DirectorsRepository>();
     }
 
     public static void AddServices(this IServiceCollection services, IConfiguration configuration)
@@ -122,6 +128,7 @@ public static class ServiceCollectionExtensions
         services.AddTransient<IMoviesService, MoviesService>();
         services.AddTransient<IAccountService, AccountService>();
         services.AddTransient<IHallsService, HallsService>();
+        services.AddTransient<IDirectorsService, DirectorsService>();
     }
 
     public static void AddIdentity(this IServiceCollection services)
