@@ -188,7 +188,7 @@ public class MoviesService : BaseBusinessService, IMoviesService
     {
         var movie = await _moviesRepository.GetById(id);
         if(movie == null)
-            return Result<bool>.Fail($"Movie with id {id} does not exist.")!;
+            return Result<bool>.Fail($"Movie with id {id} does not exist.");
             
         await _moviesRepository.Delete(movie);
         return Result<bool>.Success(true);

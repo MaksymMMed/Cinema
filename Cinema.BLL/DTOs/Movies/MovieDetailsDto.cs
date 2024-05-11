@@ -1,4 +1,5 @@
 using Cinema.BLL.DTOs.Actors;
+using Cinema.BLL.DTOs.Genres;
 
 namespace Cinema.BLL.DTOs.Movies;
 
@@ -15,7 +16,7 @@ public class MovieDetailsDto
     public string AgeRestriction { get; set; }
     public int Duration { get; set; }
     public DateTime ReleaseDate { get; set; }
-    public IEnumerable<string> Genres { get; set; }
+    public IEnumerable<GenreReadDto> Genres { get; set; }
     public IEnumerable<ActorReadDto> Actors { get; set; }
     public double AvgMark { get; set; }
 }

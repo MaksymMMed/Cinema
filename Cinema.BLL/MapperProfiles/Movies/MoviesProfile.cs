@@ -47,7 +47,7 @@ public class MoviesProfile : Profile
             .ForMember(dst => dst.ImagesUrls, opt => 
                 opt.MapFrom(src => DeserializeImageSet(src.ImageSet)))
             .ForMember(dst => dst.Genres, opt => 
-                opt.MapFrom(src => src.MovieGenres.Select(mg => mg.Genre.Name)))
+                opt.MapFrom(src => src.MovieGenres.Select(mg => mg.Genre)))
             .ForMember(dst => dst.Actors, opt => 
                 opt.MapFrom(src => src.MovieActors.Select(mg => mg.Actor)))
             .ForMember(dst => dst.AvgMark, opt =>

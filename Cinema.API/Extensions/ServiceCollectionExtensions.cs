@@ -16,6 +16,7 @@ using Cinema.DAL.Entities;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Cinema.BLL.MapperProfiles.Actors;
+using Cinema.BLL.MapperProfiles.Genres;
 using Cinema.BLL.Services.Account;
 using Microsoft.OpenApi.Models;
 
@@ -106,6 +107,7 @@ public static class ServiceCollectionExtensions
         {
             mc.AddProfile(new MoviesProfile());
             mc.AddProfile(new HallsProfile());
+            mc.AddProfile(new GenresProfile());
             mc.AddProfile(new ActorsProfile());
         });
 
