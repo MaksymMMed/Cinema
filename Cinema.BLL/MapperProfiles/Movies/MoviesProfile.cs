@@ -24,8 +24,11 @@ public class MoviesProfile : Profile
             .ForMember(dst => dst.Genres, opt =>
                 opt.MapFrom(src => src.MovieGenres.Select(mg => mg.Genre.Name)))
             .ForMember(dst => dst.AvgMark, opt =>
-                opt.MapFrom(src => src.MovieReviews.Average(mr => mr.Rank)))
+                opt.MapFrom(src => src.MovieReviews.Count != 0 
+                    ? src.MovieReviews.Average(mr => mr.Rank) : 0))
             .ForMember(dst => dst.FiveClosestSessions, opt =>
                 opt.MapFrom(src => GetClosestSessions(src.Sessions)));
+
+        CreateMap<MovieCreateDto, Movie>();
     }
 }

@@ -1,7 +1,10 @@
-﻿namespace Cinema.DAL.Entities
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Cinema.DAL.Entities
 {
     public class Movie
     {
+        [Key]
         public Guid Id { get; set; }
         public Guid DirectorId { get; set; }
         public string Name { get; set; }
@@ -13,9 +16,9 @@
         public DateTime ReleaseDate { get; set; }
         public Director Director { get; set; }
         public MovieImageSet ImageSet { get; set; }
-        public virtual ICollection<Session> Sessions { get; set; }
-        public virtual ICollection<MovieGenre> MovieGenres { get; set; }
-        public virtual ICollection<ActorMovie> MovieActors { get; set; }
-        public virtual ICollection<Review> MovieReviews { get; set; }
+        public virtual ICollection<Session> Sessions { get; set; } = new List<Session>();
+        public virtual ICollection<MovieGenre> MovieGenres { get; set; } = new List<MovieGenre>();
+        public virtual ICollection<ActorMovie> MovieActors { get; set; } = new List<ActorMovie>();
+        public virtual ICollection<Review> MovieReviews { get; set; } = new List<Review>();
     }
 }

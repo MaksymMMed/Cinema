@@ -7,4 +7,6 @@ namespace Cinema.BLL.Interfaces;
 public interface IMoviesService
 {
     Task<Result<EntitiesWithTotalCount<MovieReadDto>>> Get(MoviesFilteringModel model);
+
+    Task<Result<MovieReadDto>> Create(MovieCreateDto model);
 }

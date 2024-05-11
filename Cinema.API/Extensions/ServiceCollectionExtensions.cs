@@ -114,6 +114,9 @@ public static class ServiceCollectionExtensions
     public static void AddRepositories(this IServiceCollection services)
     {
         services.AddScoped<IMoviesRepository, MoviesRepository>();
+        services.AddScoped<IMoviesActorsRepository, MoviesActorsRepository>();
+        services.AddScoped<IMoviesGenresRepository, MoviesGenresRepository>();
+        services.AddScoped<IDirectorsRepository, DirectorsRepository>();
         services.AddScoped<IHallsRepository, HallsRepository>();
     }
 
