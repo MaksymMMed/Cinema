@@ -115,4 +115,15 @@ public class MoviesController : ControllerBase
 
         return Ok(result.Value);
     }
+    
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(Guid id)
+    {
+        var result = await _moviesService.Delete(id);
+
+        if (!result.IsSuccess)
+            return BadRequest(result.Error);
+
+        return Ok(result.Value);
+    }
 }

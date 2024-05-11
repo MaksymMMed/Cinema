@@ -23,4 +23,6 @@ public interface IMoviesService
     Task<Result<bool>> AddActorToMovie(MovieActorDto model);
 
     Task<Result<bool>> RemoveActorFromMovie(MovieActorDto model);
+
+    Task<Result<bool>> Delete(Guid id);
 }

@@ -120,7 +120,7 @@ public class MoviesService : BaseBusinessService, IMoviesService
             .FirstOrDefaultAsync(m => m.Id == model.Id);
 
         if (movie == null)
-            return Result<MovieReadDto>.Fail($"Movie with id {model} not found")!;
+            return Result<MovieReadDto>.Fail($"Movie with id {model.Id} not found")!;
 
         var mappedModel = _mapper.Map<Movie>(model);
         await _moviesRepository.Update(mappedModel);
@@ -181,6 +181,16 @@ public class MoviesService : BaseBusinessService, IMoviesService
     {
         var actorMovie = _mapper.Map<ActorMovie>(model);
         await _moviesActorsRepository.Delete(actorMovie);
+        return Result<bool>.Success(true);
+    }
+
+    public async Task<Result<bool>> Delete(Guid id)
+    {
+        var movie = await _moviesRepository.GetById(id);
+        if(movie == null)
+            return Result<bool>.Fail($"Movie with id {id} does not exist.")!;
+            
+        await _moviesRepository.Delete(movie);
         return Result<bool>.Success(true);
     }
 }
