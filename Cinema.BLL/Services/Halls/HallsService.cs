@@ -13,8 +13,11 @@ using Microsoft.EntityFrameworkCore;
 namespace Cinema.BLL.Services.Halls;
 public class HallsService : BusinessService<Hall, Guid>, IHallsService
 {
-    public HallsService(IHttpContextAccessor httpContextAccessor, IHallsRepository repository, IMapper mapper
-        ) : base(httpContextAccessor, repository, mapper)
+    public HallsService(
+        IHttpContextAccessor httpContextAccessor, 
+        IHallsRepository repository, 
+        IMapper mapper
+    ) : base(httpContextAccessor, repository, mapper)
     {
     }
 
@@ -33,7 +36,7 @@ public class HallsService : BusinessService<Hall, Guid>, IHallsService
         var hall = await _repository.GetById(id);
 
         if (hall == null)
-            return Result<HallDetailReadDto>.Fail($"Hall with id {id} not found");
+            return Result<HallDetailReadDto>.Fail($"Hall with id {id} not found")!;
 
         await _repository.Delete(hall);
 
@@ -58,12 +61,10 @@ public class HallsService : BusinessService<Hall, Guid>, IHallsService
 
     public async Task<Result<HallDetailReadDto>> GetById(Guid id)
     {
-        var hall = await _repository.GetByIdWithInclude(id, include: q => q
-                   .Include(s => s.Sessions)
-                   .Include(t => t.Tickets));
+        var hall = await _repository.GetById(id);
 
         if (hall == null)
-            return Result<HallDetailReadDto>.Fail($"Hall with id {id} not found");
+            return Result<HallDetailReadDto>.Fail($"Hall with id {id} not found")!;
 
         var mappedHall = _mapper.Map<HallDetailReadDto>(hall);
         return Result<HallDetailReadDto>.Success(mappedHall);
@@ -74,7 +75,7 @@ public class HallsService : BusinessService<Hall, Guid>, IHallsService
         var hall = await _repository.GetById(dto.Id);
 
         if (hall == null)
-            return Result<HallDetailReadDto>.Fail($"Hall with id {dto.Id} not found");
+            return Result<HallDetailReadDto>.Fail($"Hall with id {dto.Id} not found")!;
 
         _mapper.Map(dto, hall);
 
