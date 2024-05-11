@@ -55,6 +55,25 @@ public class MoviesService : BaseBusinessService, IMoviesService
         return Result<EntitiesWithTotalCount<MovieReadDto>>.Success(result);
     }
     
+    public async Task<Result<MovieDetailsDto>> GetById(Guid id)
+    {
+        var movie = await _moviesRepository
+            .GetQuery(include: q => q
+                .Include(m => m.MovieGenres)
+                .ThenInclude(mg => mg.Genre)
+                .Include(j => j.MovieActors)
+                .ThenInclude(ma => ma.Actor)
+                .Include(j => j.Director)
+                .Include(j => j.MovieReviews)
+                .Include(j => j.ImageSet))
+            .ProjectTo<MovieDetailsDto>(_mapper.ConfigurationProvider)
+            .FirstOrDefaultAsync(m => m.Id == id);
+        
+        return movie == null 
+            ? Result<MovieDetailsDto>.Fail($"Movie with id {id} not found")! 
+            : Result<MovieDetailsDto>.Success(movie);
+    }
+    
     public async Task<Result<MovieReadDto>> Create(MovieCreateDto model)
     {
         // In the future this check can be moved to the FluentValidation

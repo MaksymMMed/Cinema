@@ -28,6 +28,17 @@ public class MoviesController : ControllerBase
         return Ok(result.Value);
     }
     
+    [HttpGet("{id}")]
+    public async Task<IActionResult> Get(Guid id)
+    {
+        var result = await _moviesService.GetById(id);
+
+        if (!result.IsSuccess)
+            return BadRequest(result.Error);
+
+        return Ok(result.Value);
+    }
+    
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] MovieCreateDto model)
     {

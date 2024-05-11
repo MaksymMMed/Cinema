@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Identity;
 using Cinema.DAL.Entities;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Cinema.BLL.MapperProfiles.Actors;
 using Cinema.BLL.Services.Account;
 using Microsoft.OpenApi.Models;
 
@@ -105,6 +106,7 @@ public static class ServiceCollectionExtensions
         {
             mc.AddProfile(new MoviesProfile());
             mc.AddProfile(new HallsProfile());
+            mc.AddProfile(new ActorsProfile());
         });
 
         var mapper = mapperConfig.CreateMapper();
