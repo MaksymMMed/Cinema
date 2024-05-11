@@ -26,6 +26,8 @@ public class MoviesProfile : Profile
             ? JsonConvert.DeserializeObject<List<string>>(imageSet.ImagesUrl)
             : new List<string>())!;
     }
+    
+    private static string SerializeImageSet(IEnumerable<string> imagesUrls) => JsonConvert.SerializeObject(imagesUrls);
         
     public MoviesProfile()
     {
@@ -52,5 +54,15 @@ public class MoviesProfile : Profile
                 opt.MapFrom(src => CalculateAvgMark(src.MovieReviews)));
         
         CreateMap<MovieCreateDto, Movie>();
+        
+        CreateMap<MovieUpdateDto, Movie>();
+
+        CreateMap<UpdateMovieImageSetDto, MovieImageSet>()
+            .ForMember(dst => dst.ImagesUrl, opt => 
+                opt.MapFrom(src => SerializeImageSet(src.ImagesUrls)));
+
+        CreateMap<MovieGenreDto, MovieGenre>();
+        
+        CreateMap<MovieActorDto, ActorMovie>();
     }
 }

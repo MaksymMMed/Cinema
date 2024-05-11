@@ -49,4 +49,70 @@ public class MoviesController : ControllerBase
 
         return Ok(result.Value);
     }
+    
+    [HttpPut]
+    public async Task<IActionResult> Update([FromBody] MovieUpdateDto model)
+    {
+        var result = await _moviesService.Update(model);
+
+        if (!result.IsSuccess)
+            return BadRequest(result.Error);
+
+        return Ok(result.Value);
+    }
+    
+    [HttpPatch("update-image-set")]
+    public async Task<IActionResult> UpdateMovieImageSet(UpdateMovieImageSetDto model)
+    {
+        var result = await _moviesService.UpdateMovieImageSet(model);
+
+        if (!result.IsSuccess)
+            return BadRequest(result.Error);
+
+        return Ok(result.Value);
+    }
+    
+    [HttpPatch("add-genre")]
+    public async Task<IActionResult> AddGenreToMovie(MovieGenreDto model)
+    {
+        var result = await _moviesService.AddGenreToMovie(model);
+
+        if (!result.IsSuccess)
+            return BadRequest(result.Error);
+
+        return Ok(result.Value);
+    }
+    
+    [HttpPatch("remove-genre")]
+    public async Task<IActionResult> RemoveGenreFromMovie(MovieGenreDto model)
+    {
+        var result = await _moviesService.RemoveGenreFromMovie(model);
+
+        if (!result.IsSuccess)
+            return BadRequest(result.Error);
+
+        return Ok(result.Value);
+    }
+    
+    [HttpPatch("add-actor")]
+    public async Task<IActionResult> AddActorToMovie(MovieActorDto model)
+    {
+        var result = await _moviesService.AddActorToMovie(model);
+
+        if (!result.IsSuccess)
+            return BadRequest(result.Error);
+
+        return Ok(result.Value);
+    }
+    
+    [HttpPatch("remove-actor")]
+    public async Task<IActionResult> RemoveActorFromMovie(MovieActorDto model)
+    {
+        var result = await _moviesService.RemoveActorFromMovie(model);
+
+        if (!result.IsSuccess)
+            return BadRequest(result.Error);
+
+        return Ok(result.Value);
+    }
 }

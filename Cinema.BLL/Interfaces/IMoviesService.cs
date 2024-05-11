@@ -11,4 +11,16 @@ public interface IMoviesService
     Task<Result<MovieDetailsDto>> GetById(Guid id);
 
     Task<Result<MovieReadDto>> Create(MovieCreateDto model);
+
+    Task<Result<MovieReadDto>> Update(MovieUpdateDto model);
+
+    Task<Result<bool>> UpdateMovieImageSet(UpdateMovieImageSetDto model);
+
+    Task<Result<bool>> AddGenreToMovie(MovieGenreDto model);
+
+    Task<Result<bool>> RemoveGenreFromMovie(MovieGenreDto model);
+
+    Task<Result<bool>> AddActorToMovie(MovieActorDto model);
+
+    Task<Result<bool>> RemoveActorFromMovie(MovieActorDto model);
 }

@@ -19,6 +19,7 @@ public class MoviesService : BaseBusinessService, IMoviesService
     private readonly IMoviesRepository _moviesRepository;
     private readonly IMoviesGenresRepository _moviesGenresRepository;
     private readonly IMoviesActorsRepository _moviesActorsRepository;
+    private readonly IDirectorsRepository _directorsRepository;
     private readonly IMapper _mapper;
 
     public MoviesService(
@@ -26,12 +27,14 @@ public class MoviesService : BaseBusinessService, IMoviesService
         IMoviesRepository moviesRepository,
         IMoviesGenresRepository moviesGenresRepository,
         IMoviesActorsRepository moviesActorsRepository,
+        IDirectorsRepository directorsRepository,
         IMapper mapper
     ) : base(httpContextAccessor)
     {
         _moviesRepository = moviesRepository;
         _moviesGenresRepository = moviesGenresRepository;
         _moviesActorsRepository = moviesActorsRepository;
+        _directorsRepository = directorsRepository;
         _mapper = mapper;
     }
 
@@ -102,5 +105,82 @@ public class MoviesService : BaseBusinessService, IMoviesService
         
         var result = _mapper.Map<MovieReadDto>(movie);
         return Result<MovieReadDto>.Success(result);
+    }
+
+    public async Task<Result<MovieReadDto>> Update(MovieUpdateDto model)
+    {
+        var movie = await _moviesRepository
+            .GetQuery(include: q => q
+                .Include(m => m.MovieGenres)
+                .ThenInclude(mg => mg.Genre)
+                .Include(j => j.Director)
+                .Include(j => j.MovieReviews)
+                .Include(j => j.Sessions))
+            .ProjectTo<MovieReadDto>(_mapper.ConfigurationProvider)
+            .FirstOrDefaultAsync(m => m.Id == model.Id);
+
+        if (movie == null)
+            return Result<MovieReadDto>.Fail($"Movie with id {model} not found")!;
+
+        var mappedModel = _mapper.Map<Movie>(model);
+        await _moviesRepository.Update(mappedModel);
+        
+        var result = _mapper.Map<MovieReadDto>(mappedModel);
+        result.AvgMark = movie.AvgMark;
+        result.Genres = movie.Genres;
+        result.FiveClosestSessions = movie.FiveClosestSessions;
+        
+        if (result.DirectorId != movie.DirectorId)
+        {
+            var director = await _directorsRepository.GetById(result.DirectorId);
+            result.DirectorName = director!.Name;
+        }
+        else
+            result.DirectorName = movie.Name;
+
+        return Result<MovieReadDto>.Success(result);
+    }
+    
+    public async Task<Result<bool>> UpdateMovieImageSet(UpdateMovieImageSetDto model)
+    {
+        var movieImageSet = _mapper.Map<MovieImageSet>(model);
+        await _moviesRepository.UpdateImageSet(movieImageSet);
+        return Result<bool>.Success(true);
+    }
+
+    public async Task<Result<bool>> AddGenreToMovie(MovieGenreDto model)
+    {
+        var movieGenreExists = await _moviesGenresRepository.AnyByMovieIdAndGenreId(model.MovieId, model.GenreId);
+        if (movieGenreExists)
+            return Result<bool>.Fail("Movie already has this genre.");
+        
+        var movieGenre = _mapper.Map<MovieGenre>(model);
+        await _moviesGenresRepository.Add(movieGenre);
+        return Result<bool>.Success(true);
+    }
+    
+    public async Task<Result<bool>> RemoveGenreFromMovie(MovieGenreDto model)
+    {
+        var movieGenre = _mapper.Map<MovieGenre>(model);
+        await _moviesGenresRepository.Delete(movieGenre);
+        return Result<bool>.Success(true);
+    }
+    
+    public async Task<Result<bool>> AddActorToMovie(MovieActorDto model)
+    {
+        var movieGenreExists = await _moviesActorsRepository.AnyByMovieIdAndActorId(model.MovieId, model.ActorId);
+        if (movieGenreExists)
+            return Result<bool>.Fail("Movie already has this actor.");
+        
+        var actorMovie = _mapper.Map<ActorMovie>(model);
+        await _moviesActorsRepository.Add(actorMovie);
+        return Result<bool>.Success(true);
+    }
+    
+    public async Task<Result<bool>> RemoveActorFromMovie(MovieActorDto model)
+    {
+        var actorMovie = _mapper.Map<ActorMovie>(model);
+        await _moviesActorsRepository.Delete(actorMovie);
+        return Result<bool>.Success(true);
     }
 }
