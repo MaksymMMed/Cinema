@@ -19,6 +19,10 @@ using Cinema.BLL.MapperProfiles.Actors;
 using Cinema.BLL.MapperProfiles.Genres;
 using Cinema.BLL.Services.Account;
 using Microsoft.OpenApi.Models;
+using Cinema.BLL.Services.Actors;
+using Cinema.DAL.Interfaces.Actors;
+using Cinema.DAL.Repositories.Actors;
+using Cinema.BLL.MapperProfiles.Actors;
 using Cinema.DAL.Interfaces.Genres;
 using Cinema.DAL.Repositories.Genres;
 using Cinema.BLL.Services.Genres;
@@ -126,6 +130,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IMoviesGenresRepository, MoviesGenresRepository>();
         services.AddScoped<IDirectorsRepository, DirectorsRepository>();
         services.AddScoped<IHallsRepository, HallsRepository>();
+        services.AddScoped<IActorsRepository, ActorsRepository>();
         services.AddScoped<IGenresRepository, GenresRepository>();
     }
 
@@ -134,6 +139,7 @@ public static class ServiceCollectionExtensions
         services.AddTransient<IMoviesService, MoviesService>();
         services.AddTransient<IAccountService, AccountService>();
         services.AddTransient<IHallsService, HallsService>();
+        services.AddTransient<IActorsService, ActorsService>();
         services.AddTransient<IGenresService, GenresService>();
     }
 
