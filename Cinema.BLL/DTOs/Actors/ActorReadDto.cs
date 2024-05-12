@@ -1,7 +1,6 @@
+namespace Cinema.BLL.DTOs.Actors;
 
-namespace Cinema.BLL.DTOs.Genres;
-
-public class GenreReadDto
+public class ActorReadDto
 {
     public Guid Id { get; set; }
     public string Name { get; set; }
