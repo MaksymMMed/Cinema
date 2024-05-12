@@ -60,8 +60,7 @@ namespace Cinema.BLL.Services.Actors
 
         public async Task<Result<ActorReadDto>> GetById(Guid id)
         {
-            var actor = await _repository.GetByIdWithInclude(id, include: q => q
-                       .Include(x => x.ActorMovies));
+            var actor = await _repository.GetById(id);
 
             if (actor == null)
                 return Result<ActorReadDto>.Fail($"Actor with id {id} not found");
