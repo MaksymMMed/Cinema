@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Cinema.BLL.Interfaces;
 using Cinema.BLL.MapperProfiles.Halls;
 using Cinema.BLL.MapperProfiles.Movies;
@@ -15,12 +15,22 @@ using Microsoft.AspNetCore.Identity;
 using Cinema.DAL.Entities;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Cinema.BLL.MapperProfiles.Actors;
+using Cinema.BLL.MapperProfiles.Genres;
 using Cinema.BLL.Services.Account;
 using Microsoft.OpenApi.Models;
 using Cinema.BLL.MapperProfiles.Directors;
 using Cinema.DAL.Interfaces.Directors;
 using Cinema.DAL.Repositories.Directors;
 using Cinema.BLL.Services.Directors;
+using Cinema.BLL.Services.Actors;
+using Cinema.DAL.Interfaces.Actors;
+using Cinema.DAL.Repositories.Actors;
+using Cinema.BLL.MapperProfiles.Actors;
+using Cinema.DAL.Interfaces.Genres;
+using Cinema.DAL.Repositories.Genres;
+using Cinema.BLL.Services.Genres;
+using Cinema.BLL.MapperProfiles.Genres;
 
 namespace Cinema.API.Extensions;
 
@@ -110,6 +120,8 @@ public static class ServiceCollectionExtensions
             mc.AddProfile(new MoviesProfile());
             mc.AddProfile(new HallsProfile());
             mc.AddProfile(new DirectorsProfile());
+            mc.AddProfile(new GenresProfile());
+            mc.AddProfile(new ActorsProfile());
         });
 
         var mapper = mapperConfig.CreateMapper();
@@ -119,8 +131,13 @@ public static class ServiceCollectionExtensions
     public static void AddRepositories(this IServiceCollection services)
     {
         services.AddScoped<IMoviesRepository, MoviesRepository>();
+        services.AddScoped<IMoviesActorsRepository, MoviesActorsRepository>();
+        services.AddScoped<IMoviesGenresRepository, MoviesGenresRepository>();
+        services.AddScoped<IDirectorsRepository, DirectorsRepository>();
         services.AddScoped<IHallsRepository, HallsRepository>();
         services.AddScoped<IDirectorsRepository, DirectorsRepository>();
+        services.AddScoped<IActorsRepository, ActorsRepository>();
+        services.AddScoped<IGenresRepository, GenresRepository>();
     }
 
     public static void AddServices(this IServiceCollection services, IConfiguration configuration)
@@ -129,6 +146,8 @@ public static class ServiceCollectionExtensions
         services.AddTransient<IAccountService, AccountService>();
         services.AddTransient<IHallsService, HallsService>();
         services.AddTransient<IDirectorsService, DirectorsService>();
+        services.AddTransient<IActorsService, ActorsService>();
+        services.AddTransient<IGenresService, GenresService>();
     }
 
     public static void AddIdentity(this IServiceCollection services)
