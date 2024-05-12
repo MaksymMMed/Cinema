@@ -8,10 +8,7 @@ namespace Cinema.BLL.MapperProfiles.Actors
     {
         public ActorsProfile()
         {
-            CreateMap<Actor,ActorReadDto>()
-                .ForMember(dst => dst.Movies, opt =>
-                opt.MapFrom(src => src.ActorMovies.Select(x=>x.Movie)));
-
+            CreateMap<Actor, ActorReadDto>();
             CreateMap<ActorCreateDto,Actor>();
             CreateMap<ActorUpdateDto,Actor>();
         }

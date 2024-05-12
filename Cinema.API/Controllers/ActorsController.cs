@@ -39,6 +39,7 @@ namespace Cinema.API.Controllers
 
             return Ok(result.Value);
         }
+
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] ActorCreateDto dto)
         {
@@ -49,6 +50,7 @@ namespace Cinema.API.Controllers
 
             return Ok(result.Value);
         }
+
         [HttpPut]
         public async Task<IActionResult> Update([FromBody] ActorUpdateDto dto)
         {
@@ -59,6 +61,7 @@ namespace Cinema.API.Controllers
 
             return Ok(result.Value);
         }
+
         [HttpDelete]
         [Route("{id}")]
         public async Task<IActionResult> Delete(Guid id)

@@ -14,38 +14,40 @@ namespace Cinema.BLL.Services.Actors
 {
     public class ActorsService : BusinessService<Actor, Guid>, IActorsService
     {
-        public ActorsService(IHttpContextAccessor httpContextAccessor, IActorsRepository repository, IMapper mapper
+        public ActorsService(
+            IHttpContextAccessor httpContextAccessor,
+            IActorsRepository repository,
+            IMapper mapper
             ) : base(httpContextAccessor, repository, mapper)
         {
         }
 
         public async Task<Result<ActorReadDto>> Create(ActorCreateDto dto)
         {
-            var Actor = _mapper.Map<Actor>(dto);
+            var actor = _mapper.Map<Actor>(dto);
 
-            await _repository.Add(Actor);
+            await _repository.Add(actor);
 
-            var mappedActor = _mapper.Map<ActorReadDto>(Actor);
+            var mappedActor = _mapper.Map<ActorReadDto>(actor);
             return Result<ActorReadDto>.Success(mappedActor);
         }
 
         public async Task<Result<ActorReadDto>> Delete(Guid id)
         {
-            var Actor = await _repository.GetById(id);
+            var actor = await _repository.GetById(id);
 
-            if (Actor == null)
+            if (actor == null)
                 return Result<ActorReadDto>.Fail($"Actor with id {id} not found");
 
-            await _repository.Delete(Actor);
+            await _repository.Delete(actor);
 
-            var mappedActor = _mapper.Map<ActorReadDto>(Actor);
+            var mappedActor = _mapper.Map<ActorReadDto>(actor);
             return Result<ActorReadDto>.Success(mappedActor);
         }
 
         public async Task<Result<EntitiesWithTotalCount<ActorReadDto>>> Get(ActorsFilteringModel model)
         {
-            var query = _repository.GetQuery(include: q => q
-                .Include(x => x.ActorMovies)).Filter(model);
+            var query = _repository.GetQuery().Filter(model);
 
             var totalCount = query.Count();
             query = query.SortByField(model).Paginate(model);
@@ -58,26 +60,26 @@ namespace Cinema.BLL.Services.Actors
 
         public async Task<Result<ActorReadDto>> GetById(Guid id)
         {
-            var Actor = await _repository.GetByIdWithInclude(id, include: q => q
+            var actor = await _repository.GetByIdWithInclude(id, include: q => q
                        .Include(x => x.ActorMovies));
 
-            if (Actor == null)
+            if (actor == null)
                 return Result<ActorReadDto>.Fail($"Actor with id {id} not found");
 
-            var mappedActor = _mapper.Map<ActorReadDto>(Actor);
+            var mappedActor = _mapper.Map<ActorReadDto>(actor);
             return Result<ActorReadDto>.Success(mappedActor);
         }
 
         public async Task<Result<ActorReadDto>> Update(ActorUpdateDto dto)
         {
-            var Actor = await _repository.GetById(dto.Id);
+            var actor = await _repository.GetById(dto.Id);
 
-            if (Actor == null)
+            if (actor == null)
                 return Result<ActorReadDto>.Fail($"Actor with id {dto.Id} not found");
 
-            _mapper.Map(dto, Actor);
+            _mapper.Map(dto, actor);
 
-            var newActor = _repository.Update(Actor).Result;
+            var newActor = _repository.Update(actor).Result;
 
             var mappedActor = _mapper.Map<ActorReadDto>(newActor);
             return Result<ActorReadDto>.Success(mappedActor);
