@@ -9,8 +9,6 @@ namespace Cinema.BLL.MapperProfiles.Genres
         public GenresProfile() 
         {
             CreateMap<Genre, GenreReadDto>();
-            CreateMap<Genre, GenreDetailReadDto>()
-                .ForMember(dest => dest.Movies, opt => opt.MapFrom(src => src.MoviesGenre.Select(x => x.Movie)));
             CreateMap<GenreCreateDto, Genre>();
             CreateMap<GenreUpdateDto, Genre>();
         }

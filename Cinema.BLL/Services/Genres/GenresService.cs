@@ -14,38 +14,40 @@ namespace Cinema.BLL.Services.Genres
 {
     public class GenresService:BusinessService<Genre,Guid>,IGenresService
     {
-        public GenresService(IHttpContextAccessor httpContextAccessor, IGenresRepository repository, IMapper mapper
+        public GenresService(
+            IHttpContextAccessor httpContextAccessor,
+            IGenresRepository repository,
+            IMapper mapper
         ) : base(httpContextAccessor, repository, mapper)
         {
         }
 
-        public async Task<Result<GenreDetailReadDto>> Create(GenreCreateDto dto)
+        public async Task<Result<GenreReadDto>> Create(GenreCreateDto dto)
         {
-            var Genre = _mapper.Map<Genre>(dto);
+            var genre = _mapper.Map<Genre>(dto);
 
-            await _repository.Add(Genre);
+            await _repository.Add(genre);
 
-            var mappedGenre = _mapper.Map<GenreDetailReadDto>(Genre);
-            return Result<GenreDetailReadDto>.Success(mappedGenre);
+            var mappedGenre = _mapper.Map<GenreReadDto>(genre);
+            return Result<GenreReadDto>.Success(mappedGenre);
         }
 
-        public async Task<Result<GenreDetailReadDto>> Delete(Guid id)
+        public async Task<Result<GenreReadDto>> Delete(Guid id)
         {
-            var Genre = await _repository.GetById(id);
+            var genre = await _repository.GetById(id);
 
-            if (Genre == null)
-                return Result<GenreDetailReadDto>.Fail($"Genre with id {id} not found");
+            if (genre == null)
+                return Result<GenreReadDto>.Fail($"Genre with id {id} not found");
 
-            await _repository.Delete(Genre);
+            await _repository.Delete(genre);
 
-            var mappedGenre = _mapper.Map<GenreDetailReadDto>(Genre);
-            return Result<GenreDetailReadDto>.Success(mappedGenre);
+            var mappedGenre = _mapper.Map<GenreReadDto>(genre);
+            return Result<GenreReadDto>.Success(mappedGenre);
         }
 
         public async Task<Result<EntitiesWithTotalCount<GenreReadDto>>> Get(GenresFilteringModel model)
         {
-            var query = _repository.GetQuery(include: q => q
-                .Include(x => x.MoviesGenre)).Filter(model);
+            var query = _repository.GetQuery().Filter(model);
 
             var totalCount = query.Count();
             query = query.SortByField(model).Paginate(model);
@@ -57,47 +59,30 @@ namespace Cinema.BLL.Services.Genres
         }
 
 
-        public async Task<Result<GenreDetailReadDto>> GetById(Guid id)
+        public async Task<Result<GenreReadDto>> GetById(Guid id)
         {
-            var Genre = await _repository.GetByIdWithInclude(id, include: q => q
-                       .Include(x => x.MoviesGenre));
+            var genre = await _repository.GetById(id);
 
-            if (Genre == null)
-                return Result<GenreDetailReadDto>.Fail($"Genre with id {id} not found");
+            if (genre == null)
+                return Result<GenreReadDto>.Fail($"Genre with id {id} not found");
 
-            var mappedGenre = _mapper.Map<GenreDetailReadDto>(Genre);
-            return Result<GenreDetailReadDto>.Success(mappedGenre);
+            var mappedGenre = _mapper.Map<GenreReadDto>(genre);
+            return Result<GenreReadDto>.Success(mappedGenre);
         }
-
-        public async Task<Result<EntitiesWithTotalCount<GenreDetailReadDto>>> GetDetailed(GenresFilteringModel model)
+       
+        public async Task<Result<GenreReadDto>> Update(GenreUpdateDto dto)
         {
-            var query = _repository.GetQuery(include: q => q
-                .Include(x => x.MoviesGenre)).Filter(model);
+            var genre = await _repository.GetById(dto.Id);
 
-            var totalCount = query.Count();
-            query = query.SortByField(model).Paginate(model);
+            if (genre == null)
+                return Result<GenreReadDto>.Fail($"Genre with id {dto.Id} not found");
 
-            var mappedGenres = await query.ProjectTo<GenreDetailReadDto>(_mapper.ConfigurationProvider).ToListAsync();
+            _mapper.Map(dto, genre);
 
-            var result = new EntitiesWithTotalCount<GenreDetailReadDto> { Items = mappedGenres, TotalCount = totalCount };
-            return Result<EntitiesWithTotalCount<GenreDetailReadDto>>.Success(result);
+            var newGenre = _repository.Update(genre).Result;
+
+            var mappedGenre = _mapper.Map<GenreReadDto>(newGenre);
+            return Result<GenreReadDto>.Success(mappedGenre);
         }
-
-        public async Task<Result<GenreDetailReadDto>> Update(GenreUpdateDto dto)
-        {
-            var Genre = await _repository.GetById(dto.Id);
-
-            if (Genre == null)
-                return Result<GenreDetailReadDto>.Fail($"Genre with id {dto.Id} not found");
-
-            _mapper.Map(dto, Genre);
-
-            var newGenre = _repository.Update(Genre).Result;
-
-            var mappedGenre = _mapper.Map<GenreDetailReadDto>(newGenre);
-            return Result<GenreDetailReadDto>.Success(mappedGenre);
-        }
-
-        
     }
 }

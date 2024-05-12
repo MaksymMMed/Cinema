@@ -6,11 +6,14 @@ namespace Cinema.BLL.Interfaces
 {
     public interface IGenresService
     {
-        Task<Result<EntitiesWithTotalCount<GenreDetailReadDto>>> GetDetailed(GenresFilteringModel model);
         Task<Result<EntitiesWithTotalCount<GenreReadDto>>> Get(GenresFilteringModel model);
-        Task<Result<GenreDetailReadDto>> GetById(Guid id);
-        Task<Result<GenreDetailReadDto>> Create(GenreCreateDto dto);
-        Task<Result<GenreDetailReadDto>> Update(GenreUpdateDto dto);
-        Task<Result<GenreDetailReadDto>> Delete(Guid id);
+
+        Task<Result<GenreReadDto>> GetById(Guid id);
+        
+        Task<Result<GenreReadDto>> Create(GenreCreateDto dto);
+        
+        Task<Result<GenreReadDto>> Update(GenreUpdateDto dto);
+        
+        Task<Result<GenreReadDto>> Delete(Guid id);
     }
 }
