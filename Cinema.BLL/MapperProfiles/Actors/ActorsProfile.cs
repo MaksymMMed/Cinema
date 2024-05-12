@@ -2,7 +2,7 @@ using AutoMapper;
 using Cinema.BLL.DTOs.Actors;
 using Cinema.DAL.Entities;
 
-namespace Cinema.BLL.MapperProfiles.Actors
+namespace Cinema.BLL.MapperProfiles.Actors;
 
 public class ActorsProfile:Profile
 {

@@ -7,6 +7,7 @@ using Cinema.BLL.Filtering.Movies;
 using Cinema.BLL.Interfaces;
 using Cinema.BLL.Services.Core;
 using Cinema.DAL.Entities;
+using Cinema.DAL.Interfaces.Directors;
 using Cinema.DAL.Interfaces.Movies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
