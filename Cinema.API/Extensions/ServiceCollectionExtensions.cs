@@ -133,7 +133,6 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IMoviesRepository, MoviesRepository>();
         services.AddScoped<IMoviesActorsRepository, MoviesActorsRepository>();
         services.AddScoped<IMoviesGenresRepository, MoviesGenresRepository>();
-        services.AddScoped<IDirectorsRepository, DirectorsRepository>();
         services.AddScoped<IHallsRepository, HallsRepository>();
         services.AddScoped<IDirectorsRepository, DirectorsRepository>();
         services.AddScoped<IActorsRepository, ActorsRepository>();
