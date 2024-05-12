@@ -19,6 +19,10 @@ using Cinema.BLL.MapperProfiles.Actors;
 using Cinema.BLL.MapperProfiles.Genres;
 using Cinema.BLL.Services.Account;
 using Microsoft.OpenApi.Models;
+using Cinema.DAL.Interfaces.Genres;
+using Cinema.DAL.Repositories.Genres;
+using Cinema.BLL.Services.Genres;
+using Cinema.BLL.MapperProfiles.Genres;
 
 namespace Cinema.API.Extensions;
 
@@ -122,6 +126,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IMoviesGenresRepository, MoviesGenresRepository>();
         services.AddScoped<IDirectorsRepository, DirectorsRepository>();
         services.AddScoped<IHallsRepository, HallsRepository>();
+        services.AddScoped<IGenresRepository, GenresRepository>();
     }
 
     public static void AddServices(this IServiceCollection services, IConfiguration configuration)
@@ -129,6 +134,7 @@ public static class ServiceCollectionExtensions
         services.AddTransient<IMoviesService, MoviesService>();
         services.AddTransient<IAccountService, AccountService>();
         services.AddTransient<IHallsService, HallsService>();
+        services.AddTransient<IGenresService, GenresService>();
     }
 
     public static void AddIdentity(this IServiceCollection services)

@@ -1,3 +1,4 @@
+
 namespace Cinema.BLL.DTOs.Genres;
 
 public class GenreReadDto
