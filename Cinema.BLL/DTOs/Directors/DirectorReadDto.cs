@@ -6,6 +6,5 @@ namespace Cinema.BLL.DTOs.Directors
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
-        public virtual ICollection<MovieReadDto> Movies { get; set; }
     }
 }

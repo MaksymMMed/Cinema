@@ -10,7 +10,7 @@ namespace Cinema.BLL.Filtering
         public string? SortingField { get; set; }
         public SortingOrder SortingOrder { get; set; }
         public int PageNumber { get; set; } = 0;
-        public int PageSize { get; set; } = 12;
+        public int PageSize { get; set; } = 15;
 
         public virtual IQueryable<T> Sort(IQueryable<T> source)
         {

@@ -14,39 +14,39 @@ namespace Cinema.BLL.Services.Directors
 {
     public class DirectorsService : BusinessService<Director, Guid>, IDirectorsService
     {
-        public DirectorsService(IHttpContextAccessor httpContextAccessor,
-            IDirectorsRepository repository, IMapper mapper) 
-            : base(httpContextAccessor, repository, mapper)
+        public DirectorsService(
+            IHttpContextAccessor httpContextAccessor,
+            IDirectorsRepository repository, IMapper mapper
+            ): base(httpContextAccessor, repository, mapper)
         {
         }
 
         public async Task<Result<DirectorReadDto>> Create(DirectorCreateDto dto)
         {
-            var Director = _mapper.Map<Director>(dto);
+            var director = _mapper.Map<Director>(dto);
 
-            await _repository.Add(Director);
+            await _repository.Add(director);
 
-            var mappedDirector = _mapper.Map<DirectorReadDto>(Director);
+            var mappedDirector = _mapper.Map<DirectorReadDto>(director);
             return Result<DirectorReadDto>.Success(mappedDirector);
         }
 
         public async Task<Result<DirectorReadDto>> Delete(Guid id)
         {
-            var Director = await _repository.GetById(id);
+            var director = await _repository.GetById(id);
 
-            if (Director == null)
+            if (director == null)
                 return Result<DirectorReadDto>.Fail($"Director with id {id} not found");
 
-            await _repository.Delete(Director);
+            await _repository.Delete(director);
 
-            var mappedDirector = _mapper.Map<DirectorReadDto>(Director);
+            var mappedDirector = _mapper.Map<DirectorReadDto>(director);
             return Result<DirectorReadDto>.Success(mappedDirector);
         }
 
         public async Task<Result<EntitiesWithTotalCount<DirectorReadDto>>> Get(DirectorsFilteringModel model)
         {
-            var query = _repository.GetQuery(include: q => q
-                .Include(x => x.Movies)).Filter(model);
+            var query = _repository.GetQuery().Filter(model);
 
             query = query.SortByField(model);
             var totalCount = query.Count();
@@ -60,26 +60,26 @@ namespace Cinema.BLL.Services.Directors
 
         public async Task<Result<DirectorReadDto>> GetById(Guid id)
         {
-            var Director = await _repository.GetByIdWithInclude(id, include: q => q
+            var director = await _repository.GetByIdWithInclude(id, include: q => q
                        .Include(x => x.Movies));
 
-            if (Director == null)
+            if (director == null)
                 return Result<DirectorReadDto>.Fail($"Director with id {id} not found");
 
-            var mappedDirector = _mapper.Map<DirectorReadDto>(Director);
+            var mappedDirector = _mapper.Map<DirectorReadDto>(director);
             return Result<DirectorReadDto>.Success(mappedDirector);
         }
 
         public async Task<Result<DirectorReadDto>> Update(DirectorUpdateDto dto)
         {
-            var Director = await _repository.GetById(dto.Id);
+            var director = await _repository.GetById(dto.Id);
 
-            if (Director == null)
+            if (director == null)
                 return Result<DirectorReadDto>.Fail($"Director with id {dto.Id} not found");
 
-            _mapper.Map(dto, Director);
+            _mapper.Map(dto, director);
 
-            var newDirector = _repository.Update(Director).Result;
+            var newDirector = _repository.Update(director).Result;
 
             var mappedDirector = _mapper.Map<DirectorReadDto>(newDirector);
             return Result<DirectorReadDto>.Success(mappedDirector);
