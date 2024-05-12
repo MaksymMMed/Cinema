@@ -60,8 +60,7 @@ namespace Cinema.BLL.Services.Directors
 
         public async Task<Result<DirectorReadDto>> GetById(Guid id)
         {
-            var director = await _repository.GetByIdWithInclude(id, include: q => q
-                       .Include(x => x.Movies));
+            var director = await _repository.GetById(id);
 
             if (director == null)
                 return Result<DirectorReadDto>.Fail($"Director with id {id} not found");
