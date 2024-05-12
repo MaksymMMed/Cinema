@@ -33,9 +33,6 @@ namespace Cinema.API.Controllers
             var result = await _accountService.SignUpUser(model);
             if (result.IsSuccess) 
                 return Ok(result.Value);
-
-            if (result.Error == "UserAlreadyExists")
-                return Conflict("User already exists.");
             
             return BadRequest(result.Error);
         }
@@ -47,9 +44,6 @@ namespace Cinema.API.Controllers
             var result = await _accountService.SignUpAdmin(model);
             if (result.IsSuccess)
                 return Ok(result.Value);
-
-            if (result.Error == "UserAlreadyExists")
-                return Conflict("User already exists.");
 
             return BadRequest(result.Error);
         }
