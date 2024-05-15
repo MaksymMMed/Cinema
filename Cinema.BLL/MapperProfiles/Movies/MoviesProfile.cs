@@ -52,7 +52,13 @@ public class MoviesProfile : Profile
                 opt.MapFrom(src => src.MovieActors.Select(mg => mg.Actor)))
             .ForMember(dst => dst.AvgMark, opt =>
                 opt.MapFrom(src => CalculateAvgMark(src.MovieReviews)));
-        
+
+        CreateMap<Movie, MoviePreviewDto>()
+            .ForMember(dst => dst.DirectorName, opt =>
+                opt.MapFrom(src => src.Director.Name))
+            .ForMember(dst => dst.AvgMark, opt =>
+                opt.MapFrom(src => CalculateAvgMark(src.MovieReviews)));
+
         CreateMap<MovieCreateDto, Movie>();
         
         CreateMap<MovieUpdateDto, Movie>();

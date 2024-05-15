@@ -1,7 +1,10 @@
-﻿namespace Cinema.DAL.Entities
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Cinema.DAL.Entities
 {
     public class Session
     {
+        [Key]
         public Guid Id { get; set; }
         public Guid HallId { get; set; }
         public Guid MovieId { get; set; }
