@@ -8,7 +8,8 @@ public class SessionDetailsDto
     public Guid Id { get; set; }
     public MoviePreviewDto Movie { get; set; }
     public Guid HallId { get; set; }
-    public DateTime DateUtc { get; set; }
+    public DateTime StartDateUtc { get; set; }
+    public DateTime EndDateUtc { get; set; }
     public int TicketsCount { get; set; }
     public int HallCapacity { get; set; }
     public IEnumerable<TicketReadDto> Tickets { get; set; }
