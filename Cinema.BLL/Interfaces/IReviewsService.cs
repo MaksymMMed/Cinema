@@ -10,6 +10,6 @@ namespace Cinema.BLL.Interfaces
         Task<Result<ReviewReadDto>> GetById(Guid id);
         Task<Result<ReviewReadDto>> Create(ReviewCreateDto dto);
         Task<Result<ReviewReadDto>> Update(ReviewUpdateDto dto);
-        Task<Result<ReviewReadDto>> Delete(Guid id);
+        Task<Result<bool>> Delete(Guid id);
     }
 }

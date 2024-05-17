@@ -10,6 +10,8 @@ using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using Cinema.BLL.Interfaces;
 using Cinema.BLL.Services.Core;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
 
 namespace Cinema.BLL.Services.Reviews
 {
@@ -17,8 +19,10 @@ namespace Cinema.BLL.Services.Reviews
     {
         private readonly IReviewsRepository _repository;
         private readonly IMapper _mapper;
+        private readonly UserManager<AspNetUser> _userManager;
 
         public ReviewsService(
+            UserManager<AspNetUser> userManager,
             IHttpContextAccessor httpContextAccessor,
             IReviewsRepository repository,
             IMapper mapper
@@ -26,18 +30,32 @@ namespace Cinema.BLL.Services.Reviews
         {
             _repository = repository;
             _mapper = mapper;
+            _userManager = userManager;
         }
 
         public async Task<Result<ReviewReadDto>> Create(ReviewCreateDto dto)
         {
-            bool flag = await _repository.IsAlreadyCommented(dto.CreatedById,dto.MovieId);
 
-            if (flag)
+            var userId = HttpContextAccessor.HttpContext?.User?.Claims
+                .FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value!;
+
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                return Result<ReviewReadDto>.Fail("Invalid credentials")!;
+            }
+
+            bool alreadyCommented = await _repository.AnyAsync(x => x.CreatedById == user!.Id && x.MovieId == dto.MovieId);
+
+            if (alreadyCommented)
             {
                 return Result<ReviewReadDto>.Fail("You already leave comment")!;
             }
 
             var review = _mapper.Map<Review>(dto);
+
+            review.RegisterCreation(user);
 
             await _repository.Add(review);
 
@@ -45,17 +63,34 @@ namespace Cinema.BLL.Services.Reviews
             return Result<ReviewReadDto>.Success(mappedReview);
         }
 
-        public async Task<Result<ReviewReadDto>> Delete(Guid id)
+        public async Task<Result<bool>> Delete(Guid id)
         {
+            var userId = HttpContextAccessor.HttpContext?.User?.Claims
+                .FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value!;
+
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                return Result<bool>.Fail("Invalid credentials")!;
+            }
+
             var review = await _repository.GetById(id);
 
             if (review == null)
-                return Result<ReviewReadDto>.Fail($"Review with id {id} not found")!;
+                return Result<bool>.Fail($"Review with id {id} not found")!;
+
+            bool isAdmin = await _userManager.IsInRoleAsync(user, "Admin");
+            bool isSuperAdmin = await _userManager.IsInRoleAsync(user, "SuperAdmin");
+
+            if (!(review.CreatedById == user.Id || isAdmin || isSuperAdmin))
+            {
+                return Result<bool>.Fail("User doesn't have the necessary permissions to delete review")!;
+            }
 
             await _repository.Delete(review);
 
-            var mappedReview = _mapper.Map<ReviewReadDto>(review);
-            return Result<ReviewReadDto>.Success(mappedReview);
+            return Result<bool>.Success(true);
         }
 
         public async Task<Result<EntitiesWithTotalCount<ReviewReadDto>>> Get(ReviewsFilteringModel model)
@@ -85,10 +120,26 @@ namespace Cinema.BLL.Services.Reviews
 
         public async Task<Result<ReviewReadDto>> Update(ReviewUpdateDto dto)
         {
+            var userId = HttpContextAccessor.HttpContext?.User?.Claims
+                .FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value!;
+
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                return Result<ReviewReadDto>.Fail("Invalid credentials")!;
+            }
+
             var review = await _repository.GetById(dto.Id);
 
             if (review == null)
                 return Result<ReviewReadDto>.Fail($"Review with id {dto.Id} not found")!;
+
+
+            if (review.CreatedById != user.Id)
+            {
+                return Result<ReviewReadDto>.Fail("User doesn't have the necessary permissions to update review")!;
+            }
 
             _mapper.Map(dto, review);
 

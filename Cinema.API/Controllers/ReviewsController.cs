@@ -1,6 +1,7 @@
 ﻿using Cinema.BLL.DTOs.Reviews;
 using Cinema.BLL.Filtering.Reviews;
 using Cinema.BLL.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Cinema.API.Controllers
@@ -39,6 +40,7 @@ namespace Cinema.API.Controllers
             return Ok(result.Value);
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] ReviewCreateDto dto)
         {
@@ -50,6 +52,7 @@ namespace Cinema.API.Controllers
             return Ok(result.Value);
         }
 
+        [Authorize]
         [HttpPut]
         public async Task<IActionResult> Update([FromBody] ReviewUpdateDto dto)
         {
@@ -61,6 +64,7 @@ namespace Cinema.API.Controllers
             return Ok(result.Value);
         }
 
+        [Authorize]
         [HttpDelete]
         [Route("{id}")]
         public async Task<IActionResult> Delete(Guid id)

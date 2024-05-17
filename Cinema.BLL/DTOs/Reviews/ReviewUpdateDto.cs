@@ -4,6 +4,6 @@
     {
         public Guid Id { get; set; }
         public string Comment { get; set; }
-        public int Mark {  get; set; }
+        public int Rank {  get; set; }
     }
 }
