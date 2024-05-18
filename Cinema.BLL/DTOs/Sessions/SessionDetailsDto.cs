@@ -10,6 +10,7 @@ public class SessionDetailsDto
     public Guid HallId { get; set; }
     public DateTime StartDateUtc { get; set; }
     public DateTime EndDateUtc { get; set; }
+    public decimal BasePrice { get; set; }
     public int TicketsCount { get; set; }
     public int HallCapacity { get; set; }
     public IEnumerable<TicketReadDto> Tickets { get; set; }

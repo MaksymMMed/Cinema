@@ -7,6 +7,7 @@ using Cinema.BLL.Filtering.Sessions;
 using Cinema.BLL.Interfaces;
 using Cinema.BLL.Services.Core;
 using Cinema.DAL.Entities;
+using Cinema.DAL.Interfaces.Halls;
 using Cinema.DAL.Interfaces.Movies;
 using Cinema.DAL.Interfaces.Sessions;
 using Microsoft.AspNetCore.Http;
@@ -17,17 +18,20 @@ namespace Cinema.BLL.Services.Sessions;
 public class SessionsService : BaseBusinessService, ISessionsService
 {
     private readonly ISessionsRepository _sessionRepository;
+    private readonly IHallsRepository _hallsRepository;
     private readonly IMoviesRepository _moviesRepository;
     private readonly IMapper _mapper;
 
     public SessionsService(
          IHttpContextAccessor httpContextAccessor,
          ISessionsRepository sessionRepository,
+         IHallsRepository hallsRepository,
          IMoviesRepository moviesRepository,
          IMapper mapper
            ) : base(httpContextAccessor)
     {
         _sessionRepository = sessionRepository;
+        _hallsRepository = hallsRepository;
         _moviesRepository = moviesRepository;
         _mapper = mapper;
     }
@@ -67,12 +71,20 @@ public class SessionsService : BaseBusinessService, ISessionsService
 
     public async Task<Result<SessionReadDto>> Create(SessionCreateDto dto)
     {
-        var session = _mapper.Map<Session>(dto);
+        if (dto.BasePrice <= 0)
+            return Result<SessionReadDto>.Fail("Base price should be greater than 0")!;
 
-        var sessionMovie = await _moviesRepository.GetById(session.MovieId);
+        var sessionHall = await _hallsRepository.GetById(dto.HallId);
+
+        if (sessionHall == null)
+            return Result<SessionReadDto>.Fail($"Hall with id {dto.HallId} not found")!;
+
+        var sessionMovie = await _moviesRepository.GetById(dto.MovieId);
 
         if (sessionMovie == null)
-            return Result<SessionReadDto>.Fail($"Movie with id {session.MovieId} not found")!;
+            return Result<SessionReadDto>.Fail($"Movie with id {dto.MovieId} not found")!;
+        
+        var session = _mapper.Map<Session>(dto);
 
         // Check if hall is available
         var hasCollisionSessions = await _sessionRepository.AnyAsync(q =>
@@ -102,15 +114,26 @@ public class SessionsService : BaseBusinessService, ISessionsService
 
     public async Task<Result<SessionReadDto>> Update(SessionUpdateDto dto)
     {
+
+        if (dto.BasePrice <= 0)
+            return Result<SessionReadDto>.Fail("Base price should be greater than 0")!;
+
+        var sessionHall = await _hallsRepository.GetById(dto.HallId);
+
+        if (sessionHall == null)
+            return Result<SessionReadDto>.Fail($"Hall with id {dto.HallId} not found")!;
+
+        var sessionMovie = await _moviesRepository.GetById(dto.MovieId);
+
+        if (sessionMovie == null)
+            return Result<SessionReadDto>.Fail($"Movie with id {dto.MovieId} not found")!;
+        
         var session = await _sessionRepository.GetById(dto.Id);
 
         if (session == null)
             return Result<SessionReadDto>.Fail($"Session with id {dto.Id} not found")!;
-
-        var sessionMovie = await _moviesRepository.GetById(session.MovieId);
-
-        if (sessionMovie == null)
-            return Result<SessionReadDto>.Fail($"Movie with id {session.MovieId} not found")!;
+        
+        _mapper.Map(dto, session);
 
         // Check if hall is available
         var hasCollisionSessions = await _sessionRepository.AnyAsync(q =>
@@ -125,8 +148,6 @@ public class SessionsService : BaseBusinessService, ISessionsService
 
         if (hasCollisionSessions)
             return Result<SessionReadDto>.Fail("Hall is already booked for this time")!;
-
-        _mapper.Map(dto, session);
 
         await _sessionRepository.Update(session);
 

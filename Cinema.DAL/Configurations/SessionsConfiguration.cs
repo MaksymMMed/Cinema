@@ -10,6 +10,9 @@ public class SessionsConfiguration : IEntityTypeConfiguration<Session>
     {
         builder.HasKey(e => e.Id);
 
+        builder.Property(e => e.BasePrice)
+            .HasPrecision(8, 2);
+
         // Relations
         builder.HasOne(e => e.Hall)
             .WithMany(e => e.Sessions)
