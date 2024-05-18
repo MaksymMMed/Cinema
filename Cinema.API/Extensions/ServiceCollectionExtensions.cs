@@ -31,6 +31,8 @@ using Cinema.DAL.Interfaces.Genres;
 using Cinema.DAL.Repositories.Genres;
 using Cinema.BLL.Services.Genres;
 using Cinema.BLL.MapperProfiles.Genres;
+using Cinema.EmailService;
+using Cinema.EmailService.Sender;
 
 namespace Cinema.API.Extensions;
 
@@ -147,6 +149,16 @@ public static class ServiceCollectionExtensions
         services.AddTransient<IDirectorsService, DirectorsService>();
         services.AddTransient<IActorsService, ActorsService>();
         services.AddTransient<IGenresService, GenresService>();
+    }
+
+    public static void AddEmailService(this IServiceCollection services, IConfiguration configuration)
+    {
+        var emailConfig = configuration
+            .GetSection("EmailConfiguration")
+            .Get<EmailConfiguration>();
+
+        services.AddSingleton(emailConfig);
+        services.AddTransient<IEmailSender, EmailSender>();
     }
 
     public static void AddIdentity(this IServiceCollection services)
