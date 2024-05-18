@@ -10,7 +10,6 @@ using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using Cinema.BLL.Interfaces;
 using Cinema.BLL.Services.Core;
-using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 
 namespace Cinema.BLL.Services.Reviews
@@ -36,14 +35,16 @@ namespace Cinema.BLL.Services.Reviews
         public async Task<Result<ReviewReadDto>> Create(ReviewCreateDto dto)
         {
 
-            var userId = HttpContextAccessor.HttpContext?.User?.Claims
-                .FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value!;
-
-            var user = await _userManager.FindByIdAsync(userId);
+            var user = await _userManager.FindByIdAsync(CurrentUserId!);
 
             if (user == null)
             {
-                return Result<ReviewReadDto>.Fail("Invalid credentials")!;
+                return Result<ReviewReadDto>.Fail("User not found")!;
+            }
+
+            if (dto.Rank > 10 || dto.Rank < 1)
+            {
+                return Result<ReviewReadDto>.Fail("Choose rank between 1 and 10")!;
             }
 
             bool alreadyCommented = await _repository.AnyAsync(x => x.CreatedById == user!.Id && x.MovieId == dto.MovieId);
@@ -65,14 +66,11 @@ namespace Cinema.BLL.Services.Reviews
 
         public async Task<Result<bool>> Delete(Guid id)
         {
-            var userId = HttpContextAccessor.HttpContext?.User?.Claims
-                .FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value!;
-
-            var user = await _userManager.FindByIdAsync(userId);
+            var user = await _userManager.FindByIdAsync(CurrentUserId!);
 
             if (user == null)
             {
-                return Result<bool>.Fail("Invalid credentials")!;
+                return Result<bool>.Fail("User not found")!;
             }
 
             var review = await _repository.GetById(id);
@@ -120,14 +118,16 @@ namespace Cinema.BLL.Services.Reviews
 
         public async Task<Result<ReviewReadDto>> Update(ReviewUpdateDto dto)
         {
-            var userId = HttpContextAccessor.HttpContext?.User?.Claims
-                .FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value!;
-
-            var user = await _userManager.FindByIdAsync(userId);
+            var user = await _userManager.FindByIdAsync(CurrentUserId!);
 
             if (user == null)
             {
-                return Result<ReviewReadDto>.Fail("Invalid credentials")!;
+                return Result<ReviewReadDto>.Fail("User not found")!;
+            }
+
+            if (dto.Rank > 10 || dto.Rank < 1)
+            {
+                return Result<ReviewReadDto>.Fail("Choose rank between 1 and 10")!;
             }
 
             var review = await _repository.GetById(dto.Id);
