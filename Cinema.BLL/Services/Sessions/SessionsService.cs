@@ -12,6 +12,7 @@ using Cinema.DAL.Interfaces.Movies;
 using Cinema.DAL.Interfaces.Sessions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Cinema.BLL.Services.Sessions;
 
@@ -34,6 +35,38 @@ public class SessionsService : BaseBusinessService, ISessionsService
         _hallsRepository = hallsRepository;
         _moviesRepository = moviesRepository;
         _mapper = mapper;
+    }
+
+    private async Task<Result<bool>> ValidateSession(Session session)
+    {
+        if (session.BasePrice <= 0)
+            return Result<bool>.Fail("Base price should be greater than 0")!;
+
+        var sessionHall = await _hallsRepository.GetById(session.HallId);
+
+        if (sessionHall == null)
+            return Result<bool>.Fail($"Hall with id {session.HallId} not found")!;
+
+        var sessionMovie = await _moviesRepository.GetById(session.MovieId);
+
+        if (sessionMovie == null)
+            return Result<bool>.Fail($"Movie with id {session.MovieId} not found")!;
+
+        // Check if hall is available
+        var hasCollisionSessions = await _sessionRepository.AnyAsync(q =>
+            q.HallId == session.HallId && q.Id != session.Id &&
+            (
+                // Check if session starts before q ends and ends after q starts
+                (session.DateUtc < q.DateUtc.AddMinutes(q.Movie.Duration) && session.DateUtc.AddMinutes(sessionMovie.Duration) > q.DateUtc) ||
+                // Check if q starts before session ends and ends after session starts
+                (q.DateUtc < session.DateUtc.AddMinutes(sessionMovie.Duration) && q.DateUtc.AddMinutes(q.Movie.Duration) > session.DateUtc)
+            )
+        );
+
+        if (hasCollisionSessions)
+            return Result<bool>.Fail("Hall is already booked for this time")!;
+
+        return Result<bool>.Success(true);
     }
 
     public async Task<Result<EntitiesWithTotalCount<SessionReadDto>>> Get(SessionsFilteringModel model)
@@ -71,34 +104,12 @@ public class SessionsService : BaseBusinessService, ISessionsService
 
     public async Task<Result<SessionReadDto>> Create(SessionCreateDto dto)
     {
-        if (dto.BasePrice <= 0)
-            return Result<SessionReadDto>.Fail("Base price should be greater than 0")!;
-
-        var sessionHall = await _hallsRepository.GetById(dto.HallId);
-
-        if (sessionHall == null)
-            return Result<SessionReadDto>.Fail($"Hall with id {dto.HallId} not found")!;
-
-        var sessionMovie = await _moviesRepository.GetById(dto.MovieId);
-
-        if (sessionMovie == null)
-            return Result<SessionReadDto>.Fail($"Movie with id {dto.MovieId} not found")!;
-        
         var session = _mapper.Map<Session>(dto);
 
-        // Check if hall is available
-        var hasCollisionSessions = await _sessionRepository.AnyAsync(q =>
-            q.HallId == session.HallId &&
-            (
-                // Check if session starts before q ends and ends after q starts
-                (session.DateUtc < q.DateUtc.AddMinutes(q.Movie.Duration) && session.DateUtc.AddMinutes(sessionMovie.Duration) > q.DateUtc) ||
-                // Check if q starts before session ends and ends after session starts
-                (q.DateUtc < session.DateUtc.AddMinutes(sessionMovie.Duration) && q.DateUtc.AddMinutes(q.Movie.Duration) > session.DateUtc)
-            )
-        );
+        var validationResult = await ValidateSession(session);
 
-        if (hasCollisionSessions)
-            return Result<SessionReadDto>.Fail("Hall is already booked for this time")!;
+        if (!validationResult.IsSuccess)
+            return Result<SessionReadDto>.Fail(validationResult.Error!)!;
 
         await _sessionRepository.Add(session);
 
@@ -114,20 +125,6 @@ public class SessionsService : BaseBusinessService, ISessionsService
 
     public async Task<Result<SessionReadDto>> Update(SessionUpdateDto dto)
     {
-
-        if (dto.BasePrice <= 0)
-            return Result<SessionReadDto>.Fail("Base price should be greater than 0")!;
-
-        var sessionHall = await _hallsRepository.GetById(dto.HallId);
-
-        if (sessionHall == null)
-            return Result<SessionReadDto>.Fail($"Hall with id {dto.HallId} not found")!;
-
-        var sessionMovie = await _moviesRepository.GetById(dto.MovieId);
-
-        if (sessionMovie == null)
-            return Result<SessionReadDto>.Fail($"Movie with id {dto.MovieId} not found")!;
-        
         var session = await _sessionRepository.GetById(dto.Id);
 
         if (session == null)
@@ -135,19 +132,10 @@ public class SessionsService : BaseBusinessService, ISessionsService
         
         _mapper.Map(dto, session);
 
-        // Check if hall is available
-        var hasCollisionSessions = await _sessionRepository.AnyAsync(q =>
-            q.HallId == session.HallId && q.Id != session.Id &&
-            (
-                // Check if session starts before q ends and ends after q starts
-                (session.DateUtc < q.DateUtc.AddMinutes(q.Movie.Duration) && session.DateUtc.AddMinutes(sessionMovie.Duration) > q.DateUtc) ||
-                // Check if q starts before session ends and ends after session starts
-                (q.DateUtc < session.DateUtc.AddMinutes(sessionMovie.Duration) && q.DateUtc.AddMinutes(q.Movie.Duration) > session.DateUtc)
-            )
-        );
+        var validationResult = await ValidateSession(session);
 
-        if (hasCollisionSessions)
-            return Result<SessionReadDto>.Fail("Hall is already booked for this time")!;
+        if (!validationResult.IsSuccess)
+            return Result<SessionReadDto>.Fail(validationResult.Error!)!;
 
         await _sessionRepository.Update(session);
 
