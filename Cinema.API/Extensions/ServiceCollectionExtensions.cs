@@ -29,6 +29,11 @@ using Cinema.DAL.Repositories.Actors;
 using Cinema.DAL.Interfaces.Genres;
 using Cinema.DAL.Repositories.Genres;
 using Cinema.BLL.Services.Genres;
+using Cinema.BLL.MapperProfiles.Sessions;
+using Cinema.DAL.Interfaces.Sessions;
+using Cinema.DAL.Repositories.Sessions;
+using Cinema.BLL.Services.Sessions;
+using Cinema.BLL.MapperProfiles.Tickets;
 using Cinema.BLL.MapperProfiles.Reviews;
 using Cinema.DAL.Repositories.Reviews;
 using Cinema.DAL.Interfaces.Reviews;
@@ -124,6 +129,8 @@ public static class ServiceCollectionExtensions
             mc.AddProfile(new DirectorsProfile());
             mc.AddProfile(new GenresProfile());
             mc.AddProfile(new ActorsProfile());
+            mc.AddProfile(new SessionsProfile());
+            mc.AddProfile(new TicketsProfile());
             mc.AddProfile(new ReviewsProfile());
         });
 
@@ -140,6 +147,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IDirectorsRepository, DirectorsRepository>();
         services.AddScoped<IActorsRepository, ActorsRepository>();
         services.AddScoped<IGenresRepository, GenresRepository>();
+        services.AddScoped<ISessionsRepository, SessionsRepository>();
         services.AddScoped<IReviewsRepository, ReviewsRepository>();
     }
 
@@ -151,6 +159,7 @@ public static class ServiceCollectionExtensions
         services.AddTransient<IDirectorsService, DirectorsService>();
         services.AddTransient<IActorsService, ActorsService>();
         services.AddTransient<IGenresService, GenresService>();
+        services.AddTransient<ISessionsService, SessionsService>();
         services.AddTransient<IReviewsService, ReviewsService>();
     }
 
