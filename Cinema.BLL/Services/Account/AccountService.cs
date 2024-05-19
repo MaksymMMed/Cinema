@@ -1,8 +1,10 @@
 ﻿using Cinema.BLL.DTOs;
 using Cinema.BLL.DTOs.Account;
 using Cinema.BLL.Interfaces;
+using Cinema.BLL.Services.Core;
 using Cinema.DAL.Entities;
 using Cinema.DAL.Enums;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -13,17 +15,18 @@ using System.Text;
 
 namespace Cinema.BLL.Services.Account
 {
-    public class AccountService : IAccountService
+    public class AccountService : BaseBusinessService, IAccountService
     {
         private readonly UserManager<AspNetUser> _userManager;
         private readonly RoleManager<IdentityRole<Guid>> _roleManager;
         private readonly IConfiguration _configuration;
 
         public AccountService(
+            IHttpContextAccessor httpContextAccessor,
             UserManager<AspNetUser> userManager,
             RoleManager<IdentityRole<Guid>> roleManager,
             IConfiguration configuration
-        )
+        ) : base(httpContextAccessor)
         {
             _userManager = userManager;
             _roleManager = roleManager;
@@ -126,6 +129,19 @@ namespace Cinema.BLL.Services.Account
             }
 
             return await SignIn(model);
+        }
+
+        public async Task<Result<string>> ChangePassword(ChangePasswordDto model)
+        {
+            var user = await _userManager.FindByIdAsync(CurrentUserId!);
+            if (user == null)
+                return Result<string>.Fail("User not found")!;
+
+            var result = await _userManager.ChangePasswordAsync(user, model.OldPassword,model.NewPassword);
+            if (!result.Succeeded)
+                return Result<string>.Fail(string.Join(", ", result.Errors.Select(e => e.Description)))!;
+
+            return Result<string>.Success("Password successfully changed"); 
         }
     }
 }

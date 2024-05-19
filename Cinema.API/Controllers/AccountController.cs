@@ -16,6 +16,17 @@ namespace Cinema.API.Controllers
             _accountService = accountService;
         }
 
+        [HttpPost("change-password")]
+        public async Task<IActionResult> ChangePassword(ChangePasswordDto model)
+        {
+            var result = await _accountService.ChangePassword(model);
+            
+            if (!result.IsSuccess)
+                return BadRequest(result.Error);
+
+            return Ok(result.Value);
+        }
+
         [HttpPost("sign-in")]
         public async Task<IActionResult> SignIn([FromBody] SignInDto model)
         {
