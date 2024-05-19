@@ -1,5 +1,6 @@
 ﻿using Cinema.BLL.DTOs.Actors;
 using Cinema.BLL.Filtering.Actors;
+using Cinema.BLL.Filtering.Movies;
 using Cinema.BLL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -33,6 +34,18 @@ namespace Cinema.API.Controllers
         public async Task<IActionResult> GetById(Guid id)
         {
             var result = await _ActorsService.GetById(id);
+
+            if (!result.IsSuccess)
+                return NotFound(result.Error);
+
+            return Ok(result.Value);
+        }
+        
+        [HttpGet]
+        [Route("{id}/movies")]
+        public async Task<IActionResult> GetActorMovies(Guid id, [FromQuery] MoviesFilteringModel model)
+        {
+            var result = await _ActorsService.GetActorMovies(id, model);
 
             if (!result.IsSuccess)
                 return NotFound(result.Error);
