@@ -15,6 +15,8 @@ public class MoviesFilteringModel : FilteringModel<Movie>, IFilter<Movie>
     
     public IEnumerable<Guid>? GenresIds { get; set; }
 
+    public bool CurrentlyShowing { get; set; }
+
     public IQueryable<Movie> Filter(IQueryable<Movie> source)
     {
         if (!string.IsNullOrEmpty(Name))
@@ -31,7 +33,11 @@ public class MoviesFilteringModel : FilteringModel<Movie>, IFilter<Movie>
         
         if (GenresIds != null && GenresIds.Any())
             source = source.Where(v => v.MovieGenres.Any(mg => GenresIds.Contains(mg.GenreId)));
-        
+
+        if (CurrentlyShowing)
+            source = source.Where(v => v.ReleaseDate <= DateTime.UtcNow)
+                           .Where(m => m.Sessions.Any(s => s.DateUtc > DateTime.UtcNow));
+
         return source;
     }
 }
