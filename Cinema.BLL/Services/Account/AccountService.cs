@@ -143,5 +143,18 @@ namespace Cinema.BLL.Services.Account
 
             return Result<string>.Success("Password successfully changed"); 
         }
+
+        public async Task<Result<string>> ChangeUserName(ChangeUserNameDto model)
+        {
+            var user = await _userManager.FindByIdAsync(CurrentUserId!);
+            if (user == null)
+                return Result<string>.Fail("User not found")!;
+
+            var result = await _userManager.SetUserNameAsync(user, model.UserName);
+            if (!result.Succeeded)
+                return Result<string>.Fail(string.Join(", ", result.Errors.Select(e => e.Description)))!;
+
+            return Result<string>.Success("UserName successfully changed");
+        }
     }
 }
