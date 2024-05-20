@@ -15,4 +15,6 @@ public interface IInvoicesService
     Task<Result<InvoiceReadDto>> UpdatePaymentStatus(Guid id, bool isPaid);
 
     Task<Result<bool>> Delete(Guid id);
+
+    Task DeleteInvoiceIfUnpaid(Guid id);
 }

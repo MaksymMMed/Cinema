@@ -36,6 +36,7 @@ using Cinema.BLL.Services.Sessions;
 using Cinema.BLL.MapperProfiles.Tickets;
 using Cinema.BLL.MapperProfiles.Reviews;
 using Cinema.BLL.Services.Invoices;
+using Cinema.BLL.Services.Purchase;
 using Cinema.DAL.Repositories.Reviews;
 using Cinema.DAL.Interfaces.Reviews;
 using Cinema.BLL.Services.Reviews;
@@ -44,6 +45,8 @@ using Cinema.DAL.Interfaces.Invoices;
 using Cinema.DAL.Interfaces.Tickets;
 using Cinema.DAL.Repositories.Invoices;
 using Cinema.DAL.Repositories.Tickets;
+using Hangfire;
+using AccountService = Cinema.BLL.Services.Account.AccountService;
 using Cinema.BLL.MapperProfiles.Genres;
 using Cinema.EmailService;
 using Cinema.EmailService.Sender;
@@ -151,6 +154,15 @@ public static class ServiceCollectionExtensions
         var mapper = mapperConfig.CreateMapper();
         services.AddSingleton(mapper);
     }
+    
+    public static void AddHangfire(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddHangfire((_, config) =>
+        {
+            config.UseSqlServerStorage(configuration.GetConnectionString("MainBase"));
+        });
+        services.AddHangfireServer();
+    }
 
     public static void AddRepositories(this IServiceCollection services)
     {
@@ -179,6 +191,7 @@ public static class ServiceCollectionExtensions
         services.AddTransient<IReviewsService, ReviewsService>();
         services.AddTransient<IInvoicesService, InvoicesService>();
         services.AddTransient<ITicketsService, TicketsService>();
+        services.AddTransient<IPurchaseService, PurchaseService>();
         services.AddTransient<IRecomendationsService, RecomendationsService>();
     }
 

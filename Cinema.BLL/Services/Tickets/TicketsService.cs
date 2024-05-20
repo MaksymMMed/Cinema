@@ -1,6 +1,7 @@
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Cinema.BLL.DTOs;
+using Cinema.BLL.DTOs.Payments;
 using Cinema.BLL.DTOs.Tickets;
 using Cinema.BLL.Extensions;
 using Cinema.BLL.Filtering.Tickets;
@@ -95,6 +96,46 @@ public class TicketsService : BusinessService<Ticket, Guid>, ITicketsService
         return emptyInvoice.Id;
     }
 
+    public async Task<Result<IEnumerable<ProductPriceDto>>> CalculateTicketsPricesAndValidate(CreateTicketsDto model)
+    {
+        var sessionWithHall = await _sessionsRepository.GetByIdWithInclude(model.SessionId, include: q => q
+            .Include(s => s.Hall));
+        
+        if (sessionWithHall == null)
+            return Result<IEnumerable<ProductPriceDto>>.Fail("The session hall was not found.")!;
+
+        var rowsData = HallUtils.DeserializeRowsData(sessionWithHall.Hall.RowsData);
+        
+        var prices = new List<ProductPriceDto>();
+        foreach (var seat in model.HallSeats)
+        {
+            try
+            {
+                var rowData = rowsData[seat.RowIndex];
+                if(seat.Index < 0 || seat.Index >= rowData.Capacity)
+                    return Result<IEnumerable<ProductPriceDto>>.Fail($"The hall's({sessionWithHall.HallId}) " +
+                                                                     $"Row({seat.RowIndex}) " +
+                                                                     $"does not contain Seat index: {seat.Index}.")!;
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                return Result<IEnumerable<ProductPriceDto>>.Fail(
+                    $"The hall {sessionWithHall.HallId} does not contain Row with index: {seat.RowIndex}")!;
+            }
+            
+            var unitPrice = rowsData[seat.RowIndex].PriceMultiplier * (float) sessionWithHall.BasePrice;
+            var price = new ProductPriceDto
+            {
+                UnitPrice = (long) unitPrice,
+                ProductName = $"Ticket(row: {seat.RowIndex + 1}, seat: {seat.Index + 1})",
+                Quantity = 1
+            };
+            prices.Add(price);
+        }
+
+        return Result<IEnumerable<ProductPriceDto>>.Success(prices);
+    }
+
     private async Task<Result<bool>> ValidateTicketsToCreate(CreateTicketsDto model)
     {
         var sessionWithHall = await _sessionsRepository.GetByIdWithInclude(model.SessionId, include: q => q
@@ -134,13 +175,13 @@ public class TicketsService : BusinessService<Ticket, Guid>, ITicketsService
         return false;
     }
 
-    public async Task<Result<bool>> Create(CreateTicketsDto model)
+    public async Task<Result<bool>> Create(CreateTicketsDto model, Guid? invoiceId = null, bool bypassValidation = false)
     {
         var validationResult = await ValidateTicketsToCreate(model);
         if (!validationResult.IsSuccess)
             return validationResult;
             
-        var validInvoiceId = model.InvoiceId ?? await CreateEmptyInvoice(CurrentUserId!);
+        var validInvoiceId = invoiceId ?? await CreateEmptyInvoice(CurrentUserId!);
         
         var tickets = model.HallSeats.Select(m => new Ticket
             {

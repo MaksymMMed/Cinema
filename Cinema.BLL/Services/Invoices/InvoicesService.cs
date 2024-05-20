@@ -93,4 +93,14 @@ public class InvoicesService : BusinessService<Invoice, Guid>, IInvoicesService
         await _repository.Delete(invoice);
         return Result<bool>.Success(true);
     }
+
+    public async Task DeleteInvoiceIfUnpaid(Guid id)
+    {
+        var invoice = await _repository.GetById(id);
+        if(invoice == null)
+            return;
+        
+        if(invoice.IsPaid == false)
+            await _repository.Delete(invoice);
+    }
 }
