@@ -7,5 +7,4 @@ namespace Cinema.DAL.Repositories.Tickets;
 
 public class TicketsRepository(AppDbContext dbContext) : GenericRepository<Ticket, Guid>(dbContext), ITicketsRepository
 {
-    public class TicketsRepository(AppDbContext appDbContext) : GenericRepository<Ticket, Guid>(appDbContext), ITicketsRepository;
 }

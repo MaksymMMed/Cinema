@@ -9,8 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cinema.DAL", "Cinema.DAL\Ci
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cinema.BLL", "Cinema.BLL\Cinema.BLL.csproj", "{A55B0CC8-B192-4AB6-8989-38D6D9211043}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cinema.EmailService", "Cinema.EmailService\Cinema.EmailService.csproj", "{F19484D7-6F5F-47AF-8113-807BE2B5CD8C}"
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cinema.BLL", "Cinema.BLL\Cinema.BLL.csproj", "{A55B0CC8-B192-4AB6-8989-38D6D9211043}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cinema.EmailService", "Cinema.EmailService\Cinema.EmailService.csproj", "{F19484D7-6F5F-47AF-8113-807BE2B5CD8C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cinema.RecomendationSystem", "Cinema.RecomendationSystem\Cinema.RecomendationSystem.csproj", "{A32AC5E9-F1B8-4483-8222-5D7BBD348239}"
 EndProject

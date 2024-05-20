@@ -52,8 +52,9 @@ namespace Cinema.BLL.Services.Recomendations
         {
             var tickets = _ticketsRepository.GetQuery(include: q => q
                 .Include(s => s.Session)
-                .ThenInclude(m => m.Movie))
-                .Where(x => x.UserId == userId)
+                .ThenInclude(m => m.Movie)
+                .Include(x=>x.Invoice))
+                .Where(x => x.Invoice.CreatedById == userId)
                 .OrderBy(x => x.Session.DateUtc)
                 .Take(10);
 

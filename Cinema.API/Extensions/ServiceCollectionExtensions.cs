@@ -44,13 +44,13 @@ using Cinema.DAL.Interfaces.Invoices;
 using Cinema.DAL.Interfaces.Tickets;
 using Cinema.DAL.Repositories.Invoices;
 using Cinema.DAL.Repositories.Tickets;
-using AccountService = Cinema.BLL.Services.Account.AccountService;
 using Cinema.BLL.MapperProfiles.Genres;
 using Cinema.EmailService;
 using Cinema.EmailService.Sender;
 using Cinema.BLL.Services.Recomendations;
 using Cinema.DAL.Interfaces.Tickets;
 using Cinema.DAL.Repositories.Tickets;
+using Cinema.BLL.Services.Account;
 
 namespace Cinema.API.Extensions;
 
@@ -179,6 +179,7 @@ public static class ServiceCollectionExtensions
         services.AddTransient<IReviewsService, ReviewsService>();
         services.AddTransient<IInvoicesService, InvoicesService>();
         services.AddTransient<ITicketsService, TicketsService>();
+        services.AddTransient<IRecomendationsService, RecomendationsService>();
     }
 
     public static void AddEmailService(this IServiceCollection services, IConfiguration configuration)
