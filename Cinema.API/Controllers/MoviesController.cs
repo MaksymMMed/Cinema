@@ -1,6 +1,7 @@
 ﻿using Cinema.BLL.DTOs.Movies;
 using Cinema.BLL.Filtering.Movies;
 using Cinema.BLL.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Cinema.API.Controllers;
@@ -11,10 +12,12 @@ namespace Cinema.API.Controllers;
 public class MoviesController : ControllerBase
 {
     private readonly IMoviesService _moviesService;
+    private readonly IRecomendationsService _recomendationsService;
         
-    public MoviesController(IMoviesService moviesService)
+    public MoviesController(IMoviesService moviesService,IRecomendationsService recomendationsService)
     {
         _moviesService = moviesService;
+        _recomendationsService = recomendationsService;
     }
 
     [HttpGet]
@@ -126,4 +129,16 @@ public class MoviesController : ControllerBase
 
         return Ok(result.Value);
     }
+
+    [Authorize]
+    [HttpGet("get-recommended-films")]
+    public async Task<IActionResult> GetFilms()
+    {
+        var result = await _recomendationsService.GetRecommendedMovies();
+        if (!result.IsSuccess)
+            return BadRequest(result.Error);
+
+        return Ok(result.Value);
+    }
+
 }
