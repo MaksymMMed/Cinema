@@ -38,6 +38,9 @@ using Cinema.BLL.MapperProfiles.Reviews;
 using Cinema.DAL.Repositories.Reviews;
 using Cinema.DAL.Interfaces.Reviews;
 using Cinema.BLL.Services.Reviews;
+using Cinema.BLL.MapperProfiles.Genres;
+using Cinema.EmailService;
+using Cinema.EmailService.Sender;
 
 namespace Cinema.API.Extensions;
 
@@ -161,6 +164,16 @@ public static class ServiceCollectionExtensions
         services.AddTransient<IGenresService, GenresService>();
         services.AddTransient<ISessionsService, SessionsService>();
         services.AddTransient<IReviewsService, ReviewsService>();
+    }
+
+    public static void AddEmailService(this IServiceCollection services, IConfiguration configuration)
+    {
+        var emailConfig = configuration
+            .GetSection("EmailConfiguration")
+            .Get<EmailConfiguration>();
+
+        services.AddSingleton(emailConfig);
+        services.AddTransient<IEmailSender, EmailSender>();
     }
 
     public static void AddIdentity(this IServiceCollection services)

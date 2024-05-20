@@ -4,6 +4,7 @@ using Cinema.BLL.Interfaces;
 using Cinema.BLL.Services.Core;
 using Cinema.DAL.Entities;
 using Cinema.DAL.Enums;
+using Cinema.EmailService.Sender;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
@@ -19,17 +20,20 @@ namespace Cinema.BLL.Services.Account
     {
         private readonly UserManager<AspNetUser> _userManager;
         private readonly RoleManager<IdentityRole<Guid>> _roleManager;
+        private readonly IEmailSender _emailSender;
         private readonly IConfiguration _configuration;
 
         public AccountService(
             IHttpContextAccessor httpContextAccessor,
             UserManager<AspNetUser> userManager,
             RoleManager<IdentityRole<Guid>> roleManager,
+            IEmailSender emailSender,
             IConfiguration configuration
         ) : base(httpContextAccessor)
         {
             _userManager = userManager;
             _roleManager = roleManager;
+            _emailSender = emailSender;
             _configuration = configuration;
         }
 
@@ -92,9 +96,9 @@ namespace Cinema.BLL.Services.Account
             };
             var result = await _userManager.CreateAsync(user, model.Password);
 
-            if (result.Succeeded) 
+            if (result.Succeeded)
                 return Result<AspNetUser>.Success(user);
-            
+
             var errors = string.Join(" ", result.Errors.Select(x => x.Description));
             return Result<AspNetUser>.Fail(errors)!;
         }
@@ -129,6 +133,35 @@ namespace Cinema.BLL.Services.Account
             }
 
             return await SignIn(model);
+        }
+
+        public async Task<Result<string>> GenerateConfirmationToken(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+                return Result<string>.Fail("User not found")!;
+
+            var confirmationToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            return Result<string>.Success(confirmationToken);
+        }
+
+        public async Task SendConfirmationEmail(string email, string confirmationLink)
+        {
+            await _emailSender.SendConfirmationEmailAsync(email, confirmationLink);
+        }
+
+        public async Task<Result<string>> ConfirmEmail(string email, string confirmationToken)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+                return Result<string>.Fail("User not found")!;
+
+            var isConfirmed = await _userManager.IsEmailConfirmedAsync(user);
+            if (isConfirmed)
+                return Result<string>.Fail("Your email is already confirmed")!;
+
+            await _userManager.ConfirmEmailAsync(user, confirmationToken);
+            return Result<string>.Success("Your email is confirmed");
         }
 
         public async Task<Result<string>> ChangePassword(ChangePasswordDto model)
