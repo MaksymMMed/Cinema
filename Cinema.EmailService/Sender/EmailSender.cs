@@ -30,6 +30,24 @@ namespace Cinema.EmailService.Sender
             }
         }
 
+        public async Task SendResetPasswordEmailAsync(string email, string message)
+        {
+            var emailMessage = new MimeMessage();
+            emailMessage.From.Add(new MailboxAddress("Cinema", _configuration.From));
+            emailMessage.To.Add(new MailboxAddress("", email));
+            emailMessage.Subject = "Reset password";
+            emailMessage.Body = new TextPart("html") { Text = GenerateResetPasswordEmailBody(message) };
+
+            using (var client = new SmtpClient())
+            {
+                await client.ConnectAsync(_configuration.SmtpServer, int.Parse(_configuration.Port), true);
+                client.AuthenticationMechanisms.Remove("XOAUTH2");
+                await client.AuthenticateAsync(_configuration.UserName, _configuration.Password);
+                await client.SendAsync(emailMessage);
+                await client.DisconnectAsync(true);
+            }
+        }
+
         private string GenerateConfirmationEmailBody(string confirmationLink)
         {
             return $@"
@@ -40,6 +58,18 @@ namespace Cinema.EmailService.Sender
                 <form action='{confirmationLink}' method='post'>
                     <button type='submit'>Confirm Email</button>
                 </form>
+            </body>
+            </html>";
+        }
+
+        private string GenerateResetPasswordEmailBody(string token)
+        {
+            return $@"
+            <html>
+            <body>
+                <h2>Reset password</h2>
+                <p>Use token below to reset password.</p>
+                <p>{token}</p>
             </body>
             </html>";
         }

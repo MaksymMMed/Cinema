@@ -17,14 +17,44 @@ namespace Cinema.API.Controllers
 
 
         [HttpPost("confirm-email")]
-        public async Task<IActionResult> ConfirmEmail([FromQuery] string Value, [FromQuery] string Email)
+        public async Task<IActionResult> ConfirmEmail([FromQuery] string token, [FromQuery] string email)
         {
-            var result = await _accountService.ConfirmEmail(Email, Value);
+            var result = await _accountService.ConfirmEmail(email, token);
 
             if (!result.IsSuccess)
                 return BadRequest(result.Error);
 
             return Ok(result.Value);
+        }
+
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto model)
+        {
+            var result = await _accountService.ResetPassword(model.Email,model.Token,model.NewPassword,model.ConfirmPassword);
+
+            if (!result.IsSuccess)
+                return BadRequest(result.Error);
+
+            return Ok(result.Value);
+        }
+
+        [HttpPost("send-reset-password-email")]
+        public async Task<IActionResult> SendResetPasswordEmail(string email)
+        {
+            var result = await _accountService.GenerateResetPasswordToken(email);
+
+            if (result.IsSuccess)
+            {
+                var GetResetToken = await _accountService.GenerateResetPasswordToken(email);
+                if (GetResetToken.IsSuccess)
+                {
+                    await _accountService.SendResetPasswordEmail(email, GetResetToken.Value!);
+                    return Ok("Email sent");
+                }
+                return BadRequest(GetResetToken.Error);
+            }
+
+            return BadRequest(result.Error);
         }
 
         [HttpPost("change-password")]
@@ -69,7 +99,7 @@ namespace Cinema.API.Controllers
                 var getConfirmationToken = await _accountService.GenerateConfirmationToken(model.Email);
                 if (getConfirmationToken.IsSuccess)
                 {
-                    var confirmationLink = Url.Action("ConfirmEmail", "Account", new { getConfirmationToken.Value, model.Email }, Request.Scheme);
+                    var confirmationLink = Url.Action("ConfirmEmail", "Account", new {token = getConfirmationToken.Value,email = model.Email }, Request.Scheme);
                     await _accountService.SendConfirmationEmail(model.Email,confirmationLink!);
                     return Ok(result.Value);
                 }
