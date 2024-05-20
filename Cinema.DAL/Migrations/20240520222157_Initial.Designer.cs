@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Cinema.DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240519211933_UpdateTicketsAndInvoicesTables")]
-    partial class UpdateTicketsAndInvoicesTables
+    [Migration("20240520222157_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -170,13 +170,13 @@ namespace Cinema.DAL.Migrations
                         {
                             Id = new Guid("88d6040a-130f-43d4-8bee-1f0074962181"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "6563f52c-1ead-4345-9305-74d721694b8f",
+                            ConcurrencyStamp = "db4526f2-c794-4655-acb6-554b85b4398d",
                             Email = "admin@example.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@EXAMPLE.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEG7J7VndOkKCthbs11XNZkS7giTODEJny3IeilLi3YIEa3NrAVIY88XAtav8wz8zzg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEJ8GgflUueKNJ5sRlSUFdKyTQ0Slm8/4jkeEZtsgKD2NMv+Wv/MgOZkK+hrTazKyKg==",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false,
                             UserName = "admin"
@@ -185,13 +185,13 @@ namespace Cinema.DAL.Migrations
                         {
                             Id = new Guid("88d6040a-130f-43d4-8bee-1f0074962182"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "ec069d79-5106-4e08-b8cc-79f5345e85fe",
+                            ConcurrencyStamp = "7e2b0846-98ea-4cff-8f26-ef55f16b7c7e",
                             Email = "user@example.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "USER@EXAMPLE.COM",
                             NormalizedUserName = "USER",
-                            PasswordHash = "AQAAAAIAAYagAAAAEPLMEzlIPKtnuXJDTNirfDZroPLQVGLGF7bVzfJ6ZNxL7F/GFLpKnLEvRX+emhJapQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAENS3oyrQSpbPtoBkYTVTbBBT312s2IfeHXG/WjSjPrpDxYSJov5k9FWqVdba1GtV1Q==",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false,
                             UserName = "user"
@@ -278,7 +278,12 @@ namespace Cinema.DAL.Migrations
                     b.Property<int>("Capacity")
                         .HasColumnType("int");
 
-                    b.Property<string>("RowsCapacity")
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("RowsData")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -291,13 +296,15 @@ namespace Cinema.DAL.Migrations
                         {
                             Id = new Guid("d67b95a0-b12e-4574-b9ec-634b11f8df41"),
                             Capacity = 100,
-                            RowsCapacity = "[10,10,10,10,10,10,10,10,10,10]"
+                            Name = "Hall 1 (Big)",
+                            RowsData = "[\r\n     { \"Capacity\": 6, \"PriceMultiplier\": 1 },\r\n     { \"Capacity\": 8, \"PriceMultiplier\": 1.2 },\r\n     { \"Capacity\": 10, \"PriceMultiplier\": 1.5 },\r\n     { \"Capacity\": 10, \"PriceMultiplier\": 1.5 },\r\n     { \"Capacity\": 10, \"PriceMultiplier\": 1.5 },\r\n     { \"Capacity\": 10, \"PriceMultiplier\": 2 },\r\n     { \"Capacity\": 10, \"PriceMultiplier\": 2 },\r\n     { \"Capacity\": 10, \"PriceMultiplier\": 1.5 },\r\n     { \"Capacity\": 10, \"PriceMultiplier\": 2 },\r\n     { \"Capacity\": 10, \"PriceMultiplier\": 2 },\r\n]"
                         },
                         new
                         {
                             Id = new Guid("d67b95a0-b12e-4574-b9ec-634b11f8df42"),
                             Capacity = 50,
-                            RowsCapacity = "[5,5,5,5,5,5,5,5,5,5]"
+                            Name = "Hall 2 (Small)",
+                            RowsData = "[\r\n     { \"Capacity\": 8, \"PriceMultiplier\": 1 },\r\n     { \"Capacity\": 5, \"PriceMultiplier\": 1.2 },\r\n     { \"Capacity\": 5, \"PriceMultiplier\": 1.6 },\r\n     { \"Capacity\": 5, \"PriceMultiplier\": 1.6 },\r\n     { \"Capacity\": 5, \"PriceMultiplier\": 1.6 },\r\n     { \"Capacity\": 5, \"PriceMultiplier\": 2 },\r\n     { \"Capacity\": 5, \"PriceMultiplier\": 2 },\r\n     { \"Capacity\": 5, \"PriceMultiplier\": 2 }\r\n]"
                         });
                 });
 
@@ -311,18 +318,22 @@ namespace Cinema.DAL.Migrations
                         .HasPrecision(8, 2)
                         .HasColumnType("decimal(8,2)");
 
-                    b.Property<DateTime>("CreateDateUtc")
+                    b.Property<Guid>("CreatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("CreatedByName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedOnUtc")
                         .HasColumnType("datetime2");
 
                     b.Property<bool>("IsPaid")
                         .HasColumnType("bit");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("CreatedById");
 
                     b.ToTable("Invoice");
 
@@ -331,17 +342,19 @@ namespace Cinema.DAL.Migrations
                         {
                             Id = new Guid("363c2006-3d51-46ea-af49-f40fe7605441"),
                             Amount = 100.00m,
-                            CreateDateUtc = new DateTime(2024, 4, 28, 11, 5, 44, 0, DateTimeKind.Utc),
-                            IsPaid = true,
-                            UserId = new Guid("88d6040a-130f-43d4-8bee-1f0074962182")
+                            CreatedById = new Guid("88d6040a-130f-43d4-8bee-1f0074962182"),
+                            CreatedByName = "admin",
+                            CreatedOnUtc = new DateTime(2024, 4, 28, 11, 5, 44, 0, DateTimeKind.Utc),
+                            IsPaid = true
                         },
                         new
                         {
                             Id = new Guid("363c2006-3d51-46ea-af49-f40fe7605442"),
                             Amount = 100.00m,
-                            CreateDateUtc = new DateTime(2024, 4, 28, 19, 34, 21, 0, DateTimeKind.Utc),
-                            IsPaid = true,
-                            UserId = new Guid("88d6040a-130f-43d4-8bee-1f0074962182")
+                            CreatedById = new Guid("88d6040a-130f-43d4-8bee-1f0074962182"),
+                            CreatedByName = "admin",
+                            CreatedOnUtc = new DateTime(2024, 4, 28, 19, 34, 21, 0, DateTimeKind.Utc),
+                            IsPaid = true
                         });
                 });
 
@@ -521,7 +534,7 @@ namespace Cinema.DAL.Migrations
                             Comment = "Great movie!",
                             CreatedById = new Guid("88d6040a-130f-43d4-8bee-1f0074962182"),
                             CreatedByName = "user",
-                            CreatedOnUtc = new DateTime(2024, 5, 19, 21, 19, 32, 539, DateTimeKind.Utc).AddTicks(3720),
+                            CreatedOnUtc = new DateTime(2024, 5, 20, 22, 21, 57, 105, DateTimeKind.Utc).AddTicks(2023),
                             MovieId = new Guid("9344f562-ffdc-41c5-bb24-c41c969534c1"),
                             Rank = 5
                         },
@@ -531,7 +544,7 @@ namespace Cinema.DAL.Migrations
                             Comment = "Good movie!",
                             CreatedById = new Guid("88d6040a-130f-43d4-8bee-1f0074962182"),
                             CreatedByName = "user",
-                            CreatedOnUtc = new DateTime(2024, 5, 19, 21, 19, 32, 539, DateTimeKind.Utc).AddTicks(4110),
+                            CreatedOnUtc = new DateTime(2024, 5, 20, 22, 21, 57, 105, DateTimeKind.Utc).AddTicks(2327),
                             MovieId = new Guid("9344f562-ffdc-41c5-bb24-c41c969534c2"),
                             Rank = 4
                         });
@@ -614,10 +627,10 @@ namespace Cinema.DAL.Migrations
                     b.Property<Guid>("InvoiceId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("PlaceIndex")
+                    b.Property<int>("RowIndex")
                         .HasColumnType("int");
 
-                    b.Property<int>("RowIndex")
+                    b.Property<int>("SeatIndex")
                         .HasColumnType("int");
 
                     b.Property<Guid>("SessionId")
@@ -631,7 +644,8 @@ namespace Cinema.DAL.Migrations
 
                     b.HasIndex("InvoiceId");
 
-                    b.HasIndex("SessionId");
+                    b.HasIndex("SessionId", "RowIndex", "SeatIndex")
+                        .IsUnique();
 
                     b.ToTable("Ticket");
 
@@ -640,16 +654,16 @@ namespace Cinema.DAL.Migrations
                         {
                             Id = new Guid("9ea79a4c-d3d2-4fdf-b9c4-9f4b71e6f011"),
                             InvoiceId = new Guid("363c2006-3d51-46ea-af49-f40fe7605441"),
-                            PlaceIndex = 6,
                             RowIndex = 3,
+                            SeatIndex = 6,
                             SessionId = new Guid("1f8038c6-2e09-4919-8a40-d4715f176be1")
                         },
                         new
                         {
                             Id = new Guid("9ea79a4c-d3d2-4fdf-b9c4-9f4b71e6f012"),
                             InvoiceId = new Guid("363c2006-3d51-46ea-af49-f40fe7605442"),
-                            PlaceIndex = 4,
                             RowIndex = 1,
+                            SeatIndex = 4,
                             SessionId = new Guid("1f8038c6-2e09-4919-8a40-d4715f176be4")
                         });
                 });
@@ -808,14 +822,14 @@ namespace Cinema.DAL.Migrations
 
             modelBuilder.Entity("Cinema.DAL.Entities.Invoice", b =>
                 {
-                    b.HasOne("Cinema.DAL.Entities.AspNetUser", "User")
+                    b.HasOne("Cinema.DAL.Entities.AspNetUser", "CreatedBy")
                         .WithMany("Invoices")
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("CreatedById")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("UserInvoiceFK");
 
-                    b.Navigation("User");
+                    b.Navigation("CreatedBy");
                 });
 
             modelBuilder.Entity("Cinema.DAL.Entities.Movie", b =>

@@ -93,8 +93,9 @@ namespace Cinema.DAL.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     Capacity = table.Column<int>(type: "int", nullable: false),
-                    RowsCapacity = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    RowsData = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -205,6 +206,28 @@ namespace Cinema.DAL.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Invoice",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Amount = table.Column<decimal>(type: "decimal(8,2)", precision: 8, scale: 2, nullable: false),
+                    IsPaid = table.Column<bool>(type: "bit", nullable: false),
+                    CreatedOnUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedByName = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Invoice", x => x.Id);
+                    table.ForeignKey(
+                        name: "UserInvoiceFK",
+                        column: x => x.CreatedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -334,7 +357,8 @@ namespace Cinema.DAL.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     HallId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     MovieId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    DateUtc = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    DateUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    BasePrice = table.Column<decimal>(type: "decimal(8,2)", precision: 8, scale: 2, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -359,58 +383,35 @@ namespace Cinema.DAL.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     SessionId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    HallId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    InvoiceId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     RowIndex = table.Column<int>(type: "int", nullable: false),
-                    PlaceIndex = table.Column<int>(type: "int", nullable: false)
+                    SeatIndex = table.Column<int>(type: "int", nullable: false),
+                    AspNetUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    HallId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Ticket", x => x.Id);
                     table.ForeignKey(
-                        name: "TicketHallFK",
+                        name: "FK_Ticket_AspNetUsers_AspNetUserId",
+                        column: x => x.AspNetUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Ticket_Hall_HallId",
                         column: x => x.HallId,
                         principalTable: "Hall",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "InvoiceTicketsFK",
+                        column: x => x.InvoiceId,
+                        principalTable: "Invoice",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "TicketSessionFK",
                         column: x => x.SessionId,
                         principalTable: "Session",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "TicketUserFK",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Invoice",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    TicketId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Amount = table.Column<int>(type: "int", nullable: false),
-                    Status = table.Column<bool>(type: "bit", nullable: false),
-                    CreateDateUtc = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Invoice", x => x.Id);
-                    table.ForeignKey(
-                        name: "TicketInvoiceFK",
-                        column: x => x.TicketId,
-                        principalTable: "Ticket",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "UserInvoiceFK",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -431,8 +432,8 @@ namespace Cinema.DAL.Migrations
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { new Guid("88d6040a-130f-43d4-8bee-1f0074962181"), 0, "04c99617-c427-4f99-bd40-5dbc52108f6e", "admin@example.com", true, false, null, "ADMIN@EXAMPLE.COM", "ADMIN", "AQAAAAIAAYagAAAAEBL+uOlsNZGbN9ibvJstGX+uW/zoklJwRNalt2c0EdcN1qIHjjSsQd99veyyYun6dQ==", null, false, null, false, "admin" },
-                    { new Guid("88d6040a-130f-43d4-8bee-1f0074962182"), 0, "fdcc761f-8c63-4e40-ab00-b66bb54717e2", "user@example.com", true, false, null, "USER@EXAMPLE.COM", "USER", "AQAAAAIAAYagAAAAEB2Bp2Il1Yv0TnM+/O7cn2ALL2YXLbeghYDSejApp36HDT+MwprD3GR49o0gtE1/2Q==", null, false, null, false, "user" }
+                    { new Guid("88d6040a-130f-43d4-8bee-1f0074962181"), 0, "db4526f2-c794-4655-acb6-554b85b4398d", "admin@example.com", true, false, null, "ADMIN@EXAMPLE.COM", "ADMIN", "AQAAAAIAAYagAAAAEJ8GgflUueKNJ5sRlSUFdKyTQ0Slm8/4jkeEZtsgKD2NMv+Wv/MgOZkK+hrTazKyKg==", null, false, null, false, "admin" },
+                    { new Guid("88d6040a-130f-43d4-8bee-1f0074962182"), 0, "7e2b0846-98ea-4cff-8f26-ef55f16b7c7e", "user@example.com", true, false, null, "USER@EXAMPLE.COM", "USER", "AQAAAAIAAYagAAAAENS3oyrQSpbPtoBkYTVTbBBT312s2IfeHXG/WjSjPrpDxYSJov5k9FWqVdba1GtV1Q==", null, false, null, false, "user" }
                 });
 
             migrationBuilder.InsertData(
@@ -458,11 +459,20 @@ namespace Cinema.DAL.Migrations
 
             migrationBuilder.InsertData(
                 table: "Hall",
-                columns: new[] { "Id", "Capacity", "RowsCapacity" },
+                columns: new[] { "Id", "Capacity", "Name", "RowsData" },
                 values: new object[,]
                 {
-                    { new Guid("d67b95a0-b12e-4574-b9ec-634b11f8df41"), 100, "[10,10,10,10,10,10,10,10,10,10]" },
-                    { new Guid("d67b95a0-b12e-4574-b9ec-634b11f8df42"), 50, "[5,5,5,5,5,5,5,5,5,5]" }
+                    { new Guid("d67b95a0-b12e-4574-b9ec-634b11f8df41"), 100, "Hall 1 (Big)", "[\r\n     { \"Capacity\": 6, \"PriceMultiplier\": 1 },\r\n     { \"Capacity\": 8, \"PriceMultiplier\": 1.2 },\r\n     { \"Capacity\": 10, \"PriceMultiplier\": 1.5 },\r\n     { \"Capacity\": 10, \"PriceMultiplier\": 1.5 },\r\n     { \"Capacity\": 10, \"PriceMultiplier\": 1.5 },\r\n     { \"Capacity\": 10, \"PriceMultiplier\": 2 },\r\n     { \"Capacity\": 10, \"PriceMultiplier\": 2 },\r\n     { \"Capacity\": 10, \"PriceMultiplier\": 1.5 },\r\n     { \"Capacity\": 10, \"PriceMultiplier\": 2 },\r\n     { \"Capacity\": 10, \"PriceMultiplier\": 2 },\r\n]" },
+                    { new Guid("d67b95a0-b12e-4574-b9ec-634b11f8df42"), 50, "Hall 2 (Small)", "[\r\n     { \"Capacity\": 8, \"PriceMultiplier\": 1 },\r\n     { \"Capacity\": 5, \"PriceMultiplier\": 1.2 },\r\n     { \"Capacity\": 5, \"PriceMultiplier\": 1.6 },\r\n     { \"Capacity\": 5, \"PriceMultiplier\": 1.6 },\r\n     { \"Capacity\": 5, \"PriceMultiplier\": 1.6 },\r\n     { \"Capacity\": 5, \"PriceMultiplier\": 2 },\r\n     { \"Capacity\": 5, \"PriceMultiplier\": 2 },\r\n     { \"Capacity\": 5, \"PriceMultiplier\": 2 }\r\n]" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Invoice",
+                columns: new[] { "Id", "Amount", "CreatedById", "CreatedByName", "CreatedOnUtc", "IsPaid" },
+                values: new object[,]
+                {
+                    { new Guid("363c2006-3d51-46ea-af49-f40fe7605441"), 100.00m, new Guid("88d6040a-130f-43d4-8bee-1f0074962182"), "admin", new DateTime(2024, 4, 28, 11, 5, 44, 0, DateTimeKind.Utc), true },
+                    { new Guid("363c2006-3d51-46ea-af49-f40fe7605442"), 100.00m, new Guid("88d6040a-130f-43d4-8bee-1f0074962182"), "admin", new DateTime(2024, 4, 28, 19, 34, 21, 0, DateTimeKind.Utc), true }
                 });
 
             migrationBuilder.InsertData(
@@ -510,37 +520,28 @@ namespace Cinema.DAL.Migrations
                 columns: new[] { "Id", "Comment", "CreatedById", "CreatedByName", "CreatedOnUtc", "MovieId", "Rank" },
                 values: new object[,]
                 {
-                    { new Guid("bbd5c0d3-a45d-490a-b26d-d503b6a82261"), "Great movie!", new Guid("88d6040a-130f-43d4-8bee-1f0074962182"), "user", new DateTime(2024, 5, 7, 11, 42, 38, 687, DateTimeKind.Utc).AddTicks(8940), new Guid("9344f562-ffdc-41c5-bb24-c41c969534c1"), 5 },
-                    { new Guid("bbd5c0d3-a45d-490a-b26d-d503b6a82262"), "Good movie!", new Guid("88d6040a-130f-43d4-8bee-1f0074962182"), "user", new DateTime(2024, 5, 7, 11, 42, 38, 687, DateTimeKind.Utc).AddTicks(9330), new Guid("9344f562-ffdc-41c5-bb24-c41c969534c2"), 4 }
+                    { new Guid("bbd5c0d3-a45d-490a-b26d-d503b6a82261"), "Great movie!", new Guid("88d6040a-130f-43d4-8bee-1f0074962182"), "user", new DateTime(2024, 5, 20, 22, 21, 57, 105, DateTimeKind.Utc).AddTicks(2023), new Guid("9344f562-ffdc-41c5-bb24-c41c969534c1"), 5 },
+                    { new Guid("bbd5c0d3-a45d-490a-b26d-d503b6a82262"), "Good movie!", new Guid("88d6040a-130f-43d4-8bee-1f0074962182"), "user", new DateTime(2024, 5, 20, 22, 21, 57, 105, DateTimeKind.Utc).AddTicks(2327), new Guid("9344f562-ffdc-41c5-bb24-c41c969534c2"), 4 }
                 });
 
             migrationBuilder.InsertData(
                 table: "Session",
-                columns: new[] { "Id", "DateUtc", "HallId", "MovieId" },
+                columns: new[] { "Id", "BasePrice", "DateUtc", "HallId", "MovieId" },
                 values: new object[,]
                 {
-                    { new Guid("1f8038c6-2e09-4919-8a40-d4715f176be1"), new DateTime(2024, 4, 28, 14, 0, 0, 0, DateTimeKind.Unspecified), new Guid("d67b95a0-b12e-4574-b9ec-634b11f8df41"), new Guid("9344f562-ffdc-41c5-bb24-c41c969534c1") },
-                    { new Guid("1f8038c6-2e09-4919-8a40-d4715f176be2"), new DateTime(2024, 4, 28, 18, 0, 0, 0, DateTimeKind.Unspecified), new Guid("d67b95a0-b12e-4574-b9ec-634b11f8df41"), new Guid("9344f562-ffdc-41c5-bb24-c41c969534c2") },
-                    { new Guid("1f8038c6-2e09-4919-8a40-d4715f176be3"), new DateTime(2024, 4, 28, 18, 0, 0, 0, DateTimeKind.Unspecified), new Guid("d67b95a0-b12e-4574-b9ec-634b11f8df41"), new Guid("9344f562-ffdc-41c5-bb24-c41c969534c1") },
-                    { new Guid("1f8038c6-2e09-4919-8a40-d4715f176be4"), new DateTime(2024, 4, 29, 12, 0, 0, 0, DateTimeKind.Unspecified), new Guid("d67b95a0-b12e-4574-b9ec-634b11f8df42"), new Guid("9344f562-ffdc-41c5-bb24-c41c969534c2") }
+                    { new Guid("1f8038c6-2e09-4919-8a40-d4715f176be1"), 299.00m, new DateTime(2024, 4, 28, 14, 0, 0, 0, DateTimeKind.Unspecified), new Guid("d67b95a0-b12e-4574-b9ec-634b11f8df41"), new Guid("9344f562-ffdc-41c5-bb24-c41c969534c1") },
+                    { new Guid("1f8038c6-2e09-4919-8a40-d4715f176be2"), 129.00m, new DateTime(2024, 4, 28, 18, 0, 0, 0, DateTimeKind.Unspecified), new Guid("d67b95a0-b12e-4574-b9ec-634b11f8df41"), new Guid("9344f562-ffdc-41c5-bb24-c41c969534c2") },
+                    { new Guid("1f8038c6-2e09-4919-8a40-d4715f176be3"), 349.00m, new DateTime(2024, 4, 28, 18, 0, 0, 0, DateTimeKind.Unspecified), new Guid("d67b95a0-b12e-4574-b9ec-634b11f8df41"), new Guid("9344f562-ffdc-41c5-bb24-c41c969534c1") },
+                    { new Guid("1f8038c6-2e09-4919-8a40-d4715f176be4"), 99.00m, new DateTime(2024, 4, 29, 12, 0, 0, 0, DateTimeKind.Unspecified), new Guid("d67b95a0-b12e-4574-b9ec-634b11f8df42"), new Guid("9344f562-ffdc-41c5-bb24-c41c969534c2") }
                 });
 
             migrationBuilder.InsertData(
                 table: "Ticket",
-                columns: new[] { "Id", "HallId", "PlaceIndex", "RowIndex", "SessionId", "UserId" },
+                columns: new[] { "Id", "AspNetUserId", "HallId", "InvoiceId", "RowIndex", "SeatIndex", "SessionId" },
                 values: new object[,]
                 {
-                    { new Guid("9ea79a4c-d3d2-4fdf-b9c4-9f4b71e6f011"), new Guid("d67b95a0-b12e-4574-b9ec-634b11f8df41"), 6, 3, new Guid("1f8038c6-2e09-4919-8a40-d4715f176be1"), new Guid("88d6040a-130f-43d4-8bee-1f0074962182") },
-                    { new Guid("9ea79a4c-d3d2-4fdf-b9c4-9f4b71e6f012"), new Guid("d67b95a0-b12e-4574-b9ec-634b11f8df42"), 4, 1, new Guid("1f8038c6-2e09-4919-8a40-d4715f176be4"), new Guid("88d6040a-130f-43d4-8bee-1f0074962182") }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Invoice",
-                columns: new[] { "Id", "Amount", "CreateDateUtc", "Status", "TicketId", "UserId" },
-                values: new object[,]
-                {
-                    { new Guid("363c2006-3d51-46ea-af49-f40fe7605441"), 100, new DateTime(2024, 4, 28, 11, 5, 44, 0, DateTimeKind.Utc), true, new Guid("9ea79a4c-d3d2-4fdf-b9c4-9f4b71e6f011"), new Guid("88d6040a-130f-43d4-8bee-1f0074962182") },
-                    { new Guid("363c2006-3d51-46ea-af49-f40fe7605442"), 100, new DateTime(2024, 4, 28, 19, 34, 21, 0, DateTimeKind.Utc), true, new Guid("9ea79a4c-d3d2-4fdf-b9c4-9f4b71e6f012"), new Guid("88d6040a-130f-43d4-8bee-1f0074962182") }
+                    { new Guid("9ea79a4c-d3d2-4fdf-b9c4-9f4b71e6f011"), null, null, new Guid("363c2006-3d51-46ea-af49-f40fe7605441"), 3, 6, new Guid("1f8038c6-2e09-4919-8a40-d4715f176be1") },
+                    { new Guid("9ea79a4c-d3d2-4fdf-b9c4-9f4b71e6f012"), null, null, new Guid("363c2006-3d51-46ea-af49-f40fe7605442"), 1, 4, new Guid("1f8038c6-2e09-4919-8a40-d4715f176be4") }
                 });
 
             migrationBuilder.CreateIndex(
@@ -588,15 +589,9 @@ namespace Cinema.DAL.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Invoice_TicketId",
+                name: "IX_Invoice_CreatedById",
                 table: "Invoice",
-                column: "TicketId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Invoice_UserId",
-                table: "Invoice",
-                column: "UserId");
+                column: "CreatedById");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Movie_DirectorId",
@@ -629,19 +624,25 @@ namespace Cinema.DAL.Migrations
                 column: "MovieId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Ticket_AspNetUserId",
+                table: "Ticket",
+                column: "AspNetUserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Ticket_HallId",
                 table: "Ticket",
                 column: "HallId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Ticket_SessionId",
+                name: "IX_Ticket_InvoiceId",
                 table: "Ticket",
-                column: "SessionId");
+                column: "InvoiceId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Ticket_UserId",
+                name: "IX_Ticket_SessionId_RowIndex_SeatIndex",
                 table: "Ticket",
-                column: "UserId");
+                columns: new[] { "SessionId", "RowIndex", "SeatIndex" },
+                unique: true);
         }
 
         /// <inheritdoc />
@@ -666,9 +667,6 @@ namespace Cinema.DAL.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Invoice");
-
-            migrationBuilder.DropTable(
                 name: "MovieGenre");
 
             migrationBuilder.DropTable(
@@ -678,16 +676,19 @@ namespace Cinema.DAL.Migrations
                 name: "Review");
 
             migrationBuilder.DropTable(
+                name: "Ticket");
+
+            migrationBuilder.DropTable(
                 name: "Actor");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "Ticket");
+                name: "Genre");
 
             migrationBuilder.DropTable(
-                name: "Genre");
+                name: "Invoice");
 
             migrationBuilder.DropTable(
                 name: "Session");

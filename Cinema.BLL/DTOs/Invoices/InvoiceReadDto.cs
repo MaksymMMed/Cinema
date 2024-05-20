@@ -1,3 +1,6 @@
+using Cinema.DAL.Entities;
+using System.ComponentModel.DataAnnotations;
+
 namespace Cinema.BLL.DTOs.Invoices;
 
 public class InvoiceReadDto

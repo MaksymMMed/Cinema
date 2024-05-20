@@ -167,13 +167,13 @@ namespace Cinema.DAL.Migrations
                         {
                             Id = new Guid("88d6040a-130f-43d4-8bee-1f0074962181"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "f7e9d265-0e2a-4393-be01-2eec50b042f5",
+                            ConcurrencyStamp = "db4526f2-c794-4655-acb6-554b85b4398d",
                             Email = "admin@example.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@EXAMPLE.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEFOvpdx5/+5faw+kgZwsmSSzF8fCX+0Htfz/GIOPNtB8NLVFeVRBWiSMlSCtq+vSAw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEJ8GgflUueKNJ5sRlSUFdKyTQ0Slm8/4jkeEZtsgKD2NMv+Wv/MgOZkK+hrTazKyKg==",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false,
                             UserName = "admin"
@@ -182,13 +182,13 @@ namespace Cinema.DAL.Migrations
                         {
                             Id = new Guid("88d6040a-130f-43d4-8bee-1f0074962182"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "23946112-1af5-4961-b533-5d97107f3651",
+                            ConcurrencyStamp = "7e2b0846-98ea-4cff-8f26-ef55f16b7c7e",
                             Email = "user@example.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "USER@EXAMPLE.COM",
                             NormalizedUserName = "USER",
-                            PasswordHash = "AQAAAAIAAYagAAAAEO88oKxvaprt1giaezIKlpOOBK6E8HuutnrSjDlrq5B7llVv+Kn9iSrqNdVcL2AWTw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAENS3oyrQSpbPtoBkYTVTbBBT312s2IfeHXG/WjSjPrpDxYSJov5k9FWqVdba1GtV1Q==",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false,
                             UserName = "user"
@@ -294,14 +294,14 @@ namespace Cinema.DAL.Migrations
                             Id = new Guid("d67b95a0-b12e-4574-b9ec-634b11f8df41"),
                             Capacity = 100,
                             Name = "Hall 1 (Big)",
-                            RowsData = "[\n     { \"Capacity\": 6, \"PriceMultiplier\": 1 },\n     { \"Capacity\": 8, \"PriceMultiplier\": 1.2 },\n     { \"Capacity\": 10, \"PriceMultiplier\": 1.5 },\n     { \"Capacity\": 10, \"PriceMultiplier\": 1.5 },\n     { \"Capacity\": 10, \"PriceMultiplier\": 1.5 },\n     { \"Capacity\": 10, \"PriceMultiplier\": 2 },\n     { \"Capacity\": 10, \"PriceMultiplier\": 2 },\n     { \"Capacity\": 10, \"PriceMultiplier\": 1.5 },\n     { \"Capacity\": 10, \"PriceMultiplier\": 2 },\n     { \"Capacity\": 10, \"PriceMultiplier\": 2 },\n]"
+                            RowsData = "[\r\n     { \"Capacity\": 6, \"PriceMultiplier\": 1 },\r\n     { \"Capacity\": 8, \"PriceMultiplier\": 1.2 },\r\n     { \"Capacity\": 10, \"PriceMultiplier\": 1.5 },\r\n     { \"Capacity\": 10, \"PriceMultiplier\": 1.5 },\r\n     { \"Capacity\": 10, \"PriceMultiplier\": 1.5 },\r\n     { \"Capacity\": 10, \"PriceMultiplier\": 2 },\r\n     { \"Capacity\": 10, \"PriceMultiplier\": 2 },\r\n     { \"Capacity\": 10, \"PriceMultiplier\": 1.5 },\r\n     { \"Capacity\": 10, \"PriceMultiplier\": 2 },\r\n     { \"Capacity\": 10, \"PriceMultiplier\": 2 },\r\n]"
                         },
                         new
                         {
                             Id = new Guid("d67b95a0-b12e-4574-b9ec-634b11f8df42"),
                             Capacity = 50,
                             Name = "Hall 2 (Small)",
-                            RowsData = "[\n     { \"Capacity\": 8, \"PriceMultiplier\": 1 },\n     { \"Capacity\": 5, \"PriceMultiplier\": 1.2 },\n     { \"Capacity\": 5, \"PriceMultiplier\": 1.6 },\n     { \"Capacity\": 5, \"PriceMultiplier\": 1.6 },\n     { \"Capacity\": 5, \"PriceMultiplier\": 1.6 },\n     { \"Capacity\": 5, \"PriceMultiplier\": 2 },\n     { \"Capacity\": 5, \"PriceMultiplier\": 2 },\n     { \"Capacity\": 5, \"PriceMultiplier\": 2 }\n]"
+                            RowsData = "[\r\n     { \"Capacity\": 8, \"PriceMultiplier\": 1 },\r\n     { \"Capacity\": 5, \"PriceMultiplier\": 1.2 },\r\n     { \"Capacity\": 5, \"PriceMultiplier\": 1.6 },\r\n     { \"Capacity\": 5, \"PriceMultiplier\": 1.6 },\r\n     { \"Capacity\": 5, \"PriceMultiplier\": 1.6 },\r\n     { \"Capacity\": 5, \"PriceMultiplier\": 2 },\r\n     { \"Capacity\": 5, \"PriceMultiplier\": 2 },\r\n     { \"Capacity\": 5, \"PriceMultiplier\": 2 }\r\n]"
                         });
                 });
 
@@ -317,7 +317,7 @@ namespace Cinema.DAL.Migrations
 
                     b.Property<Guid>("CreatedById")
                         .HasColumnType("uniqueidentifier");
-                        
+
                     b.Property<string>("CreatedByName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -531,7 +531,7 @@ namespace Cinema.DAL.Migrations
                             Comment = "Great movie!",
                             CreatedById = new Guid("88d6040a-130f-43d4-8bee-1f0074962182"),
                             CreatedByName = "user",
-                            CreatedOnUtc = new DateTime(2024, 5, 20, 1, 56, 28, 549, DateTimeKind.Utc).AddTicks(1130),
+                            CreatedOnUtc = new DateTime(2024, 5, 20, 22, 21, 57, 105, DateTimeKind.Utc).AddTicks(2023),
                             MovieId = new Guid("9344f562-ffdc-41c5-bb24-c41c969534c1"),
                             Rank = 5
                         },
@@ -541,7 +541,7 @@ namespace Cinema.DAL.Migrations
                             Comment = "Good movie!",
                             CreatedById = new Guid("88d6040a-130f-43d4-8bee-1f0074962182"),
                             CreatedByName = "user",
-                            CreatedOnUtc = new DateTime(2024, 5, 20, 1, 56, 28, 549, DateTimeKind.Utc).AddTicks(1500),
+                            CreatedOnUtc = new DateTime(2024, 5, 20, 22, 21, 57, 105, DateTimeKind.Utc).AddTicks(2327),
                             MovieId = new Guid("9344f562-ffdc-41c5-bb24-c41c969534c2"),
                             Rank = 4
                         });
