@@ -292,28 +292,32 @@ namespace Cinema.DAL.Seeding
                     Id = new Guid("1F8038C6-2E09-4919-8A40-D4715F176BE1"),
                     HallId = Halls[0].Id,
                     MovieId = Movies[0].Id,
-                    DateUtc = new DateTime(2024, 4, 28, 14, 0, 0)
+                    DateUtc = new DateTime(2024, 4, 28, 14, 0, 0),
+                    BasePrice = 299.00m
                 },
                 new Session
                 {
                     Id = new Guid("1F8038C6-2E09-4919-8A40-D4715F176BE2"),
                     HallId = Halls[0].Id,
                     MovieId = Movies[1].Id,
-                    DateUtc = new DateTime(2024, 4, 28, 18, 0, 0)
+                    DateUtc = new DateTime(2024, 4, 28, 18, 0, 0),
+                    BasePrice = 129.00m
                 },
                 new Session
                 {
                     Id = new Guid("1F8038C6-2E09-4919-8A40-D4715F176BE3"),
                     HallId = Halls[0].Id,
                     MovieId = Movies[0].Id,
-                    DateUtc = new DateTime(2024, 4, 28, 18, 0, 0)
+                    DateUtc = new DateTime(2024, 4, 28, 18, 0, 0),
+                    BasePrice = 349.00m
                 },
                 new Session
                 {
                     Id = new Guid("1F8038C6-2E09-4919-8A40-D4715F176BE4"),
                     HallId = Halls[1].Id,
                     MovieId = Movies[1].Id,
-                    DateUtc = new DateTime(2024, 4, 29, 12, 0, 0)
+                    DateUtc = new DateTime(2024, 4, 29, 12, 0, 0),
+                    BasePrice = 99.00m
                 }
             ];
         }
