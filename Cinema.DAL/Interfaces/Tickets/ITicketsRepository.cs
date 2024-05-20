@@ -4,4 +4,5 @@ namespace Cinema.DAL.Interfaces.Tickets;
 
 public interface ITicketsRepository : IGenericRepository<Ticket, Guid>
 {
+    public interface ITicketsRepository:IGenericRepository<Ticket,Guid>;
 }

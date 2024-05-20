@@ -48,6 +48,9 @@ using AccountService = Cinema.BLL.Services.Account.AccountService;
 using Cinema.BLL.MapperProfiles.Genres;
 using Cinema.EmailService;
 using Cinema.EmailService.Sender;
+using Cinema.BLL.Services.Recomendations;
+using Cinema.DAL.Interfaces.Tickets;
+using Cinema.DAL.Repositories.Tickets;
 
 namespace Cinema.API.Extensions;
 
