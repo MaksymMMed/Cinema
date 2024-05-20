@@ -17,11 +17,6 @@ public class UsersConfiguration : IEntityTypeConfiguration<AspNetUser>
             .HasForeignKey(x => x.UserId)
             .HasConstraintName("UserInvoiceFK");
 
-        builder.HasMany(x => x.Tickets)
-            .WithOne(x => x.User)
-            .HasForeignKey(x => x.UserId)
-            .HasConstraintName("TicketUserFK");
-
         builder.HasMany(x => x.Reviews)
             .WithOne(x => x.CreatedBy)
             .HasForeignKey(x=> x.CreatedById)

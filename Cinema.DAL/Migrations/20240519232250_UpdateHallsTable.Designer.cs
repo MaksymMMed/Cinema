@@ -4,6 +4,7 @@ using Cinema.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Cinema.DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240519232250_UpdateHallsTable")]
+    partial class UpdateHallsTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -167,13 +170,13 @@ namespace Cinema.DAL.Migrations
                         {
                             Id = new Guid("88d6040a-130f-43d4-8bee-1f0074962181"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "45d8747e-9ed0-4dcf-b3b5-905373bfec43",
+                            ConcurrencyStamp = "84211d55-de98-4f9d-a2e2-38b4d183b1e9",
                             Email = "admin@example.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@EXAMPLE.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEOXOikuRNwLuJbg5ArgpRY+VuCoucbeFHs8hgqV+RP8hcwtKJtV1xIbO66yL3dCvPQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEBUmMf5mRfxhNIs3oipQBzxz3g7faMqsAdt2QTbtBA07Z82qw6a1Y2bWupWE+XdBfg==",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false,
                             UserName = "admin"
@@ -182,13 +185,13 @@ namespace Cinema.DAL.Migrations
                         {
                             Id = new Guid("88d6040a-130f-43d4-8bee-1f0074962182"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "6ab117c7-d1c8-4684-a63d-2b8048d5af5d",
+                            ConcurrencyStamp = "c1bb3371-aee7-4121-8a71-cc1e78bfebaa",
                             Email = "user@example.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "USER@EXAMPLE.COM",
                             NormalizedUserName = "USER",
-                            PasswordHash = "AQAAAAIAAYagAAAAEAzcHDIXjB62UkPx3cikxteIcE86I6XLtnRK3lTWVssETL6COuF6DbzHh03GOl5WBw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEM/zxVDQ2EHUOzOXpMrUXfG73O4WW49SOEdhhv9rhKYS1aTcOLvC6KoU6CXzRiC41g==",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false,
                             UserName = "user"
@@ -525,7 +528,7 @@ namespace Cinema.DAL.Migrations
                             Comment = "Great movie!",
                             CreatedById = new Guid("88d6040a-130f-43d4-8bee-1f0074962182"),
                             CreatedByName = "user",
-                            CreatedOnUtc = new DateTime(2024, 5, 19, 23, 24, 23, 266, DateTimeKind.Utc).AddTicks(2630),
+                            CreatedOnUtc = new DateTime(2024, 5, 19, 23, 22, 50, 43, DateTimeKind.Utc).AddTicks(7270),
                             MovieId = new Guid("9344f562-ffdc-41c5-bb24-c41c969534c1"),
                             Rank = 5
                         },
@@ -535,7 +538,7 @@ namespace Cinema.DAL.Migrations
                             Comment = "Good movie!",
                             CreatedById = new Guid("88d6040a-130f-43d4-8bee-1f0074962182"),
                             CreatedByName = "user",
-                            CreatedOnUtc = new DateTime(2024, 5, 19, 23, 24, 23, 266, DateTimeKind.Utc).AddTicks(3020),
+                            CreatedOnUtc = new DateTime(2024, 5, 19, 23, 22, 50, 43, DateTimeKind.Utc).AddTicks(7630),
                             MovieId = new Guid("9344f562-ffdc-41c5-bb24-c41c969534c2"),
                             Rank = 4
                         });
@@ -618,10 +621,10 @@ namespace Cinema.DAL.Migrations
                     b.Property<Guid>("InvoiceId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("RowIndex")
+                    b.Property<int>("PlaceIndex")
                         .HasColumnType("int");
 
-                    b.Property<int>("SeatIndex")
+                    b.Property<int>("RowIndex")
                         .HasColumnType("int");
 
                     b.Property<Guid>("SessionId")
@@ -635,7 +638,7 @@ namespace Cinema.DAL.Migrations
 
                     b.HasIndex("InvoiceId");
 
-                    b.HasIndex("SessionId", "RowIndex", "SeatIndex")
+                    b.HasIndex("SessionId", "RowIndex", "PlaceIndex")
                         .IsUnique();
 
                     b.ToTable("Ticket");
@@ -645,16 +648,16 @@ namespace Cinema.DAL.Migrations
                         {
                             Id = new Guid("9ea79a4c-d3d2-4fdf-b9c4-9f4b71e6f011"),
                             InvoiceId = new Guid("363c2006-3d51-46ea-af49-f40fe7605441"),
+                            PlaceIndex = 6,
                             RowIndex = 3,
-                            SeatIndex = 6,
                             SessionId = new Guid("1f8038c6-2e09-4919-8a40-d4715f176be1")
                         },
                         new
                         {
                             Id = new Guid("9ea79a4c-d3d2-4fdf-b9c4-9f4b71e6f012"),
                             InvoiceId = new Guid("363c2006-3d51-46ea-af49-f40fe7605442"),
+                            PlaceIndex = 4,
                             RowIndex = 1,
-                            SeatIndex = 4,
                             SessionId = new Guid("1f8038c6-2e09-4919-8a40-d4715f176be4")
                         });
                 });

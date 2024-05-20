@@ -3,42 +3,34 @@ using Cinema.BLL.DTOs.Halls;
 using Cinema.BLL.DTOs.Sessions;
 using Cinema.DAL.Entities;
 using System.Text.Json;
+using Cinema.BLL.Utils;
 
 namespace Cinema.BLL.MapperProfiles.Halls;
 
 public class HallsProfile : Profile
 {
-    private static string SerializeRowsCapacity(IEnumerable<int> rowsCapacity)
-    {
-        return JsonSerializer.Serialize(rowsCapacity);
-    }
-    private static IEnumerable<int> DeserializeRowsCapacity(string rowsCapacity)
-    {
-        return JsonSerializer.Deserialize<IEnumerable<int>>(rowsCapacity) ?? [];
-    }
-
     public HallsProfile()
     {
         CreateMap<Hall, HallReadDto>()
             .ForMember(dst => dst.SessionsCount, opt =>
-                opt.MapFrom(src => src.Sessions.Count()))
+                opt.MapFrom(src => src.Sessions.Count))
             .ForMember(dst => dst.TicketsCount, opt =>
-                opt.MapFrom(src => src.Tickets.Count()));
+                opt.MapFrom(src => src.Tickets.Count));
 
         CreateMap<Hall, HallDetailReadDto>()
-            .ForMember(dst => dst.RowsCapacity, opt =>
-                           opt.MapFrom(src => DeserializeRowsCapacity(src.RowsCapacity)));
+            .ForMember(dst => dst.RowsData, opt =>
+                           opt.MapFrom(src => HallUtils.DeserializeRowsData(src.RowsData)));
 
         CreateMap<HallCreateDto, Hall>()
             .ForMember(dst => dst.Capacity, opt =>
-                           opt.MapFrom(src => src.RowsCapacity.Sum()))
-            .ForMember(dst => dst.RowsCapacity, opt =>
-                           opt.MapFrom(src => SerializeRowsCapacity(src.RowsCapacity)));
+                           opt.MapFrom(src => src.RowsData.Sum(rd => rd.Capacity)))
+            .ForMember(dst => dst.RowsData, opt =>
+                           opt.MapFrom(src => HallUtils.SerializeRowsData(src.RowsData)));
 
         CreateMap<HallUpdateDto, Hall>()
             .ForMember(dst => dst.Capacity, opt =>
-                           opt.MapFrom(src => src.RowsCapacity.Sum()))
-            .ForMember(dst => dst.RowsCapacity, opt =>
-                           opt.MapFrom(src => SerializeRowsCapacity(src.RowsCapacity)));
+                           opt.MapFrom(src => src.RowsData.Sum(rd => rd.Capacity)))
+            .ForMember(dst => dst.RowsData, opt =>
+                           opt.MapFrom(src => HallUtils.SerializeRowsData(src.RowsData)));
     }
 }

@@ -8,6 +8,20 @@ public class TicketsProfile : Profile
 {
     public TicketsProfile()
     {
-        CreateMap<Ticket, TicketReadDto>();
+        CreateMap<Ticket, TicketReadDto>()
+            .ForMember(dst => dst.SessionDateUtc, opt =>
+                opt.MapFrom(src => src.Session.DateUtc))
+            .ForMember(dst => dst.Movie, opt =>
+                opt.MapFrom(src => src.Session.Movie))
+            .ForMember(dst => dst.HallId, opt =>
+                opt.MapFrom(src => src.Session.Hall.Id))
+            .ForMember(dst => dst.HallName, opt =>
+                opt.MapFrom(src => src.Session.Hall.Name))
+            .ForMember(dst => dst.PurchasedById, opt =>
+                opt.MapFrom(src => src.Invoice.User.Id))
+            .ForMember(dst => dst.PurchasedByName, opt =>
+                opt.MapFrom(src => src.Invoice.User.UserName));
+        
+        CreateMap<Ticket, SessionTicketDto>();
     }
 }

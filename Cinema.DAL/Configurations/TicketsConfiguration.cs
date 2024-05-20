@@ -9,6 +9,10 @@ public class TicketsConfiguration : IEntityTypeConfiguration<Ticket>
     public void Configure(EntityTypeBuilder<Ticket> builder)
     {
         builder.HasKey(e => e.Id);
+        
+        // The constraint to avoid tickets collision
+        builder.HasIndex(t => new { t.SessionId, t.RowIndex, t.SeatIndex })
+            .IsUnique();
 
         // Relations
         builder.HasOne(e => e.Session)
@@ -16,20 +20,10 @@ public class TicketsConfiguration : IEntityTypeConfiguration<Ticket>
             .OnDelete(DeleteBehavior.Restrict)
             .HasForeignKey(e => e.SessionId)
             .HasConstraintName("TicketSessionFK");
-        
-        builder.HasOne(e => e.Hall)
-            .WithMany(e => e.Tickets)
-            .HasForeignKey(e => e.HallId)
-            .HasConstraintName("TicketHallFK");
-        
-        builder.HasOne(e => e.User)
-            .WithMany(e => e.Tickets)
-            .HasForeignKey(g => g.UserId)
-            .HasConstraintName("TicketUserFK");
 
         builder.HasOne(e => e.Invoice)
-            .WithOne(e => e.Ticket)
-            .HasConstraintName("TicketInvoiceFK");
+            .WithMany(e => e.Tickets)
+            .HasConstraintName("InvoiceTicketsFK");
 
         //Seeding
         builder.HasData(Seeding.DataSeed.Tickets);

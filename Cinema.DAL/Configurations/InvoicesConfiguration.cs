@@ -9,17 +9,15 @@ public class InvoicesConfiguration : IEntityTypeConfiguration<Invoice>
     public void Configure(EntityTypeBuilder<Invoice> builder)
     {
         builder.HasKey(e => e.Id);
+        
+        builder.Property(e => e.Amount)
+            .HasPrecision(8, 2);
 
         // Relations
         builder.HasOne(e => e.User)
             .WithMany()
             .HasForeignKey(g => g.UserId)
             .HasConstraintName("UserInvoiceFK");
-        
-        builder.HasOne(e => e.Ticket)
-            .WithMany()
-            .HasForeignKey(g => g.TicketId)
-            .HasConstraintName("TicketInvoiceFK");
 
         //Seeding
         builder.HasData(Seeding.DataSeed.Invoices);

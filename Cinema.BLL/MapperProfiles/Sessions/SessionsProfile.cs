@@ -9,7 +9,7 @@ public class SessionsProfile : Profile
 {
     private static List<List<bool>> GetSeatsLayout(IEnumerable<Ticket> tickets, Hall hall)
     {
-        var hallSeats = JsonSerializer.Deserialize<List<int>>(hall.RowsCapacity) ?? [];
+        var hallSeats = JsonSerializer.Deserialize<List<int>>(hall.RowsData) ?? [];
         var seats = new List<List<bool>>();
         for (int i = 0; i < hallSeats.Count; i++)
         {
@@ -22,7 +22,7 @@ public class SessionsProfile : Profile
         }
         foreach (var ticket in tickets)
         {
-            seats[ticket.RowIndex][ticket.PlaceIndex] = true;
+            seats[ticket.RowIndex][ticket.SeatIndex] = true;
         }
         return seats;
     }
