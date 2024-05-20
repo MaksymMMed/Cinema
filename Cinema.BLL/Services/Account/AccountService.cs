@@ -145,11 +145,40 @@ namespace Cinema.BLL.Services.Account
             return Result<string>.Success(confirmationToken);
         }
 
+        public async Task<Result<string>> GenerateResetPasswordToken(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+                return Result<string>.Fail("User not found")!;
+
+            var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
+            return Result<string>.Success(resetToken);
+        }
+
+        public async Task SendResetPasswordEmail(string email, string confirmationLink)
+        {
+            await _emailSender.SendResetPasswordEmailAsync(email, confirmationLink);
+        }
+
+        public async Task<Result<string>> ResetPassword(string email, string resetToken, string newPassword, string confirmPassword)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+                return Result<string>.Fail("User not found")!;
+
+            if (newPassword != confirmPassword)
+                return Result<string>.Fail("Passwords do not match")!;
+
+            await _userManager.ResetPasswordAsync(user, resetToken, newPassword);
+            return Result<string>.Success("Password changed");
+        }
+
         public async Task SendConfirmationEmail(string email, string confirmationLink)
         {
             await _emailSender.SendConfirmationEmailAsync(email, confirmationLink);
         }
 
+        
         public async Task<Result<string>> ConfirmEmail(string email, string confirmationToken)
         {
             var user = await _userManager.FindByEmailAsync(email);
