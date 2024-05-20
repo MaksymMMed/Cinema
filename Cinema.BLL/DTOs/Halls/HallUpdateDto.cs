@@ -3,5 +3,6 @@
 public class HallUpdateDto
 {
     public Guid Id { get; set; }
-    public IEnumerable<int> RowsCapacity { get; set; }
+    public string Name { get; set; }
+    public IEnumerable<HallRowDataDto> RowsData { get; set; }
 }

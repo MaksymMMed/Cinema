@@ -13,7 +13,7 @@ public class SessionDetailsDto
     public decimal BasePrice { get; set; }
     public int TicketsCount { get; set; }
     public int HallCapacity { get; set; }
-    public IEnumerable<TicketReadDto> Tickets { get; set; }
+    public IEnumerable<SessionTicketDto> Tickets { get; set; }
     public IEnumerable<IEnumerable<bool>> Seats { get; set; }
 
 }

@@ -59,6 +59,8 @@ public class MoviesProfile : Profile
             .ForMember(dst => dst.AvgMark, opt =>
                 opt.MapFrom(src => CalculateAvgMark(src.MovieReviews)));
 
+        CreateMap<Movie, TicketMovieDto>();
+
         CreateMap<MovieCreateDto, Movie>();
         
         CreateMap<MovieUpdateDto, Movie>();

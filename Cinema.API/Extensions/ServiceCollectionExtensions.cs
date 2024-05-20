@@ -38,6 +38,11 @@ using Cinema.BLL.MapperProfiles.Reviews;
 using Cinema.DAL.Repositories.Reviews;
 using Cinema.DAL.Interfaces.Reviews;
 using Cinema.BLL.Services.Reviews;
+using Cinema.BLL.Services.Tickets;
+using Cinema.DAL.Interfaces.Invoices;
+using Cinema.DAL.Interfaces.Tickets;
+using Cinema.DAL.Repositories.Invoices;
+using Cinema.DAL.Repositories.Tickets;
 using Cinema.BLL.MapperProfiles.Genres;
 using Cinema.EmailService;
 using Cinema.EmailService.Sender;
@@ -152,6 +157,8 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IGenresRepository, GenresRepository>();
         services.AddScoped<ISessionsRepository, SessionsRepository>();
         services.AddScoped<IReviewsRepository, ReviewsRepository>();
+        services.AddScoped<IInvoicesRepository, InvoicesRepository>();
+        services.AddScoped<ITicketsRepository, TicketsRepository>();
     }
 
     public static void AddServices(this IServiceCollection services, IConfiguration configuration)
@@ -164,6 +171,7 @@ public static class ServiceCollectionExtensions
         services.AddTransient<IGenresService, GenresService>();
         services.AddTransient<ISessionsService, SessionsService>();
         services.AddTransient<IReviewsService, ReviewsService>();
+        services.AddTransient<ITicketsService, TicketsService>();
     }
 
     public static void AddEmailService(this IServiceCollection services, IConfiguration configuration)

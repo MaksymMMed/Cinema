@@ -32,8 +32,8 @@ namespace Cinema.DAL.Seeding
             SeedReviews();
             SeedHalls();
             SeedSessions();
-            SeedTickets();
             SeedInvoices();
+            SeedTickets();
         }
 
         private static void SeedUsers()
@@ -272,14 +272,40 @@ namespace Cinema.DAL.Seeding
                 new Hall
                 {
                     Id = new Guid("D67B95A0-B12E-4574-B9EC-634B11F8DF41"),
+                    Name = "Hall 1 (Big)",
                     Capacity = 100,
-                    RowsCapacity = "[10,10,10,10,10,10,10,10,10,10]"
+                    RowsData = """
+                               [
+                                    { "Capacity": 6, "PriceMultiplier": 1 },
+                                    { "Capacity": 8, "PriceMultiplier": 1.2 },
+                                    { "Capacity": 10, "PriceMultiplier": 1.5 },
+                                    { "Capacity": 10, "PriceMultiplier": 1.5 },
+                                    { "Capacity": 10, "PriceMultiplier": 1.5 },
+                                    { "Capacity": 10, "PriceMultiplier": 2 },
+                                    { "Capacity": 10, "PriceMultiplier": 2 },
+                                    { "Capacity": 10, "PriceMultiplier": 1.5 },
+                                    { "Capacity": 10, "PriceMultiplier": 2 },
+                                    { "Capacity": 10, "PriceMultiplier": 2 },
+                               ]
+                               """
                 },
                 new Hall
                 {
                     Id = new Guid("D67B95A0-B12E-4574-B9EC-634B11F8DF42"),
+                    Name = "Hall 2 (Small)",
                     Capacity = 50,
-                    RowsCapacity = "[5,5,5,5,5,5,5,5,5,5]"
+                    RowsData = """
+                               [
+                                    { "Capacity": 8, "PriceMultiplier": 1 },
+                                    { "Capacity": 5, "PriceMultiplier": 1.2 },
+                                    { "Capacity": 5, "PriceMultiplier": 1.6 },
+                                    { "Capacity": 5, "PriceMultiplier": 1.6 },
+                                    { "Capacity": 5, "PriceMultiplier": 1.6 },
+                                    { "Capacity": 5, "PriceMultiplier": 2 },
+                                    { "Capacity": 5, "PriceMultiplier": 2 },
+                                    { "Capacity": 5, "PriceMultiplier": 2 }
+                               ]
+                               """
                 }
             ];
         }
@@ -321,6 +347,30 @@ namespace Cinema.DAL.Seeding
                 }
             ];
         }
+        
+        private static void SeedInvoices()
+        {
+            Invoices =
+            [
+                new Invoice
+                {
+                    Id = new Guid("363C2006-3D51-46EA-AF49-F40FE7605441"),
+                    UserId = Users[1].Id,
+                    Amount = 100.00m,
+                    IsPaid = true,
+                    CreateDateUtc = new DateTime(2024, 4, 28, 11, 5, 44, DateTimeKind.Utc),
+                },
+                new Invoice
+                {
+                    Id = new Guid("363C2006-3D51-46EA-AF49-F40FE7605442"),
+                    UserId = Users[1].Id,
+                    Amount = 100.00m,
+                    IsPaid = true,
+                    CreateDateUtc = new DateTime(2024, 4, 28, 19, 34, 21, DateTimeKind.Utc),
+                }
+            ];
+        }
+        
         private static void SeedTickets()
         {
             Tickets =
@@ -329,43 +379,17 @@ namespace Cinema.DAL.Seeding
                 {
                     Id = new Guid("9EA79A4C-D3D2-4FDF-B9C4-9F4B71E6F011"),
                     SessionId = Sessions[0].Id,
-                    HallId = Halls[0].Id,
-                    UserId = Users[1].Id,
+                    InvoiceId = Invoices[0].Id,
                     RowIndex = 3,
-                    PlaceIndex = 6
+                    SeatIndex = 6
                 },
                 new Ticket
                 {
                     Id = new Guid("9EA79A4C-D3D2-4FDF-B9C4-9F4B71E6F012"),
                     SessionId = Sessions[3].Id,
-                    HallId = Halls[1].Id,
-                    UserId = Users[1].Id,
+                    InvoiceId = Invoices[1].Id,
                     RowIndex = 1,
-                    PlaceIndex = 4
-                }
-            ];
-        }
-        private static void SeedInvoices()
-        {
-            Invoices =
-            [
-                new Invoice
-                {
-                    Id = new Guid("363C2006-3D51-46EA-AF49-F40FE7605441"),
-                    TicketId = Tickets[0].Id,
-                    UserId = Users[1].Id,
-                    Amount = 100,
-                    Status = true,
-                    CreateDateUtc = new DateTime(2024, 4, 28, 11, 5, 44,    DateTimeKind.Utc),
-                },
-                new Invoice
-                {
-                    Id = new Guid("363C2006-3D51-46EA-AF49-F40FE7605442"),
-                    TicketId = Tickets[1].Id,
-                    UserId = Users[1].Id,
-                    Amount = 100,
-                    Status = true,
-                    CreateDateUtc = new DateTime(2024, 4, 28, 19, 34, 21,   DateTimeKind.Utc),
+                    SeatIndex = 4
                 }
             ];
         }

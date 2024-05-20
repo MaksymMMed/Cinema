@@ -9,17 +9,16 @@ public class HallsConfiguration : IEntityTypeConfiguration<Hall>
     public void Configure(EntityTypeBuilder<Hall> builder)
     {
         builder.HasKey(e => e.Id);
+        
+        builder.Property(e => e.Name)
+            .IsRequired()
+            .HasMaxLength(20);
 
         // Relations
         builder.HasMany(e => e.Sessions)
             .WithOne(e => e.Hall)
             .HasForeignKey(g => g.HallId)
             .HasConstraintName("SessionHallFK");
-
-        builder.HasMany(e => e.Tickets)
-            .WithOne(e => e.Hall)
-            .HasForeignKey(g => g.HallId)
-            .HasConstraintName("TicketHallFK");
 
         //Seeding
         builder.HasData(Seeding.DataSeed.Halls);
