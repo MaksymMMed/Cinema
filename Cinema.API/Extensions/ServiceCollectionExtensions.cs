@@ -17,9 +17,9 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Cinema.BLL.MapperProfiles.Actors;
 using Cinema.BLL.MapperProfiles.Genres;
-using Cinema.BLL.Services.Account;
 using Microsoft.OpenApi.Models;
 using Cinema.BLL.MapperProfiles.Directors;
+using Cinema.BLL.MapperProfiles.Invoices;
 using Cinema.DAL.Interfaces.Directors;
 using Cinema.DAL.Repositories.Directors;
 using Cinema.BLL.Services.Directors;
@@ -35,6 +35,7 @@ using Cinema.DAL.Repositories.Sessions;
 using Cinema.BLL.Services.Sessions;
 using Cinema.BLL.MapperProfiles.Tickets;
 using Cinema.BLL.MapperProfiles.Reviews;
+using Cinema.BLL.Services.Invoices;
 using Cinema.DAL.Repositories.Reviews;
 using Cinema.DAL.Interfaces.Reviews;
 using Cinema.BLL.Services.Reviews;
@@ -43,6 +44,7 @@ using Cinema.DAL.Interfaces.Invoices;
 using Cinema.DAL.Interfaces.Tickets;
 using Cinema.DAL.Repositories.Invoices;
 using Cinema.DAL.Repositories.Tickets;
+using AccountService = Cinema.BLL.Services.Account.AccountService;
 using Cinema.BLL.MapperProfiles.Genres;
 using Cinema.EmailService;
 using Cinema.EmailService.Sender;
@@ -140,6 +142,7 @@ public static class ServiceCollectionExtensions
             mc.AddProfile(new SessionsProfile());
             mc.AddProfile(new TicketsProfile());
             mc.AddProfile(new ReviewsProfile());
+            mc.AddProfile(new InvoicesProfile());
         });
 
         var mapper = mapperConfig.CreateMapper();
@@ -161,7 +164,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ITicketsRepository, TicketsRepository>();
     }
 
-    public static void AddServices(this IServiceCollection services, IConfiguration configuration)
+    public static void AddServices(this IServiceCollection services)
     {
         services.AddTransient<IMoviesService, MoviesService>();
         services.AddTransient<IAccountService, AccountService>();
@@ -171,6 +174,7 @@ public static class ServiceCollectionExtensions
         services.AddTransient<IGenresService, GenresService>();
         services.AddTransient<ISessionsService, SessionsService>();
         services.AddTransient<IReviewsService, ReviewsService>();
+        services.AddTransient<IInvoicesService, InvoicesService>();
         services.AddTransient<ITicketsService, TicketsService>();
     }
 

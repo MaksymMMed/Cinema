@@ -11,6 +11,7 @@ using Cinema.DAL.Interfaces.Invoices;
 using Cinema.DAL.Interfaces.Sessions;
 using Cinema.DAL.Interfaces.Tickets;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,17 +21,20 @@ public class TicketsService : BusinessService<Ticket, Guid>, ITicketsService
 {
     private readonly IInvoicesRepository _invoicesRepository;
     private readonly ISessionsRepository _sessionsRepository;
+    private readonly UserManager<AspNetUser> _userManager;
     
     public TicketsService(
         IHttpContextAccessor httpContextAccessor, 
         ITicketsRepository ticketsRepository,
         IInvoicesRepository invoicesRepository,
         ISessionsRepository sessionsRepository,
+        UserManager<AspNetUser> userManager,
         IMapper mapper
     ) : base(httpContextAccessor, ticketsRepository, mapper)
     {
         _invoicesRepository = invoicesRepository;
         _sessionsRepository = sessionsRepository;
+        _userManager = userManager;
     }
 
     public async Task<Result<EntitiesWithTotalCount<TicketReadDto>>> Get(TicketsFilteringModel model)
@@ -42,7 +46,7 @@ public class TicketsService : BusinessService<Ticket, Guid>, ITicketsService
                 .Include(t => t.Session)
                 .ThenInclude(mg => mg.Hall)
                 .Include(t => t.Invoice)
-                .ThenInclude(i => i.User))
+                .ThenInclude(i => i.CreatedBy))
             .Filter(model);
         
         var totalCount = query.Count();
@@ -63,7 +67,7 @@ public class TicketsService : BusinessService<Ticket, Guid>, ITicketsService
                 .Include(t => t.Session)
                 .ThenInclude(mg => mg.Hall)
                 .Include(t => t.Invoice)
-                .ThenInclude(i => i.User))
+                .ThenInclude(i => i.CreatedBy))
             .ProjectTo<TicketReadDto>(_mapper.ConfigurationProvider)
             .FirstOrDefaultAsync(m => m.Id == id);
         
@@ -72,15 +76,21 @@ public class TicketsService : BusinessService<Ticket, Guid>, ITicketsService
             : Result<TicketReadDto>.Success(ticket);
     }
 
-    private async Task<Guid> CreateEmptyInvoice(Guid userId)
+    private async Task<Guid> CreateEmptyInvoice(string userId)
     {
         var emptyInvoice = new Invoice
         {
-            UserId = userId,
             Amount = 0,
-            IsPaid = true,
-            CreateDateUtc = new DateTime()
+            IsPaid = true
         };
+        
+        var user = await _userManager.FindByIdAsync(userId);
+        if (user == null)
+        {
+            throw new Exception("User was not found");
+        }
+        
+        emptyInvoice.RegisterCreation(user);
         await _invoicesRepository.Add(emptyInvoice);
         return emptyInvoice.Id;
     }
@@ -129,9 +139,8 @@ public class TicketsService : BusinessService<Ticket, Guid>, ITicketsService
         var validationResult = await ValidateTicketsToCreate(model);
         if (!validationResult.IsSuccess)
             return validationResult;
-        
-        var currentUserId = new Guid(CurrentUserId!);
-        var validInvoiceId = model.InvoiceId ?? await CreateEmptyInvoice(currentUserId);
+            
+        var validInvoiceId = model.InvoiceId ?? await CreateEmptyInvoice(CurrentUserId!);
         
         var tickets = model.HallSeats.Select(m => new Ticket
             {

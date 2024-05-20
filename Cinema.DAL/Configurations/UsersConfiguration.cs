@@ -12,9 +12,9 @@ public class UsersConfiguration : IEntityTypeConfiguration<AspNetUser>
 
         // Relations
         builder.HasMany(x => x.Invoices)
-            .WithOne(x => x.User)
+            .WithOne(x => x.CreatedBy)
             .OnDelete(DeleteBehavior.Restrict)
-            .HasForeignKey(x => x.UserId)
+            .HasForeignKey(x => x.CreatedById)
             .HasConstraintName("UserInvoiceFK");
 
         builder.HasMany(x => x.Reviews)

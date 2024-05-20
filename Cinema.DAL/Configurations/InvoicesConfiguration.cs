@@ -14,9 +14,9 @@ public class InvoicesConfiguration : IEntityTypeConfiguration<Invoice>
             .HasPrecision(8, 2);
 
         // Relations
-        builder.HasOne(e => e.User)
+        builder.HasOne(e => e.CreatedBy)
             .WithMany()
-            .HasForeignKey(g => g.UserId)
+            .HasForeignKey(g => g.CreatedById)
             .HasConstraintName("UserInvoiceFK");
 
         //Seeding
