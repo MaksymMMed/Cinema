@@ -1,4 +1,5 @@
 using Cinema.API.Extensions;
+using Stripe;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +13,9 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddAutoMapper();
+builder.Services.AddHangfire(builder.Configuration);
+
+StripeConfiguration.ApiKey = builder.Configuration["Payments:Stripe:ApiKey"];
 
 builder.Services.AddIdentity();
 builder.Services.AddJwtAuthentication(builder.Configuration);

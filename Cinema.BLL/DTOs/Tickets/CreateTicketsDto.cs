@@ -5,6 +5,5 @@ namespace Cinema.BLL.DTOs.Tickets;
 public class CreateTicketsDto
 {
     public Guid SessionId { get; set; }
-    public Guid? InvoiceId { get; set; }
     public IEnumerable<HallSeatDto> HallSeats { get; set; }
 }
