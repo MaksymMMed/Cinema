@@ -9,6 +9,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Cinema.DAL\Cinema.DAL.csproj" />
     <ProjectReference Include="..\Cinema.EmailService\Cinema.EmailService.csproj" />
+    <ProjectReference Include="..\Cinema.RecomendationSystem\Cinema.RecomendationSystem.csproj" />
   </ItemGroup>
 
   <ItemGroup>
