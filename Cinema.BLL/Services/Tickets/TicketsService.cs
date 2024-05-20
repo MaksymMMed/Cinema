@@ -139,7 +139,7 @@ public class TicketsService : BusinessService<Ticket, Guid>, ITicketsService
         var validationResult = await ValidateTicketsToCreate(model);
         if (!validationResult.IsSuccess)
             return validationResult;
-        
+            
         var validInvoiceId = model.InvoiceId ?? await CreateEmptyInvoice(CurrentUserId!);
         
         var tickets = model.HallSeats.Select(m => new Ticket

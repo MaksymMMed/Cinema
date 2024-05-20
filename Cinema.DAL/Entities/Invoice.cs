@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using Cinema.DAL.Utilities.Interfaces.TrackChanges;
 
 namespace Cinema.DAL.Entities
