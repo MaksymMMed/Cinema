@@ -355,18 +355,20 @@ namespace Cinema.DAL.Seeding
                 new Invoice
                 {
                     Id = new Guid("363C2006-3D51-46EA-AF49-F40FE7605441"),
-                    UserId = Users[1].Id,
+                    CreatedById = Users[1].Id,
                     Amount = 100.00m,
                     IsPaid = true,
-                    CreateDateUtc = new DateTime(2024, 4, 28, 11, 5, 44, DateTimeKind.Utc),
+                    CreatedByName = "admin",
+                    CreatedOnUtc = new DateTime(2024, 4, 28, 11, 5, 44, DateTimeKind.Utc),
                 },
                 new Invoice
                 {
                     Id = new Guid("363C2006-3D51-46EA-AF49-F40FE7605442"),
-                    UserId = Users[1].Id,
+                    CreatedById = Users[1].Id,
                     Amount = 100.00m,
                     IsPaid = true,
-                    CreateDateUtc = new DateTime(2024, 4, 28, 19, 34, 21, DateTimeKind.Utc),
+                    CreatedByName = "admin",
+                    CreatedOnUtc = new DateTime(2024, 4, 28, 19, 34, 21, DateTimeKind.Utc),
                 }
             ];
         }

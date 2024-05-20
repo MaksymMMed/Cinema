@@ -37,7 +37,7 @@ public class TicketsFilteringModel : FilteringModel<Ticket>, IFilter<Ticket>
             source = source.Where(t => t.Session.HallId == HallId);
         
         if (PurchasedByUserId != null)
-            source = source.Where(t => t.Invoice.User.Id == PurchasedByUserId);
+            source = source.Where(t => t.Invoice.CreatedBy.Id == PurchasedByUserId);
         
         if (InvoiceId != null)
             source = source.Where(t => t.InvoiceId == InvoiceId);

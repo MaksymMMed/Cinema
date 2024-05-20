@@ -18,9 +18,9 @@ public class TicketsProfile : Profile
             .ForMember(dst => dst.HallName, opt =>
                 opt.MapFrom(src => src.Session.Hall.Name))
             .ForMember(dst => dst.PurchasedById, opt =>
-                opt.MapFrom(src => src.Invoice.User.Id))
+                opt.MapFrom(src => src.Invoice.CreatedBy.Id))
             .ForMember(dst => dst.PurchasedByName, opt =>
-                opt.MapFrom(src => src.Invoice.User.UserName));
+                opt.MapFrom(src => src.Invoice.CreatedBy.UserName));
         
         CreateMap<Ticket, SessionTicketDto>();
     }
