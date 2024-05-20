@@ -43,6 +43,9 @@ using Cinema.DAL.Interfaces.Invoices;
 using Cinema.DAL.Interfaces.Tickets;
 using Cinema.DAL.Repositories.Invoices;
 using Cinema.DAL.Repositories.Tickets;
+using Cinema.BLL.MapperProfiles.Genres;
+using Cinema.EmailService;
+using Cinema.EmailService.Sender;
 
 namespace Cinema.API.Extensions;
 
@@ -169,6 +172,16 @@ public static class ServiceCollectionExtensions
         services.AddTransient<ISessionsService, SessionsService>();
         services.AddTransient<IReviewsService, ReviewsService>();
         services.AddTransient<ITicketsService, TicketsService>();
+    }
+
+    public static void AddEmailService(this IServiceCollection services, IConfiguration configuration)
+    {
+        var emailConfig = configuration
+            .GetSection("EmailConfiguration")
+            .Get<EmailConfiguration>();
+
+        services.AddSingleton(emailConfig);
+        services.AddTransient<IEmailSender, EmailSender>();
     }
 
     public static void AddIdentity(this IServiceCollection services)

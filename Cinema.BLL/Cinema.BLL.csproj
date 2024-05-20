@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Cinema.DAL\Cinema.DAL.csproj" />
+    <ProjectReference Include="..\Cinema.EmailService\Cinema.EmailService.csproj" />
   </ItemGroup>
 
   <ItemGroup>

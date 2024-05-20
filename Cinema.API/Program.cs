@@ -18,6 +18,7 @@ builder.Services.AddJwtAuthentication(builder.Configuration);
 
 builder.Services.AddRepositories();
 builder.Services.AddServices(builder.Configuration);
+builder.Services.AddEmailService(builder.Configuration);
 
 builder.Services.AddTokenInSwagger();
 
