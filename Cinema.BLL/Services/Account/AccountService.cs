@@ -1,14 +1,14 @@
 ﻿using Cinema.BLL.DTOs;
 using Cinema.BLL.DTOs.Account;
 using Cinema.BLL.Interfaces;
+using Cinema.BLL.Services.Core;
 using Cinema.DAL.Entities;
 using Cinema.DAL.Enums;
 using Cinema.EmailService.Sender;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json.Linq;
-using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -16,7 +16,7 @@ using System.Text;
 
 namespace Cinema.BLL.Services.Account
 {
-    public class AccountService : IAccountService
+    public class AccountService : BaseBusinessService, IAccountService
     {
         private readonly UserManager<AspNetUser> _userManager;
         private readonly RoleManager<IdentityRole<Guid>> _roleManager;
@@ -24,11 +24,12 @@ namespace Cinema.BLL.Services.Account
         private readonly IConfiguration _configuration;
 
         public AccountService(
+            IHttpContextAccessor httpContextAccessor,
             UserManager<AspNetUser> userManager,
             RoleManager<IdentityRole<Guid>> roleManager,
             IEmailSender emailSender,
             IConfiguration configuration
-        )
+        ) : base(httpContextAccessor)
         {
             _userManager = userManager;
             _roleManager = roleManager;
@@ -161,6 +162,32 @@ namespace Cinema.BLL.Services.Account
 
             await _userManager.ConfirmEmailAsync(user, confirmationToken);
             return Result<string>.Success("Your email is confirmed");
+        }
+
+        public async Task<Result<string>> ChangePassword(ChangePasswordDto model)
+        {
+            var user = await _userManager.FindByIdAsync(CurrentUserId!);
+            if (user == null)
+                return Result<string>.Fail("User not found")!;
+
+            var result = await _userManager.ChangePasswordAsync(user, model.OldPassword,model.NewPassword);
+            if (!result.Succeeded)
+                return Result<string>.Fail(string.Join(", ", result.Errors.Select(e => e.Description)))!;
+
+            return Result<string>.Success("Password successfully changed"); 
+        }
+
+        public async Task<Result<string>> ChangeUserName(ChangeUserNameDto model)
+        {
+            var user = await _userManager.FindByIdAsync(CurrentUserId!);
+            if (user == null)
+                return Result<string>.Fail("User not found")!;
+
+            var result = await _userManager.SetUserNameAsync(user, model.UserName);
+            if (!result.Succeeded)
+                return Result<string>.Fail(string.Join(", ", result.Errors.Select(e => e.Description)))!;
+
+            return Result<string>.Success("UserName successfully changed");
         }
     }
 }
