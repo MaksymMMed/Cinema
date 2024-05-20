@@ -17,13 +17,6 @@ using System.Linq;
 
 namespace Cinema.BLL.Services.Recomendations
 {
-    public class AssociationRule1
-    {
-        public List<string> Antecedent { get; set; }
-        public List<string> Consequent { get; set; }
-        public double Confidance { get; set; }
-    }
-
     public class RecomendationsService : BaseBusinessService, IRecomendationsService
     {
         private readonly UserManager<AspNetUser> _userManager;
@@ -109,7 +102,7 @@ namespace Cinema.BLL.Services.Recomendations
                 .Take(15)
                 .ToList();
 
-            var movies = sortedSessions.Select(x=>x.Movie).ToList();
+            var movies = sortedSessions.Select(x=>x.Movie).Distinct().ToList();
 
             var mappedMovies = _mapper.Map<List<MovieReadDto>>(movies);
 
