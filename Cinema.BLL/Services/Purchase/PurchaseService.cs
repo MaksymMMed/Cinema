@@ -92,7 +92,7 @@ public class PurchaseService : IPurchaseService
         return session.Url;
     }
 
-    private async Task HandleSuccessfulPayment(PaymentIntent paymentIntent)
+    private async Task HandleSuccessfulPayment(Session paymentIntent)
     {
         if (paymentIntent.Metadata.TryGetValue("invoiceId", out var invoiceId))
         {
@@ -104,9 +104,9 @@ public class PurchaseService : IPurchaseService
     {
         switch (stripeEvent.Type)
         {
-            case Events.PaymentIntentSucceeded:
+            case Events.CheckoutSessionCompleted:
             {
-                var paymentIntent = stripeEvent.Data.Object as PaymentIntent;
+                var paymentIntent = stripeEvent.Data.Object as Session;
                 await HandleSuccessfulPayment(paymentIntent!);
                 break;
             }
