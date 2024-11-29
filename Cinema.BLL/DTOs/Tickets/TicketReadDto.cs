@@ -1,4 +1,5 @@
-﻿using Cinema.BLL.DTOs.Movies;
+﻿using Cinema.BLL.DTOs.Invoices;
+using Cinema.BLL.DTOs.Movies;
 
 namespace Cinema.BLL.DTOs.Tickets;
 

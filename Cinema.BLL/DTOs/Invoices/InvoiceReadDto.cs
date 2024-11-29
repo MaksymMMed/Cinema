@@ -1,3 +1,4 @@
+using Cinema.BLL.DTOs.Tickets;
 using Cinema.DAL.Entities;
 using System.ComponentModel.DataAnnotations;
 
@@ -11,4 +12,6 @@ public class InvoiceReadDto
     public bool IsPaid { get; set; }
     public DateTime CreatedOnUtc { get; set; }
     public string CreatedByName { get; set; }
+    public ICollection<InvoiceTicketDto> Tickets { get; set; }
+
 }

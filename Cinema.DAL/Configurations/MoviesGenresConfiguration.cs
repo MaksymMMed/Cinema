@@ -17,7 +17,7 @@ public class MoviesGenresConfiguration : IEntityTypeConfiguration<MovieGenre>
             .HasConstraintName("MovieGenreFK");
         
         builder.HasOne(e => e.Genre)
-            .WithMany(e => e.MoviesGenre)
+            .WithMany(e => e.MoviesGenre)   
             .HasForeignKey(g => g.GenreId)
             .HasConstraintName("GenreMovieFK");
 

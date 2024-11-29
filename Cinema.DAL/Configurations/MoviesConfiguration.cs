@@ -42,7 +42,7 @@ public class MoviesConfiguration : IEntityTypeConfiguration<Movie>
             .HasForeignKey(e => e.MovieId)
             .HasConstraintName("MovieActorFK");
 
-        builder.HasMany(e => e.MovieReviews)
+        builder.HasMany(e => e.MovieReviews)    
             .WithOne(e => e.Movie)
             .HasForeignKey(e => e.MovieId)
             .HasConstraintName("MovieReviewFK");

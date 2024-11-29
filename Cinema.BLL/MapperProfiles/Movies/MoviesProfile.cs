@@ -37,9 +37,7 @@ public class MoviesProfile : Profile
             .ForMember(dst => dst.Genres, opt =>
                 opt.MapFrom(src => src.MovieGenres.Select(mg => mg.Genre.Name)))
             .ForMember(dst => dst.AvgMark, opt =>
-                opt.MapFrom(src => CalculateAvgMark(src.MovieReviews)))
-            .ForMember(dst => dst.FiveClosestSessions, opt =>
-                opt.MapFrom(src => GetClosestSessions(src.Sessions)));
+                opt.MapFrom(src => CalculateAvgMark(src.MovieReviews)));
 
         CreateMap<Movie, MovieDetailsDto>()
             .ForMember(dst => dst.DirectorName, opt =>
@@ -51,7 +49,9 @@ public class MoviesProfile : Profile
             .ForMember(dst => dst.Actors, opt => 
                 opt.MapFrom(src => src.MovieActors.Select(mg => mg.Actor)))
             .ForMember(dst => dst.AvgMark, opt =>
-                opt.MapFrom(src => CalculateAvgMark(src.MovieReviews)));
+                opt.MapFrom(src => CalculateAvgMark(src.MovieReviews)))
+            .ForMember(dst => dst.FiveClosestSessions, opt =>
+                opt.MapFrom(src => GetClosestSessions(src.Sessions)));
 
         CreateMap<Movie, MoviePreviewDto>()
             .ForMember(dst => dst.DirectorName, opt =>

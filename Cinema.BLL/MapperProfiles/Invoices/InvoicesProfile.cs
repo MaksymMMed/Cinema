@@ -14,7 +14,8 @@ public class InvoicesProfile : Profile
         CreateMap<Invoice, InvoiceDetailsReadDto>()
             .ForMember(dst => dst.Tickets, opt => 
                 opt.MapFrom(src => src.Tickets));
-        
+
+
         CreateMap<InvoiceCreateDto, Invoice>();
         
         CreateMap<Ticket, InvoiceTicketDto>()

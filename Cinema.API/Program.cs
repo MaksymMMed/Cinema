@@ -3,11 +3,9 @@ using Stripe;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Sql Server 
 builder.Services.AddDbContext(builder.Configuration);
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHttpContextAccessor();
@@ -26,8 +24,17 @@ builder.Services.AddEmailService(builder.Configuration);
 
 builder.Services.AddTokenInSwagger();
 
-var app = builder.Build();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigin", builder =>
+    {
+        builder.WithOrigins("http://localhost:3000") 
+            .AllowAnyMethod()  // Дозволяє будь-які HTTP методи (GET, POST, etc.)
+            .AllowAnyHeader(); // Дозволяє будь-які заголовки
+    });
+});
 
+var app = builder.Build();
 app.CreateRoles();
 
 if (app.Environment.IsDevelopment())
@@ -35,11 +42,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseCors("AllowSpecificOrigin");
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
-
 app.Run();

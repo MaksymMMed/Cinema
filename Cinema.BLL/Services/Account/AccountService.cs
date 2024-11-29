@@ -1,12 +1,20 @@
-﻿using Cinema.BLL.DTOs;
+﻿using AutoMapper;
+using Cinema.BLL.DTOs;
 using Cinema.BLL.DTOs.Account;
+using Cinema.BLL.DTOs.Invoices;
+using Cinema.BLL.DTOs.Reviews;
+using Cinema.BLL.DTOs.Tickets;
 using Cinema.BLL.Interfaces;
 using Cinema.BLL.Services.Core;
 using Cinema.DAL.Entities;
 using Cinema.DAL.Enums;
+using Cinema.DAL.Interfaces.Invoices;
+using Cinema.DAL.Interfaces.Reviews;
+using Cinema.DAL.Interfaces.Tickets;
 using Cinema.EmailService.Sender;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -22,19 +30,64 @@ namespace Cinema.BLL.Services.Account
         private readonly RoleManager<IdentityRole<Guid>> _roleManager;
         private readonly IEmailSender _emailSender;
         private readonly IConfiguration _configuration;
+        private readonly IMapper _mapper;
+        private readonly IReviewsRepository _reviewsRepository;
+        private readonly IInvoicesRepository _invoicesRepository;
 
         public AccountService(
+            IInvoicesRepository invoicesRepository,
+            IReviewsRepository reviewsRepository,
             IHttpContextAccessor httpContextAccessor,
             UserManager<AspNetUser> userManager,
             RoleManager<IdentityRole<Guid>> roleManager,
             IEmailSender emailSender,
-            IConfiguration configuration
+            IConfiguration configuration,
+            IMapper mapper
         ) : base(httpContextAccessor)
         {
+            _reviewsRepository = reviewsRepository;
+            _invoicesRepository = invoicesRepository;
             _userManager = userManager;
             _roleManager = roleManager;
             _emailSender = emailSender;
             _configuration = configuration;
+            _mapper = mapper;
+        }
+
+        public async Task<Result<UserInfoDto>> GetUserInfo()
+        {
+            var user = await _userManager.FindByIdAsync(CurrentUserId!);
+
+            if (user == null)
+                return Result<UserInfoDto>.Fail("User not founded")!;
+
+            var invoices = await _invoicesRepository.GetQuery(include: q => q
+                .Include(x => x.Tickets)
+                    .ThenInclude(x => x.Session)
+                    .ThenInclude(x => x.Movie)
+                .Include(x => x.Tickets)
+                    .ThenInclude(x => x.Session)
+                    .ThenInclude(x => x.Hall))
+                .Where(x=>x.CreatedById == user.Id) 
+                .ToListAsync();
+
+            var reviews = await _reviewsRepository
+                .GetQuery(include: q => q
+                .Include(x => x.Movie))
+                .Where(x => x.CreatedById == user.Id)
+                .ToListAsync();
+;
+
+
+            UserInfoDto userInfo = new UserInfoDto()
+            {
+                Email = user.Email!,
+                UserName = user.UserName!,
+                Reviews = _mapper.Map<IEnumerable<ReviewReadDto>>(reviews),
+                Invoices = _mapper.Map<IEnumerable<InvoiceDetailsReadDto>>(invoices)
+
+            }; 
+            return Result<UserInfoDto>.Success(userInfo);
         }
 
         public async Task<Result<TokenDto>> SignIn(SignInDto model)
@@ -62,7 +115,7 @@ namespace Cinema.BLL.Services.Account
             var token = new JwtSecurityToken(
                 issuer: _configuration["Jwt:Issuer"],
                 audience: _configuration["Jwt:Audience"],
-                expires: DateTime.Now.AddHours(3),
+                expires: DateTime.Now.AddDays(7),
                 claims: authClaims,
                 signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
             );

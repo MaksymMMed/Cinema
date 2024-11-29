@@ -1,4 +1,4 @@
-﻿namespace Cinema.DAL.Entities
+﻿    namespace Cinema.DAL.Entities
 {
     public class ActorMovie
     {

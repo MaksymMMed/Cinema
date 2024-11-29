@@ -8,9 +8,7 @@ namespace Cinema.DAL
 {
     public class AppDbContext : IdentityDbContext<AspNetUser, IdentityRole<Guid>, Guid>
     {
-        public AppDbContext(DbContextOptions options) : base(options)
-        {
-        }
+        public AppDbContext(DbContextOptions options) : base(options){}
 
         public DbSet<Actor> Actor { get; set; }
         public DbSet<ActorMovie> ActorMovie { get; set; }

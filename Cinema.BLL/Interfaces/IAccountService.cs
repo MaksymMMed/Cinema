@@ -5,6 +5,7 @@ namespace Cinema.BLL.Interfaces
 {
     public interface IAccountService
     {
+        Task<Result<UserInfoDto>> GetUserInfo();
         Task<Result<TokenDto>> SignIn(SignInDto model);
         Task<Result<TokenDto>> SignUpUser(SignUpDto model);
         Task<Result<TokenDto>> SignUpAdmin(SignUpDto model);

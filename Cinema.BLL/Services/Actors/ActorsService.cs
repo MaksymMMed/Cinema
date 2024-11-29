@@ -28,7 +28,7 @@ namespace Cinema.BLL.Services.Actors
         {
             _moviesRepository = moviesRepository;
         }
-
+            
         public async Task<Result<EntitiesWithTotalCount<MovieReadDto>>> GetActorMovies(Guid id,
             MoviesFilteringModel filter)
         {

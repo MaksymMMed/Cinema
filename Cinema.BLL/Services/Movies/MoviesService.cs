@@ -129,7 +129,6 @@ public class MoviesService : BaseBusinessService, IMoviesService
         var result = _mapper.Map<MovieReadDto>(mappedModel);
         result.AvgMark = movie.AvgMark;
         result.Genres = movie.Genres;
-        result.FiveClosestSessions = movie.FiveClosestSessions;
         
         if (result.DirectorId != movie.DirectorId)
         {

@@ -15,5 +15,4 @@ public class MovieReadDto
     public DateTime ReleaseDate { get; set; }
     public IEnumerable<string> Genres { get; set; }
     public double AvgMark { get; set; }
-    public IEnumerable<SessionDateTimeReadDto> FiveClosestSessions { get; set; }
 }

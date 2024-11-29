@@ -46,7 +46,6 @@ using Cinema.DAL.Interfaces.Tickets;
 using Cinema.DAL.Repositories.Invoices;
 using Cinema.DAL.Repositories.Tickets;
 using Hangfire;
-using AccountService = Cinema.BLL.Services.Account.AccountService;
 using Cinema.BLL.MapperProfiles.Genres;
 using Cinema.EmailService;
 using Cinema.EmailService.Sender;

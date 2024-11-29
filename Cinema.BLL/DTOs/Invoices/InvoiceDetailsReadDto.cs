@@ -10,5 +10,5 @@ public class InvoiceDetailsReadDto
     public bool IsPaid { get; set; }
     public DateTime CreatedOnUtc { get; set; }
     public string CreatedByName { get; set; }
-    public ICollection<InvoiceTicketDto> Tickets { get; set; }
+    public ICollection<TicketDetailedDto> Tickets { get; set; }
 }

@@ -1,9 +1,12 @@
-﻿namespace Cinema.BLL.DTOs.Reviews
+﻿using Cinema.BLL.DTOs.Movies;
+
+namespace Cinema.BLL.DTOs.Reviews
 {
     public class ReviewReadDto
     {
         public Guid Id { get; set; }
         public Guid MovieId { get; set; }
+        public MoviePreviewDto Movie { get; set; }
         public Guid CreatedById { get; set; }
         public string Comment { get; set; }
         public string CreatedByName { get; set; }
