@@ -8,6 +8,7 @@ public class SessionDetailsDto
     public Guid Id { get; set; }
     public MoviePreviewDto Movie { get; set; }
     public Guid HallId { get; set; }
+    public string HallName { get; set; }
     public DateTime StartDateUtc { get; set; }
     public DateTime EndDateUtc { get; set; }
     public decimal BasePrice { get; set; }
