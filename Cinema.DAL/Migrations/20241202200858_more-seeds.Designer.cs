@@ -4,6 +4,7 @@ using Cinema.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Cinema.DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241202200858_more-seeds")]
+    partial class moreseeds
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -128,7 +131,7 @@ namespace Cinema.DAL.Migrations
                         new
                         {
                             ActorId = new Guid("bbd5c0d3-a45d-490a-b26d-d503b6a82267"),
-                            MovieId = new Guid("01ba7a49-ff3b-4138-9aff-3d43df1325a9")
+                            MovieId = new Guid("38edea4a-5a0c-4428-8370-e370fc90093f")
                         });
                 });
 
@@ -202,13 +205,13 @@ namespace Cinema.DAL.Migrations
                         {
                             Id = new Guid("88d6040a-130f-43d4-8bee-1f0074962181"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "497abfa3-03d7-40e7-baf5-46aa5b89a54d",
+                            ConcurrencyStamp = "19900c34-e662-4148-927a-8af71a8f2580",
                             Email = "admin@example.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@EXAMPLE.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJ1FmEvxWKgEhjZPKsHuU27QEz4VIcixEpq/1vNOYh8ACRe8ycaqS/jJwAbXHQIxHw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEBHrqc/BOiNGK3mBhO4BBA2mQnSjQwzBkfC1EIi5ZH7BZiK77CxXT+vpzQR08AnnQg==",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false,
                             UserName = "admin"
@@ -217,13 +220,13 @@ namespace Cinema.DAL.Migrations
                         {
                             Id = new Guid("88d6040a-130f-43d4-8bee-1f0074962182"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "3989aca2-2a1c-4ff1-b666-b68b8060cec7",
+                            ConcurrencyStamp = "495b5497-dbb8-45fc-ae8a-bdf67cd63456",
                             Email = "WWhite@example.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "WWHITE@EXAMPLE.COM",
                             NormalizedUserName = "WALTHER WHITE",
-                            PasswordHash = "AQAAAAIAAYagAAAAEE+NztFu9OGx53iRxnhE834fEfZ0pdkiujWunca2nyEHXXjCQuBk/fnuZ1p6Ee0KWQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEHXk7FlQ4ogsQpwyp/kQWynpChE5oJCzgj61P26xQynvJTB3ocz7z35z6Hvy1hGH5w==",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false,
                             UserName = "Walther White"
@@ -232,13 +235,13 @@ namespace Cinema.DAL.Migrations
                         {
                             Id = new Guid("88d6040a-130f-43d4-8bee-1f0074962183"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "16d2b048-a8bd-4ed2-8996-25050ffca942",
+                            ConcurrencyStamp = "a54e2bdc-ffc4-432c-97c8-49eeaaf3d8cb",
                             Email = "jpink@example.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "JPINK@EXAMPLE.COM",
                             NormalizedUserName = "JESSIE PINKMAN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJ96L6TnxhWYP6dkv/tcJgiRUUgoxLCBs7SikkLuCztNoivkcXnyHkobq6oxbfwWYQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAECkNVFKO5yCpoI88MjQr/xqna+gPKIrLoW/D+tuG/keUb/lHb6dZ+4StpkUkzgyr/w==",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false,
                             UserName = "Jessie Pinkman"
@@ -247,13 +250,13 @@ namespace Cinema.DAL.Migrations
                         {
                             Id = new Guid("88d6040a-130f-43d4-8bee-1f0074962184"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "9223ee6e-f121-4891-b576-ae7b2a68c406",
+                            ConcurrencyStamp = "e6cd5179-d285-4887-bf13-0e65110cd121",
                             Email = "user@example.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "USER@EXAMPLE.COM",
                             NormalizedUserName = "USER",
-                            PasswordHash = "AQAAAAIAAYagAAAAEP56R8ef542GueK3xlelsCwozwRrXHtYLiSEVdVUy8Rq57EURKECUkwv1hXmafX4Ww==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEJqJ+KUfQd+G7EcEcRmbAtColcatziow1S1Gby19q+wCBO4gh0MTCiF1V3SKqw3Png==",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false,
                             UserName = "user"
@@ -364,7 +367,7 @@ namespace Cinema.DAL.Migrations
                             Id = new Guid("d67b95a0-b12e-4574-b9ec-634b11f8df41"),
                             Capacity = 100,
                             Name = "Hall 1 (Big)",
-                            RowsData = "[\r\n     { \"Capacity\": 6, \"PriceMultiplier\": 1 },\r\n     { \"Capacity\": 8, \"PriceMultiplier\": 1.2 },\r\n     { \"Capacity\": 10, \"PriceMultiplier\": 1.5 },\r\n     { \"Capacity\": 10, \"PriceMultiplier\": 1.5 },\r\n     { \"Capacity\": 10, \"PriceMultiplier\": 1.5 },\r\n     { \"Capacity\": 10, \"PriceMultiplier\": 2 },\r\n     { \"Capacity\": 10, \"PriceMultiplier\": 2 },\r\n     { \"Capacity\": 10, \"PriceMultiplier\": 1.5 },\r\n     { \"Capacity\": 10, \"PriceMultiplier\": 2 },\r\n     { \"Capacity\": 10, \"PriceMultiplier\": 2 }\r\n]"
+                            RowsData = "[\r\n     { \"Capacity\": 6, \"PriceMultiplier\": 1 },\r\n     { \"Capacity\": 8, \"PriceMultiplier\": 1.2 },\r\n     { \"Capacity\": 10, \"PriceMultiplier\": 1.5 },\r\n     { \"Capacity\": 10, \"PriceMultiplier\": 1.5 },\r\n     { \"Capacity\": 10, \"PriceMultiplier\": 1.5 },\r\n     { \"Capacity\": 10, \"PriceMultiplier\": 2 },\r\n     { \"Capacity\": 10, \"PriceMultiplier\": 2 },\r\n     { \"Capacity\": 10, \"PriceMultiplier\": 1.5 },\r\n     { \"Capacity\": 10, \"PriceMultiplier\": 2 },\r\n     { \"Capacity\": 10, \"PriceMultiplier\": 2 },\r\n]"
                         },
                         new
                         {
@@ -447,7 +450,7 @@ namespace Cinema.DAL.Migrations
                     b.Property<int>("Duration")
                         .HasColumnType("int");
 
-                    b.Property<string>("LargePosterImageUrl")
+                    b.Property<string>("ImageUrl")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -458,10 +461,6 @@ namespace Cinema.DAL.Migrations
 
                     b.Property<DateTime>("ReleaseDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("SmallPosterImageUrl")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TrailerUrl")
                         .IsRequired()
@@ -481,10 +480,9 @@ namespace Cinema.DAL.Migrations
                             Description = "Oppenheimer is a 2023 epic biographical thriller film written, directed, and produced by Christopher Nolan.It follows the life of J. Robert Oppenheimer, the American theoretical physicist who helped develop the first nuclear weapons during World War II. Based on the 2005 biography American Prometheus by Kai Bird and Martin J. Sherwin, the film chronicles Oppenheimer's studies, his direction of the Los Alamos Laboratory, and his fall from grace after his 1954 security hearing. Cillian Murphy stars as Oppenheimer, alongside Robert Downey Jr. as the United States Atomic Energy Commission member Lewis Strauss.",
                             DirectorId = new Guid("ed9a79d9-fe9d-456e-a0a7-2a028cbe1001"),
                             Duration = 180,
-                            LargePosterImageUrl = "https://images4.alphacoders.com/132/1326785.jpeg",
+                            ImageUrl = "https://upload.wikimedia.org/wikipedia/en/thumb/4/4a/Oppenheimer_%28film%29.jpg/220px-Oppenheimer_%28film%29.jpg",
                             Name = "Oppenheimer",
                             ReleaseDate = new DateTime(2023, 7, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            SmallPosterImageUrl = "https://upload.wikimedia.org/wikipedia/en/thumb/4/4a/Oppenheimer_%28film%29.jpg/220px-Oppenheimer_%28film%29.jpg",
                             TrailerUrl = "https://www.youtube.com/watch?v=bK6ldnjE3Y0&pp=ygUTb3BwZW5oZWltZXIgdHJhaWxlcg%3D%3D"
                         },
                         new
@@ -494,10 +492,9 @@ namespace Cinema.DAL.Migrations
                             Description = "Interstellar is a 2014 epic science fiction film directed, written, and produced by Christopher Nolan and starring Matthew McConaughey, Anne Hathaway,   Jessica Chastain, Bill Irwin, Ellen Burstyn, Michael Caine, and Matt Damon. Set in a dystopian future where humanity is embroiled in a catastrophic blight and    famine, the film follows a group of astronauts who travel through a wormhole near Saturn in search of a new home for humankind.",
                             DirectorId = new Guid("ed9a79d9-fe9d-456e-a0a7-2a028cbe1001"),
                             Duration = 169,
-                            LargePosterImageUrl = "https://i.pinimg.com/originals/e9/24/0b/e9240b7c5b29b0fb4aa86304a03287e8.jpg",
+                            ImageUrl = "https://upload.wikimedia.org/wikipedia/en/b/bc/Interstellar_film_poster.jpg",
                             Name = "Interstellar",
                             ReleaseDate = new DateTime(2014, 10, 26, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            SmallPosterImageUrl = "https://upload.wikimedia.org/wikipedia/en/b/bc/Interstellar_film_poster.jpg",
                             TrailerUrl = "https://www.youtube.com/watch?v=zSWdZVtXT7E&pp=ygUUaW50ZXJzdGVsbGFyIHRyYWlsZXI%3D"
                         },
                         new
@@ -507,10 +504,9 @@ namespace Cinema.DAL.Migrations
                             Description = "140 years after a devastating civil war, Earth's population is living underground in a silo due to the effects of the war on the atmosphere. In the silo the Sherrif's wife stumbles upon some prohibited information and is sentenced to go outside and die. A few years later her husband voluntarily follows her. The information they uncovered is stored in a 140+ year old hard-drive. The hard-drive lands in the possession of an engineer. When he is murdered his girlfriend, a fellow engineer, searches for the truth.",
                             DirectorId = new Guid("ed9a79d9-fe9d-456e-a0a7-2a028cbe1002"),
                             Duration = 120,
-                            LargePosterImageUrl = "https://images.wallpapersden.com/image/download/silo-2023-season_bmVsamqUmZqaraWkpJRmbmdlrWZlbWU.jpg",
+                            ImageUrl = "https://upload.wikimedia.org/wikipedia/uk/thumb/d/d0/Silo_2023.jpg/250px-Silo_2023.jpg",
                             Name = "Silo",
                             ReleaseDate = new DateTime(2019, 10, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            SmallPosterImageUrl = "https://upload.wikimedia.org/wikipedia/uk/thumb/d/d0/Silo_2023.jpg/250px-Silo_2023.jpg",
                             TrailerUrl = "https://youtu.be/8ZYhuvIv1pA?si=zOpNLdrSdlAmkF0V"
                         },
                         new
@@ -520,10 +516,9 @@ namespace Cinema.DAL.Migrations
                             Description = "Dune is a 2021 epic science fiction film based on the 1965 novel by Frank Herbert.",
                             DirectorId = new Guid("ed9a79d9-fe9d-456e-a0a7-2a028cbe1002"),
                             Duration = 155,
-                            LargePosterImageUrl = "https://www.hdwallpapers.in/download/poster_of_dune_2020_4k_hd_movies-HD.jpg",
+                            ImageUrl = "https://cdn.europosters.eu/image/1300/122815.jpg",
                             Name = "Dune",
                             ReleaseDate = new DateTime(2021, 10, 22, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            SmallPosterImageUrl = "https://cdn.europosters.eu/image/1300/122815.jpg",
                             TrailerUrl = "https://www.youtube.com/watch?v=n9xhJrPXop4"
                         },
                         new
@@ -533,23 +528,21 @@ namespace Cinema.DAL.Migrations
                             Description = "A young blacksmith teams up with an eccentric pirate to save the governor's daughter.",
                             DirectorId = new Guid("ed9a79d9-fe9d-456e-a0a7-2a028cbe1003"),
                             Duration = 143,
-                            LargePosterImageUrl = "https://wallpaperswide.com/download/keira_knightley_pirates_of_the_caribbean_at_worlds_end-wallpaper-1920x1080.jpg",
+                            ImageUrl = "https://lumiere-a.akamaihd.net/v1/images/p_piratesofthecaribbean_thecurseoftheblackpearl_19642_d1ba8e66.jpeg",
                             Name = "Pirates of the Caribbean: The Curse of the Black Pearl",
                             ReleaseDate = new DateTime(2003, 7, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            SmallPosterImageUrl = "https://lumiere-a.akamaihd.net/v1/images/p_piratesofthecaribbean_thecurseoftheblackpearl_19642_d1ba8e66.jpeg",
                             TrailerUrl = "https://www.youtube.com/watch?v=naQr0uTrH_s"
                         },
                         new
                         {
-                            Id = new Guid("01ba7a49-ff3b-4138-9aff-3d43df1325a9"),
+                            Id = new Guid("38edea4a-5a0c-4428-8370-e370fc90093f"),
                             AgeRestriction = "TV-MA",
                             Description = "In a dystopian future where humankind has lost its sight, two children with the ability to see are born.",
                             DirectorId = new Guid("ed9a79d9-fe9d-456e-a0a7-2a028cbe1003"),
                             Duration = 143,
-                            LargePosterImageUrl = "https://pics.filmaffinity.com/See_TV_Series-838548891-large.jpg",
+                            ImageUrl = "https://www.kino-teatr.ru/movie/posters/big/8/2/137928.jpg",
                             Name = "See",
                             ReleaseDate = new DateTime(2019, 11, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            SmallPosterImageUrl = "https://www.kino-teatr.ru/movie/posters/big/8/2/137928.jpg",
                             TrailerUrl = "https://www.youtube.com/watch?v=7Rg0y7NT1gU"
                         });
                 });
@@ -611,7 +604,7 @@ namespace Cinema.DAL.Migrations
                         },
                         new
                         {
-                            MovieId = new Guid("01ba7a49-ff3b-4138-9aff-3d43df1325a9"),
+                            MovieId = new Guid("38edea4a-5a0c-4428-8370-e370fc90093f"),
                             GenreId = new Guid("bbd5c0d3-a45d-490a-b26d-d503b6a82264")
                         });
                 });
@@ -657,7 +650,7 @@ namespace Cinema.DAL.Migrations
                         },
                         new
                         {
-                            MovieId = new Guid("01ba7a49-ff3b-4138-9aff-3d43df1325a9"),
+                            MovieId = new Guid("38edea4a-5a0c-4428-8370-e370fc90093f"),
                             ImagesUrl = "['https://static1.cbrimages.com/wordpress/wp-content/uploads/2019/11/see-feature.jpg','https://images.bauerhosting.com/legacy/media/612d/f171/f03d/2f72/b707/68e4/see-season-2-2.jpg?auto=format&w=1440&q=80']"
                         });
                 });
@@ -704,7 +697,7 @@ namespace Cinema.DAL.Migrations
                             Comment = "Great movie!",
                             CreatedById = new Guid("88d6040a-130f-43d4-8bee-1f0074962182"),
                             CreatedByName = "Walther White",
-                            CreatedOnUtc = new DateTime(2024, 12, 6, 16, 3, 47, 307, DateTimeKind.Utc).AddTicks(1709),
+                            CreatedOnUtc = new DateTime(2024, 12, 2, 20, 8, 57, 839, DateTimeKind.Utc).AddTicks(7998),
                             MovieId = new Guid("9344f562-ffdc-41c5-bb24-c41c969534c1"),
                             Rank = 5
                         },
@@ -714,7 +707,7 @@ namespace Cinema.DAL.Migrations
                             Comment = "Good movie!",
                             CreatedById = new Guid("88d6040a-130f-43d4-8bee-1f0074962182"),
                             CreatedByName = "Walther White",
-                            CreatedOnUtc = new DateTime(2024, 12, 6, 16, 3, 47, 307, DateTimeKind.Utc).AddTicks(2000),
+                            CreatedOnUtc = new DateTime(2024, 12, 2, 20, 8, 57, 839, DateTimeKind.Utc).AddTicks(8359),
                             MovieId = new Guid("9344f562-ffdc-41c5-bb24-c41c969534c2"),
                             Rank = 4
                         });

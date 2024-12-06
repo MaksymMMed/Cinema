@@ -85,7 +85,8 @@ public class MoviesService : BaseBusinessService, IMoviesService
             return Result<MovieReadDto>.Fail("The movie needs to have at least one image.")!;
         
         var movie = _mapper.Map<Movie>(model);
-        movie.ImageUrl = model.ImagesUrls.First();
+        movie.LargePosterImageUrl = model.ImagesUrls.ToList()[0];
+        movie.SmallPosterImageUrl = model.ImagesUrls.ToList()[1];
         await _moviesRepository.Add(movie);
 
         var serializedImageUrls = JsonConvert.SerializeObject(model.ImagesUrls.Skip(1));
